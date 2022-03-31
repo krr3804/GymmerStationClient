@@ -24,7 +24,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'com.gymmer.gymmerstation'
-    mainClass = 'com.gymmer.gymmerstation.HelloApplication'
+    mainClass = 'com.gymmer.gymmerstation.Main'
 }
 
 javafx {
