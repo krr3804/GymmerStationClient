@@ -2,12 +2,14 @@ package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.domain.Program;
 
+import java.util.List;
+
 public interface ProgramModel {
     void addProgram(Program program);
 
-    void showProgram();
+    List<String> showProgramList();
 
-    void editProgram();
+    void editProgram(Program program);
 
     void deleteProgram(Program program);
 }
