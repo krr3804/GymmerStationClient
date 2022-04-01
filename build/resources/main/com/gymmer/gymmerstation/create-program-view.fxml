@@ -10,31 +10,46 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<?import javafx.scene.control.TextArea?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.Number?>
+<?import java.lang.String?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="com.gymmer.gymmerstation.programManagement.ProgramController">
    <children>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name :" />
-            <TextField />
+            <TextField fx:id="inpName"/>
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Purpose :" />
-            <TextField />
+            <TextArea fx:id="inpPurpose"/>
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Length :" />
-            <TextField />
+            <TextField fx:id="inpLength"/>
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Division :" />
-            <ChoiceBox prefWidth="150.0" />
-            <Button mnemonicParsing="false" text="Add Exercise" />
+            <ChoiceBox value="1" fx:id="inpDivision" prefWidth="150.0">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="1"/>
+                            <String fx:value="2"/>
+                            <String fx:value="3"/>
+                            <String fx:value="4"/>
+                            <String fx:value="5"/>
+                        </FXCollections>
+                    </items>
+            </ChoiceBox>
+            <Button fx:id="btnAddExercise" text="Add Exercise" />
          </children>
       </HBox>
       <Accordion>
@@ -54,7 +69,7 @@
           </TitledPane>
         </panes>
       </Accordion>
-      <Button mnemonicParsing="false" text="Save" />
-      <Button mnemonicParsing="false" text="Exit" />
+      <Button fx:id="btnSave" text="Save" />
+      <Button fx:id="btnExit" text="Exit" />
    </children>
 </VBox>

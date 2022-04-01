@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProgramModel {
     void addProgram(Program program);
 
-    List<String> showProgramList();
+    List<Program> showProgramList();
 
     void editProgram(Program program);
 

@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProgramRepository {
     void addProgram(Program program);
 
-    List<String> showProgramList();
+    List<Program> showProgramList();
 
     void editProgram(Program program);
 
