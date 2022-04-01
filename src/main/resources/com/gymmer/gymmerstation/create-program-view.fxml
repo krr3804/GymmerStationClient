@@ -11,6 +11,9 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.TextArea?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.Number?>
+<?import java.lang.String?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" fx:controller="com.gymmer.gymmerstation.programManagement.ProgramController">
    <children>
@@ -35,7 +38,17 @@
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Division :" />
-            <ChoiceBox fx:id="inpDivision" prefWidth="150.0" />
+            <ChoiceBox value="1" fx:id="inpDivision" prefWidth="150.0">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="1"/>
+                            <String fx:value="2"/>
+                            <String fx:value="3"/>
+                            <String fx:value="4"/>
+                            <String fx:value="5"/>
+                        </FXCollections>
+                    </items>
+            </ChoiceBox>
             <Button fx:id="btnAddExercise" text="Add Exercise" />
          </children>
       </HBox>
