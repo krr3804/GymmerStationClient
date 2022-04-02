@@ -15,7 +15,7 @@
 <?import java.lang.Number?>
 <?import java.lang.String?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="com.gymmer.gymmerstation.programManagement.ProgramController">
+      xmlns:fx="http://javafx.com/fxml" fx:controller="com.gymmer.gymmerstation.programManagement.ProgramCreateController">
    <children>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>

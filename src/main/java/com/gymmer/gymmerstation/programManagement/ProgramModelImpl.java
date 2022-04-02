@@ -18,8 +18,9 @@ public class ProgramModelImpl implements ProgramModel {
     }
 
     @Override
-    public List<Program> showProgramList() {
-        return null;
+    public List<String> showProgramList() {
+
+        return programRepository.showProgramList();
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ProgramModelImpl implements ProgramModel {
     }
 
     @Override
-    public void deleteProgram(Program program) {
-
+    public void deleteProgram(int index) {
+        programRepository.deleteProgram(index);
     }
 }

@@ -1,5 +1,6 @@
 package com.gymmer.gymmerstation;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,8 +26,8 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         btnCreateProgram.setOnAction(event -> loadStage("create-program-view.fxml"));
-        //btnLoadProgram.setOnAction(event -> loadStage(""));
-        //btnExit.setOnAction(event -> loadStage(""));
+        btnLoadProgram.setOnAction(event -> loadStage("load-program-view.fxml"));
+        btnExit.setOnAction(event -> Platform.exit());
     }
 
     private void loadStage(String fxml) {

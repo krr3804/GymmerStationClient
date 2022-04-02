@@ -7,9 +7,9 @@ import java.util.List;
 public interface ProgramRepository {
     void addProgram(Program program);
 
-    List<Program> showProgramList();
+    List<String> showProgramList();
 
     void editProgram(Program program);
 
-    void deleteProgram(Program program);
+    void deleteProgram(int index);
 }

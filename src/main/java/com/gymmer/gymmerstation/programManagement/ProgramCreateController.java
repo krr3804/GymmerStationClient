@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ProgramController implements Initializable {
+public class ProgramCreateController implements Initializable {
 
     private ProgramModel programModel = AppConfig.programModel();
 
