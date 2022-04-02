@@ -19,13 +19,17 @@ public class ProgramModelImpl implements ProgramModel {
 
     @Override
     public List<String> showProgramList() {
-
         return programRepository.showProgramList();
     }
 
     @Override
-    public void editProgram(Program program) {
+    public void editProgram(int index,Program program) {
+        programRepository.editProgram(index,program);
+    }
 
+    @Override
+    public Program getProgram(int index) {
+        return programRepository.getProgramByIndex(index);
     }
 
     @Override

@@ -9,7 +9,9 @@ public interface ProgramRepository {
 
     List<String> showProgramList();
 
-    void editProgram(Program program);
+    void editProgram(int index, Program program);
+
+    Program getProgramByIndex(int index);
 
     void deleteProgram(int index);
 }

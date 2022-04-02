@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.util.Util.loadStage;
+
 public class MainController implements Initializable {
     @FXML
     Button btnCreateProgram;
@@ -25,21 +27,9 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        btnCreateProgram.setOnAction(event -> loadStage("create-program-view.fxml"));
-        btnLoadProgram.setOnAction(event -> loadStage("load-program-view.fxml"));
+        btnCreateProgram.setOnAction(event -> loadStage("create-program-view.fxml",btnCreateProgram.getScene()));
+        btnLoadProgram.setOnAction(event -> loadStage("load-program-view.fxml",btnLoadProgram.getScene()));
         btnExit.setOnAction(event -> Platform.exit());
-    }
-
-    private void loadStage(String fxml) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxml));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 }
 

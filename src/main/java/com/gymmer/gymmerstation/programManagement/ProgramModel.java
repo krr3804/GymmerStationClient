@@ -9,7 +9,9 @@ public interface ProgramModel {
 
     List<String> showProgramList();
 
-    void editProgram(Program program);
+    void editProgram(int index, Program program);
+
+    Program getProgram(int index);
 
     void deleteProgram(int index);
 }

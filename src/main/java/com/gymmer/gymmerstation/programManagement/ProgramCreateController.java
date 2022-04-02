@@ -1,27 +1,27 @@
 package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.AppConfig;
+import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Program;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.util.Util.closeStage;
+import static com.gymmer.gymmerstation.util.Util.loadStage;
+
 public class ProgramCreateController implements Initializable {
 
     private ProgramModel programModel = AppConfig.programModel();
+    private static boolean isNew = true;
+    private static int idx = -1;
 
     @FXML
     private TextField inpName;
@@ -46,32 +46,40 @@ public class ProgramCreateController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        btnAddExercise.setOnAction(event -> loadStage("exercise-form-view.fxml"));
+        btnAddExercise.setOnAction(event -> loadStage("exercise-form-view.fxml",btnAddExercise.getScene()));
         btnSave.setOnAction(event -> handleBtnSaveAction(event));
-        btnExit.setOnAction(event -> handleBtnExit(event));
+        btnExit.setOnAction(event -> {
+            if(isNew) {
+                loadStage("main-view.fxml", btnExit.getScene());
+            }
+            else {
+                loadStage("load-program-view.fxml", btnExit.getScene());
+                isNew = true;
+                idx = -1;
+            }
+        });
     }
 
-    public void handleBtnSaveAction(ActionEvent event) {
+    private void handleBtnSaveAction(ActionEvent event) {
         String name = inpName.getText();
         String purpose = inpPurpose.getText();
         Long length = Long.parseLong(inpLength.getText());
         Long division = Long.parseLong(inpDivision.getValue());
-        programModel.addProgram(new Program(name,purpose,length,division));
-    }
-
-    private void handleBtnExit(ActionEvent event) {
-        Stage stage = (Stage) btnExit.getScene().getWindow();
-        stage.close();
-    }
-
-    private void loadStage(String fxml) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxml));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        Program program = new Program(name,purpose,length,division);
+        if(isNew) {
+            programModel.addProgram(program);
         }
+        else {
+            programModel.editProgram(idx,program);
+        }
+    }
+
+    public void initData(int index, Program program) {
+        inpName.setText(program.getName());
+        inpPurpose.setText(program.getPurpose());
+        inpLength.setText(program.getLength().toString());
+        inpDivision.setValue(program.getDivision().toString());
+        isNew = false;
+        idx = index;
     }
 }
