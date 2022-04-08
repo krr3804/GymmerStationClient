@@ -9,6 +9,7 @@ import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,11 +27,10 @@ import java.util.stream.Collectors;
 
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
-public class ProgramCreateController implements Initializable {
-
+public class ProgramEditController implements Initializable {
     private ProgramService programModel = AppConfig.programModel();
-
     private List<Division> divList = new ArrayList<>();
+    private int index;
     private static int selectedDivisionIndex;
 
     @FXML
@@ -65,24 +65,23 @@ public class ProgramCreateController implements Initializable {
         btnExit.setOnAction(event -> handleBtnExitAction(event));
     }
 
-    private void handleBtnExitAction(ActionEvent event) {
-        loadStage("main-view.fxml", btnExit.getScene());
-    }
-
     private void handleBtnSaveAction(ActionEvent event) {
         String name = inpName.getText();
         String purpose = inpPurpose.getText();
         Long length = Long.parseLong(inpLength.getText());
         Program program = new Program(name,purpose,length,divList);
-        programModel.addProgram(program);
+        programModel.editProgram(index,program);
+
+    }
+
+    private void handleBtnExitAction(ActionEvent event) {
+        loadStage("load-program-view.fxml", btnExit.getScene());
     }
 
     private void showDivisionList(ActionEvent event) {
         int divCount = Integer.parseInt(inpDivision.getValue());
-        initDivisionList(divCount);
-        List<Integer> divNumberList = divList.stream().map(Division::getNumber).collect(Collectors.toList());
-        ObservableList<Integer> observableList = FXCollections.observableList(divNumberList);
-        divisionListView.setItems(observableList);
+        inpDivision.setOnMouseClicked(event1 -> initDivisionList(divCount));
+        divisionListView.setItems(FXCollections.observableList(divList.stream().map(Division::getNumber).collect(Collectors.toList())));
     }
 
     private void initDivisionList(int divCount) {
@@ -122,5 +121,15 @@ public class ProgramCreateController implements Initializable {
     private void setExerciseData(List<Exercise> list) {
         divList.get(selectedDivisionIndex).getExerciseList().clear();
         divList.get(selectedDivisionIndex).getExerciseList().addAll(list);
+    }
+
+    public void initEditData(int index, Program program) {
+        inpName.setText(program.getName());
+        inpPurpose.setText(program.getPurpose());
+        inpLength.setText(program.getLength().toString());
+        inpDivision.setValue(""+program.getDivision().size());
+        divList.addAll(program.getDivision());
+        divisionListView.setItems(FXCollections.observableList(divList.stream().map(Division::getNumber).collect(Collectors.toList())));
+        this.index = index;
     }
 }

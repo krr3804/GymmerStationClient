@@ -65,10 +65,10 @@ public class ProgramLoadController implements Initializable {
         Program program = programModel.getProgram(index);
         try{
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("create-program-view.fxml"));
+            loader.setLocation(Main.class.getResource("edit-program-view.fxml"));
             Parent root = (Parent) loader.load();
-            ProgramCreateController programCreateController = loader.getController();
-            programCreateController.initEditData(index, program);
+            ProgramEditController programEditController = loader.getController();
+            programEditController.initEditData(index, program);
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
