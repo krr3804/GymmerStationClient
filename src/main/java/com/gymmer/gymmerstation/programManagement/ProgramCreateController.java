@@ -28,7 +28,7 @@ import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramCreateController implements Initializable {
 
-    private ProgramService programModel = AppConfig.programModel();
+    private ProgramService programModel = AppConfig.programService();
 
     private List<Division> divList = new ArrayList<>();
     private static int selectedDivisionIndex;

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramEditController implements Initializable {
-    private ProgramService programModel = AppConfig.programModel();
+    private ProgramService programModel = AppConfig.programService();
     private List<Division> divList = new ArrayList<>();
     private int index;
     private static int selectedDivisionIndex;
@@ -123,7 +123,8 @@ public class ProgramEditController implements Initializable {
         divList.get(selectedDivisionIndex).getExerciseList().addAll(list);
     }
 
-    public void initEditData(int index, Program program) {
+    public void initEditData(int index) {
+        Program program = programModel.getProgram(index);
         inpName.setText(program.getName());
         inpPurpose.setText(program.getPurpose());
         inpLength.setText(program.getLength().toString());

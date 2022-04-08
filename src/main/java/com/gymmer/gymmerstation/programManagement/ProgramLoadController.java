@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramLoadController implements Initializable {
-    private ProgramService programModel = AppConfig.programModel();
+    private ProgramService programModel = AppConfig.programService();
     private static int index = -1;
 
     @FXML
@@ -62,13 +62,12 @@ public class ProgramLoadController implements Initializable {
 
     private void handleBtnEdit(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
-        Program program = programModel.getProgram(index);
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("edit-program-view.fxml"));
             Parent root = (Parent) loader.load();
             ProgramEditController programEditController = loader.getController();
-            programEditController.initEditData(index, program);
+            programEditController.initEditData(index);
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
