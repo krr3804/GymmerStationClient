@@ -4,7 +4,7 @@ import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.List;
 
-public interface ProgramModel {
+public interface ProgramService {
     void addProgram(Program program);
 
     List<String> showProgramList();

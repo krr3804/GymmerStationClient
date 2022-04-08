@@ -5,10 +5,10 @@ import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.List;
 
-public class ProgramModelImpl implements ProgramModel {
+public class ProgramServiceImpl implements ProgramService {
     ProgramRepository programRepository;
 
-    public ProgramModelImpl(ProgramRepository programRepository) {
+    public ProgramServiceImpl(ProgramRepository programRepository) {
         this.programRepository = AppConfig.programRepository();
     }
 

@@ -3,10 +3,7 @@ package com.gymmer.gymmerstation.programManagement;
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Program;
-import com.gymmer.gymmerstation.util.Util;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,11 +18,10 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.util.Util.closeStage;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramLoadController implements Initializable {
-    private ProgramModel programModel = AppConfig.programModel();
+    private ProgramService programModel = AppConfig.programModel();
     private static int index = -1;
 
     @FXML

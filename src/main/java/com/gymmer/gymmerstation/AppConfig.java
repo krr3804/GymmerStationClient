@@ -7,7 +7,7 @@ public class AppConfig {
         return new MemoryProgramRepository();
     }
 
-    public static ProgramModel programModel() {
-        return new ProgramModelImpl(programRepository());
+    public static ProgramService programModel() {
+        return new ProgramServiceImpl(programRepository());
     }
 }

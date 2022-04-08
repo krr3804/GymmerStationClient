@@ -28,7 +28,7 @@ import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramCreateController implements Initializable {
 
-    private ProgramModel programModel = AppConfig.programModel();
+    private ProgramService programModel = AppConfig.programModel();
 
     private static boolean isNew = true;
     private static int idx = -1;
