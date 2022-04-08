@@ -1,11 +1,20 @@
 package com.gymmer.gymmerstation.domain;
 
-public class Division {
-    Long number;
-    Exercise exercise;
+import java.util.List;
 
-    public Division(Long number, Exercise exercise) {
+public class Division {
+    Integer number;
+    List<Exercise> exerciseList;
+    public Division(Integer number, List<Exercise> exerciseList) {
         this.number = number;
-        this.exercise = exercise;
+        this.exerciseList = exerciseList;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public List<Exercise> getExerciseList() {
+        return exerciseList;
     }
 }

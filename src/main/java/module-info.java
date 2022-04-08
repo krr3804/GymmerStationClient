@@ -7,4 +7,6 @@ module com.gymmer.gymmerstation {
     exports com.gymmer.gymmerstation;
     opens com.gymmer.gymmerstation.programManagement to javafx.fxml;
     exports com.gymmer.gymmerstation.programManagement;
+    opens com.gymmer.gymmerstation.exerciseManagement to javafx.fxml;
+    exports com.gymmer.gymmerstation.exerciseManagement;
 }

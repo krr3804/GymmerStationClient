@@ -52,7 +52,7 @@ public class ProgramLoadController implements Initializable {
         btnReturn.setOnAction(event -> loadStage("main-view.fxml",btnReturn.getScene()));
     }
 
-    public void handleBtnDelete(ActionEvent event) {
+    private void handleBtnDelete(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
         if(index > -1) {
             programModel.deleteProgram(index);
@@ -64,7 +64,7 @@ public class ProgramLoadController implements Initializable {
         index = -1;
     }
 
-    public void handleBtnEdit(ActionEvent event) {
+    private void handleBtnEdit(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
         Program program = programModel.getProgram(index);
         try{
@@ -72,7 +72,7 @@ public class ProgramLoadController implements Initializable {
             loader.setLocation(Main.class.getResource("create-program-view.fxml"));
             Parent root = (Parent) loader.load();
             ProgramCreateController programCreateController = loader.getController();
-            programCreateController.initData(index, program);
+            programCreateController.initEditData(index, program);
             Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
