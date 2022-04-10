@@ -13,7 +13,7 @@
    <children>
       <FlowPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Label alignment="CENTER" prefHeight="46.0" prefWidth="298.0" text="Divison" />
+            <Label alignment="CENTER" prefHeight="46.0" prefWidth="298.0" text="Division" />
             <Label fx:id="divisionInfo" alignment="CENTER" prefHeight="46.0" prefWidth="298.0" />
             <Label alignment="CENTER" prefHeight="46.0" prefWidth="298.0" text="Exercise" />
             <Label fx:id="exerciseInfo" alignment="CENTER" prefHeight="46.0" prefWidth="298.0" />
@@ -35,12 +35,12 @@
                   <Font size="36.0" />
                </font>
             </Label>
-            <Label fx:id="second" text=":">
+            <Label  text=":">
                <font>
                   <Font size="36.0" />
                </font>
             </Label>
-            <Label text="00">
+            <Label fx:id="second" text="00">
                <font>
                   <Font size="36.0" />
                </font>
@@ -49,13 +49,13 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="71.0" prefWidth="600.0">
          <children>
-            <Button fx:id="btnPause1" mnemonicParsing="false" text="Pause">
+            <Button fx:id="btnPause" mnemonicParsing="false" text="Pause">
                <HBox.margin>
                   <Insets right="70.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnStart1" mnemonicParsing="false" text="Start" />
-            <Button fx:id="btnDone1" mnemonicParsing="false" text="Done">
+            <Button fx:id="btnStart" mnemonicParsing="false" text="Start" />
+            <Button fx:id="btnDone" mnemonicParsing="false" text="Done">
                <HBox.margin>
                   <Insets left="70.0" />
                </HBox.margin>

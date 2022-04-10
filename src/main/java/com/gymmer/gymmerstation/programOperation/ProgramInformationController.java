@@ -2,6 +2,8 @@ package com.gymmer.gymmerstation.programOperation;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
+import com.gymmer.gymmerstation.domain.Division;
+import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
@@ -51,22 +53,30 @@ public class ProgramInformationController implements Initializable {
 
     private void handleBtnStartAction(ActionEvent event) {
         Program program = programService.getProgram(index);
+        for(Division division : program.getDivision()) {
+            for(Exercise exercise : division.getExerciseList()) {
+                loadOperationStage(division.getNumber(),exercise);
+            }
+        }
+    }
 
+    private void loadOperationStage(int divisionNumber, Exercise exercise) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
-            Parent root = (Parent) loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent root = loader.load();
+            ProgramOperationController programOperationController = loader.getController();
+            programOperationController.initData(divisionNumber,exercise);
+            Stage stage = new Stage();
             stage.setScene(new Scene(root));
-
-            stage.show();
-
-
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(btnStart.getScene().getWindow());
+            stage.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
 
     private void handleBtnExitAction(ActionEvent event) {
         Util.loadStage("load-program-view.fxml",btnExit.getScene());

@@ -1,11 +1,18 @@
 package com.gymmer.gymmerstation;
 
+import com.gymmer.gymmerstation.domain.Division;
+import com.gymmer.gymmerstation.domain.Exercise;
+import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.programManagement.ProgramService;
+import com.gymmer.gymmerstation.programManagement.ProgramServiceImpl;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends javafx.application.Application {
     @Override

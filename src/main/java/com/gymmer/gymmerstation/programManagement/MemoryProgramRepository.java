@@ -2,7 +2,6 @@ package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.domain.Program;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
