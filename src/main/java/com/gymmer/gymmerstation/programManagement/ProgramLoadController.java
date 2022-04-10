@@ -3,6 +3,7 @@ package com.gymmer.gymmerstation.programManagement;
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.programOperation.ProgramInformationController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -25,7 +27,7 @@ public class ProgramLoadController implements Initializable {
     private static int index = -1;
 
     @FXML
-    ListView programList;
+    ListView<String> programList;
 
     @FXML
     Button btnStart;
@@ -42,10 +44,32 @@ public class ProgramLoadController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         programList.setItems(FXCollections.observableList(programModel.showProgramList()));
-
+        btnStart.setOnAction(event -> handleBtnStart(event));
         btnDelete.setOnAction(event -> handleBtnDelete(event));
         btnEdit.setOnAction(event -> handleBtnEdit(event));
         btnReturn.setOnAction(event -> loadStage("main-view.fxml",btnReturn.getScene()));
+    }
+
+    private void handleBtnStart(ActionEvent event) {
+        index = programList.getSelectionModel().getSelectedIndex();
+        if(index > -1) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(Main.class.getResource("program-information-view.fxml"));
+                Parent root = (Parent) loader.load();
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(new Scene(root));
+                ProgramInformationController programInformationController = loader.getController();
+                programInformationController.initProgramData(index);
+
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            return;
+        }
+        index = -1;
     }
 
     private void handleBtnDelete(ActionEvent event) {

@@ -24,4 +24,11 @@ public class Util {
         Stage stage = (Stage) btn.getScene().getWindow();
         stage.close();
     }
+
+    public static void stopWatch() {
+        Thread thread = new Thread() {
+
+        }
+
+    }
 }

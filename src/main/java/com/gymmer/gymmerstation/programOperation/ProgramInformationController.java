@@ -52,6 +52,20 @@ public class ProgramInformationController implements Initializable {
     private void handleBtnStartAction(ActionEvent event) {
         Program program = programService.getProgram(index);
 
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
+            Parent root = (Parent) loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+            stage.show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void handleBtnExitAction(ActionEvent event) {
