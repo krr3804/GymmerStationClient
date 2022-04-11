@@ -81,8 +81,9 @@ public class ExerciseController implements Initializable {
         Long set = Long.parseLong(inpSets.getText());
         Long rep = Long.parseLong(inpReps.getText());
         Long weight = Long.parseLong(inpWeight.getText());
-        String rest = ""+inpMinute.getValue() + inpSecond.getValue();
-        exerciseList.add(new Exercise(name,set,rep,weight,rest));
+        String minute = ""+inpMinute.getValue();
+        String second = ""+inpSecond.getValue();
+        exerciseList.add(new Exercise(name,set,rep,weight,minute,second));
         exerciseListView.setItems(FXCollections.observableList(exerciseList.stream().map(Exercise::getName).collect(Collectors.toList())));
     }
 

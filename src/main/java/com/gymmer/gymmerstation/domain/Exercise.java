@@ -7,15 +7,17 @@ public class Exercise {
     Long set;
     Long rep;
     Long weight;
-    String rest;
+    String minute;
+    String second;
 
-    public Exercise(String name, Long set, Long rep, Long weight, String rest
+    public Exercise(String name, Long set, Long rep, Long weight, String minute, String second
     ) {
         this.name = name;
         this.set = set;
         this.rep = rep;
         this.weight = weight;
-        this.rest = rest;
+        this.minute = minute;
+        this.second = second;
     }
 
     public String getName() {
@@ -34,11 +36,11 @@ public class Exercise {
         return weight;
     }
 
-    public String getRest() {
-        return rest;
+    public String getMinute() {
+        return minute;
     }
 
-    public String toString() {
-        return "[" + name + ", " + set + ", " + rep + ", " + weight + ", " + rest + "]";
+    public String getSecond() {
+        return second;
     }
 }

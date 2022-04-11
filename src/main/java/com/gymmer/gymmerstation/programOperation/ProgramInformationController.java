@@ -53,11 +53,14 @@ public class ProgramInformationController implements Initializable {
 
     private void handleBtnStartAction(ActionEvent event) {
         Program program = programService.getProgram(index);
+        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        currentStage.hide();
         for(Division division : program.getDivision()) {
             for(Exercise exercise : division.getExerciseList()) {
                 loadOperationStage(division.getNumber(),exercise);
             }
         }
+        currentStage.show();
     }
 
     private void loadOperationStage(int divisionNumber, Exercise exercise) {
@@ -72,6 +75,7 @@ public class ProgramInformationController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(btnStart.getScene().getWindow());
             stage.showAndWait();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
