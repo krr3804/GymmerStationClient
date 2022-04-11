@@ -2,16 +2,16 @@ package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
-import com.gymmer.gymmerstation.domain.Division;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
+import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,19 +19,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.gymmer.gymmerstation.util.Util.loadExerciseWindow;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramCreateController implements Initializable {
 
-    private ProgramService programModel = AppConfig.programService();
+    private final ProgramService programService = AppConfig.programService();
 
-    private List<Division> divList = new ArrayList<>();
-    private static int selectedDivisionIndex;
+    private Map<Integer,List<Exercise>> exerciseMap = new LinkedHashMap<>();
+    private static Integer selectedDivision;
 
     @FXML
     private TextField inpName;
@@ -73,54 +72,23 @@ public class ProgramCreateController implements Initializable {
         String name = inpName.getText();
         String purpose = inpPurpose.getText();
         Long length = Long.parseLong(inpLength.getText());
-        Program program = new Program(name,purpose,length,divList);
-        programModel.addProgram(program);
+        Program program = new Program(name,purpose,length,exerciseMap);
+        programService.addProgram(program);
     }
 
     private void showDivisionList(ActionEvent event) {
         int divCount = Integer.parseInt(inpDivision.getValue());
-        initDivisionList(divCount);
-        List<Integer> divNumberList = divList.stream().map(Division::getNumber).collect(Collectors.toList());
-        ObservableList<Integer> observableList = FXCollections.observableList(divNumberList);
-        divisionListView.setItems(observableList);
+        exerciseMap = new LinkedHashMap<Integer,List<Exercise>>(programService.createExerciseMap(divCount));
+        divisionListView.setItems(FXCollections.observableList(new ArrayList<>(exerciseMap.keySet())));
     }
 
-    private void initDivisionList(int divCount) {
-        if(!divList.isEmpty()) {
-            divList.clear();
-        }
-        for(int i = 1; i <= divCount; i++) {
-            List<Exercise> exerciseList = new ArrayList<>();
-            Division division = new Division(i,exerciseList);
-            divList.add(division);
-        }
-    }
-
-    private void handleBtnAddExerciseEvent(ActionEvent event) {
-        if(divisionListView.getSelectionModel().getSelectedItem() == null) {
+    public void handleBtnAddExerciseEvent(ActionEvent event) {
+        selectedDivision = divisionListView.getSelectionModel().getSelectedItem();
+        try {
+            exerciseMap.put(selectedDivision, loadExerciseWindow(exerciseMap,selectedDivision,event));
+        } catch (Exception e) {
             return;
         }
-        selectedDivisionIndex = divisionListView.getSelectionModel().getSelectedIndex();
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("exercise-form-view.fxml"));
-            Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            ExerciseController exerciseController = loader.getController();
-            exerciseController.initExerciseList(divList.get(selectedDivisionIndex).getExerciseList());
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(btnAddExercise.getScene().getWindow());
-            stage.showAndWait();
-
-            setExerciseData(exerciseController.getExerciseList());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setExerciseData(List<Exercise> list) {
-        divList.get(selectedDivisionIndex).getExerciseList().clear();
-        divList.get(selectedDivisionIndex).getExerciseList().addAll(list);
+        selectedDivision = null;
     }
 }

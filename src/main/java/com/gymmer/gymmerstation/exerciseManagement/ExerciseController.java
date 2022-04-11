@@ -1,6 +1,5 @@
 package com.gymmer.gymmerstation.exerciseManagement;
 
-import com.gymmer.gymmerstation.domain.Division;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;

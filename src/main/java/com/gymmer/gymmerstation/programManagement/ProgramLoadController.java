@@ -2,9 +2,6 @@ package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
-import com.gymmer.gymmerstation.domain.Division;
-import com.gymmer.gymmerstation.domain.Exercise;
-import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programOperation.ProgramInformationController;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,12 +13,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static com.gymmer.gymmerstation.util.Util.loadStage;
@@ -47,25 +41,11 @@ public class ProgramLoadController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        temp();
         programList.setItems(FXCollections.observableList(programService.showProgramList()));
         btnStart.setOnAction(event -> handleBtnStart(event));
         btnDelete.setOnAction(event -> handleBtnDelete(event));
         btnEdit.setOnAction(event -> handleBtnEdit(event));
         btnReturn.setOnAction(event -> loadStage("main-view.fxml",btnReturn.getScene()));
-    }
-
-    private void temp() {
-        Exercise exercise1 = new Exercise("Leg Press",3L,4L,100L,"00","02");
-        Exercise exercise2 = new Exercise("Front Squat",3L,10L,80L,"00","30");
-        List<Exercise> tmp = new ArrayList<>();
-        tmp.add(exercise1);
-        tmp.add(exercise2);
-        Division division = new Division(1,tmp);
-        List<Division> tmpDivList = new ArrayList<>();
-        tmpDivList.add(division);
-        Program program = new Program("Leg buster","To increase leg weight limit",7L,tmpDivList);
-        programService.addProgram(program);
     }
 
     private void handleBtnStart(ActionEvent event) {

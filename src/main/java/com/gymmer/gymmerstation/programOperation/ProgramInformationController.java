@@ -2,10 +2,8 @@ package com.gymmer.gymmerstation.programOperation;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
-import com.gymmer.gymmerstation.domain.Division;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
-import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.event.ActionEvent;
@@ -21,6 +19,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ProgramInformationController implements Initializable {
@@ -55,9 +55,10 @@ public class ProgramInformationController implements Initializable {
         Program program = programService.getProgram(index);
         Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         currentStage.hide();
-        for(Division division : program.getDivision()) {
-            for(Exercise exercise : division.getExerciseList()) {
-                loadOperationStage(division.getNumber(),exercise);
+
+        for(Map.Entry<Integer, List<Exercise>> entry : program.getExerciseMap().entrySet()) {
+            for(Exercise exercise : entry.getValue()) {
+                loadOperationStage(entry.getKey(),exercise);
             }
         }
         currentStage.show();
@@ -91,7 +92,7 @@ public class ProgramInformationController implements Initializable {
         programNameInfo.setText(program.getName());
         purposeInfo.setText(program.getPurpose());
         lengthInfo.setText(program.getLength().toString());
-        divisionInfo.setText(""+program.getDivision().size());
+        divisionInfo.setText(""+program.getExerciseMap().size());
         this.index = index;
     }
 }
