@@ -33,7 +33,7 @@ public class Main extends javafx.application.Application {
 
     private static void temp() {
         Exercise exercise1 = new Exercise("Leg Press",3L,4L,100L,"00","02");
-        Exercise exercise2 = new Exercise("Front Squat",3L,10L,80L,"00","30");
+        Exercise exercise2 = new Exercise("Front Squat",3L,10L,80L,"00","03");
         List<Exercise> tmp = new ArrayList<>();
         tmp.add(exercise1);
         tmp.add(exercise2);

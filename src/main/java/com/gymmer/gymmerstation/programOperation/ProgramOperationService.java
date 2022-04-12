@@ -11,4 +11,8 @@ public interface ProgramOperationService {
     void saveProgramData(Program program, List<OperationDataProgram> odpList);
 
     void deleteProgramData(Program program);
+
+    void updateODPList(Program program, List<OperationDataExercise> odeList);
+
+    int getCurrentWeek(Program program);
 }

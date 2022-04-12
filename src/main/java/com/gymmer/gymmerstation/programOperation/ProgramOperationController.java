@@ -2,6 +2,7 @@ package com.gymmer.gymmerstation.programOperation;
 
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
+import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -85,5 +86,9 @@ public class ProgramOperationController implements Initializable {
         weightInfo.setText(exercise.getWeight().toString());
         minInfo = exercise.getMinute();
         secInfo = exercise.getSecond();
+    }
+
+    public String getTimeConsumed() {
+        return minute.getText()+":"+second.getText();
     }
 }

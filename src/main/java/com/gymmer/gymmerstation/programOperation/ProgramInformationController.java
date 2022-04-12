@@ -3,6 +3,7 @@ package com.gymmer.gymmerstation.programOperation;
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
+import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.util.Util;
@@ -19,12 +20,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ProgramInformationController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
+    private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private int index;
 
     @FXML
@@ -53,18 +56,22 @@ public class ProgramInformationController implements Initializable {
 
     private void handleBtnStartAction(ActionEvent event) {
         Program program = programService.getProgram(index);
+        List<OperationDataExercise> odeList = new ArrayList<>();
         Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         currentStage.hide();
 
         for(Map.Entry<Integer, List<Exercise>> entry : program.getExerciseMap().entrySet()) {
             for(Exercise exercise : entry.getValue()) {
-                loadOperationStage(entry.getKey(),exercise);
+                String timeConsumed = loadOperationStage(entry.getKey(),exercise);
+                odeList.add(new OperationDataExercise(entry.getKey(),exercise,timeConsumed));
             }
         }
         currentStage.show();
+        programOperationService.updateODPList(program,odeList);
     }
 
-    private void loadOperationStage(int divisionNumber, Exercise exercise) {
+    private String loadOperationStage(int divisionNumber, Exercise exercise) {
+        String timeConsumed = "";
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
@@ -77,9 +84,12 @@ public class ProgramInformationController implements Initializable {
             stage.initOwner(btnStart.getScene().getWindow());
             stage.showAndWait();
 
+            timeConsumed += programOperationController.getTimeConsumed();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return timeConsumed;
     }
 
 
