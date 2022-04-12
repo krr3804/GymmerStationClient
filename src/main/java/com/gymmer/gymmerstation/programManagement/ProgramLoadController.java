@@ -3,6 +3,7 @@ package com.gymmer.gymmerstation.programManagement;
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.programOperation.ProgramInformationController;
+import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,11 +14,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.util.Util.closeStage;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramLoadController implements Initializable {
@@ -54,12 +57,11 @@ public class ProgramLoadController implements Initializable {
             try {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(Main.class.getResource("program-information-view.fxml"));
-                Parent root = (Parent) loader.load();
+                Parent root = loader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));
                 ProgramInformationController programInformationController = loader.getController();
                 programInformationController.initProgramData(index);
-
                 stage.show();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -88,10 +90,10 @@ public class ProgramLoadController implements Initializable {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("edit-program-view.fxml"));
             Parent root = (Parent) loader.load();
+            Stage stage = (Stage) btnEdit.getScene().getWindow();
+            stage.setScene(new Scene(root));
             ProgramEditController programEditController = loader.getController();
             programEditController.initEditData(index);
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

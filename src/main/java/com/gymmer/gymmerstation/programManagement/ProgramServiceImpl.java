@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProgramServiceImpl implements ProgramService {
-    ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public ProgramServiceImpl(ProgramRepository programRepository) {
         this.programRepository = AppConfig.programRepository();

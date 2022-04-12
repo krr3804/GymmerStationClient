@@ -13,8 +13,6 @@
    <children>
       <FlowPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Label alignment="CENTER" prefHeight="46.0" prefWidth="298.0" text="Division" />
-            <Label fx:id="divisionInfo" alignment="CENTER" prefHeight="46.0" prefWidth="298.0" />
             <Label alignment="CENTER" prefHeight="46.0" prefWidth="298.0" text="Exercise" />
             <Label fx:id="exerciseInfo" alignment="CENTER" prefHeight="46.0" prefWidth="298.0" />
             <Label alignment="CENTER" prefHeight="46.0" prefWidth="298.0" text="Set" />

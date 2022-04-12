@@ -3,6 +3,7 @@ package com.gymmer.gymmerstation.programManagement;
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,7 +64,7 @@ public class ProgramEditController implements Initializable {
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        loadStage("load-program-view.fxml", btnExit.getScene());
+        Util.loadStage("load-program-view.fxml",btnExit.getScene());
     }
 
     private void showDivisionList(ActionEvent event) {

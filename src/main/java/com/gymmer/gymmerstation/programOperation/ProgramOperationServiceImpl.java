@@ -6,36 +6,34 @@ import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramOperationServiceImpl implements ProgramOperationService{
-    OperationDataRepository operationDataRepository;
+    private final OperationDataRepository operationDataRepository;
 
     public ProgramOperationServiceImpl(OperationDataRepository operationDataRepository) {
         this.operationDataRepository = AppConfig.operationDataRepository();
     }
 
     @Override
-    public void saveProgramData(Program program, List<OperationDataProgram> odpList) {
-        operationDataRepository.save(program,odpList);
+    public void saveProgramData(Program program, int week, int division, List<OperationDataExercise> odeList) {
+        List<OperationDataProgram> list = new ArrayList<>(operationDataRepository.getODPList(program));
+        list.add(new OperationDataProgram(week,division,odeList));
+        operationDataRepository.save(program,list);
     }
 
     @Override
     public void deleteProgramData(Program program) {
-
     }
-
-    @Override
-    public void updateODPList(Program program, List<OperationDataExercise> odeList) {
-        List<OperationDataProgram> list =operationDataRepository.getODPList(program);
-        int currentWeek = getCurrentWeek(program);
-        list.add(new OperationDataProgram(currentWeek,odeList));
-        saveProgramData(program,list);
-    }
-
 
     @Override
     public int getCurrentWeek(Program program) {
         return operationDataRepository.getCurrentWeek(program);
+    }
+
+    @Override
+    public int getCurrentDivision(Program program) {
+        return operationDataRepository.getCurrentDivision(program);
     }
 }

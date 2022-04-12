@@ -65,7 +65,7 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        loadStage("main-view.fxml", btnExit.getScene());
+        loadStage("main-view.fxml",btnExit.getScene());
     }
 
     private void handleBtnSaveAction(ActionEvent event) {

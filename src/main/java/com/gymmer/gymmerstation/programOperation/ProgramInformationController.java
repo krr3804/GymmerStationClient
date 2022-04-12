@@ -7,6 +7,7 @@ import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.util.Util;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.util.Util.loadStage;
+
 public class ProgramInformationController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private int index;
+    private int week;
+    private int division;
 
     @FXML
     private Label programNameInfo;
@@ -57,27 +62,26 @@ public class ProgramInformationController implements Initializable {
     private void handleBtnStartAction(ActionEvent event) {
         Program program = programService.getProgram(index);
         List<OperationDataExercise> odeList = new ArrayList<>();
-        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        currentStage.hide();
 
-        for(Map.Entry<Integer, List<Exercise>> entry : program.getExerciseMap().entrySet()) {
-            for(Exercise exercise : entry.getValue()) {
-                String timeConsumed = loadOperationStage(entry.getKey(),exercise);
-                odeList.add(new OperationDataExercise(entry.getKey(),exercise,timeConsumed));
-            }
+        for(Exercise exercise : program.getExerciseMap().get(division)) {
+            String timeConsumed = loadOperationStage(exercise);
+            odeList.add(new OperationDataExercise(exercise,timeConsumed));
         }
-        currentStage.show();
-        programOperationService.updateODPList(program,odeList);
+
+        programOperationService.saveProgramData(program,week,division,odeList);
+        btnStart.setText("Completed");
+        btnStart.setDisable(true);
     }
 
-    private String loadOperationStage(int divisionNumber, Exercise exercise) {
+    private String loadOperationStage(Exercise exercise) {
         String timeConsumed = "";
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
             Parent root = loader.load();
+            Stage currentStage = (Stage) btnStart.getScene().getWindow();
             ProgramOperationController programOperationController = loader.getController();
-            programOperationController.initData(divisionNumber,exercise);
+            programOperationController.initData(exercise);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -85,7 +89,6 @@ public class ProgramInformationController implements Initializable {
             stage.showAndWait();
 
             timeConsumed += programOperationController.getTimeConsumed();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,7 +97,7 @@ public class ProgramInformationController implements Initializable {
 
 
     private void handleBtnExitAction(ActionEvent event) {
-        Util.loadStage("load-program-view.fxml",btnExit.getScene());
+        loadStage("load-program-view.fxml",btnExit.getScene());
     }
 
     public void initProgramData(int index) {
@@ -102,7 +105,9 @@ public class ProgramInformationController implements Initializable {
         programNameInfo.setText(program.getName());
         purposeInfo.setText(program.getPurpose());
         lengthInfo.setText(program.getLength().toString());
-        divisionInfo.setText(""+program.getExerciseMap().size());
+        week = programOperationService.getCurrentWeek(program);
+        division = programOperationService.getCurrentDivision(program);
+        divisionInfo.setText("Week " + week + " - " + division);
         this.index = index;
     }
 }

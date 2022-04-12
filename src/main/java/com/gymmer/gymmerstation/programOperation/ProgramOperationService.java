@@ -8,11 +8,11 @@ import com.gymmer.gymmerstation.domain.Program;
 import java.util.List;
 
 public interface ProgramOperationService {
-    void saveProgramData(Program program, List<OperationDataProgram> odpList);
+    void saveProgramData(Program program, int week, int division, List<OperationDataExercise> odeList);
 
     void deleteProgramData(Program program);
 
-    void updateODPList(Program program, List<OperationDataExercise> odeList);
-
     int getCurrentWeek(Program program);
+
+    int getCurrentDivision(Program program);
 }

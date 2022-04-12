@@ -24,7 +24,7 @@ public class ProgramOperationController implements Initializable {
     private boolean stop;
 
     @FXML
-    private Label divisionInfo, exerciseInfo, setInfo, repsInfo, weightInfo, minute, second;
+    private Label exerciseInfo, setInfo, repsInfo, weightInfo, minute, second;
 
     @FXML
     private Button btnPause, btnStart, btnDone;
@@ -78,8 +78,7 @@ public class ProgramOperationController implements Initializable {
         }
     }
 
-    public void initData(int divisionNumber, Exercise exercise) {
-        divisionInfo.setText(""+divisionNumber);
+    public void initData(Exercise exercise) {
         exerciseInfo.setText(exercise.getName());
         setInfo.setText(exercise.getSet().toString());
         repsInfo.setText(exercise.getRep().toString());

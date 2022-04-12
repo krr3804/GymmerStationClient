@@ -13,4 +13,6 @@ public interface OperationDataRepository {
     List<OperationDataProgram> getODPList(Program program);
 
     int getCurrentWeek(Program program);
+
+    int getCurrentDivision(Program program);
 }
