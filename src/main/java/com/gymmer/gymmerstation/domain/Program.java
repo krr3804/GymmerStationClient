@@ -2,6 +2,7 @@ package com.gymmer.gymmerstation.domain;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Program {
     String name;
@@ -30,5 +31,23 @@ public class Program {
 
     public Map<Integer, List<Exercise>> getExerciseMap() {
         return exerciseMap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Program other = (Program)o;
+
+        return other.name == name && other.purpose == purpose && other.length == length && other.exerciseMap == exerciseMap;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name,purpose,length,exerciseMap);
     }
 }
