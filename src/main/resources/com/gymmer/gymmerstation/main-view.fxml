@@ -14,7 +14,7 @@
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gymmer Station" textAlignment="CENTER" />
       <Button fx:id="btnCreateProgram" text="Create Program" />
       <Button fx:id="btnLoadProgram" text="Load Program" />
-      <Button fx:id="btnPerformance Archive" mnemonicParsing="false" text="Performance Archive" />
+      <Button fx:id="btnPerformanceArchive" mnemonicParsing="false" text="Performance Archive" />
       <Button fx:id="btnExit" text="Exit" />
    </children>
 </VBox>
