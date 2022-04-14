@@ -2,8 +2,9 @@
 
 ---
 ## Main window
-- [Create Program] button
-- [Load Program] button
+- [Create Program] button -> [Create Program] window
+- [Load Program] button -> [Load Program] window
+- [Performance Archive] button -> [Performance Archive] window
 - [Exit] button
 
 ## [Create Program] window
@@ -12,49 +13,64 @@
   - Purpose
   - Length
   - Division
-  - [Add Exercise] button
-- Backwards button
+  - [Add Exercise] button -> [Add Exercise] window
+- Save button
+- Exit button
 
 ## [Add Exercise] window
 - Add Exercise
   - Exercise name
-  - Sets & Reps
+  - Sets
+  - Reps
   - Rest time
   - Weight
-- Save & return to [Create Program] window
+- [Save] button
+- [Return] -> return to [Create Program] window
 
 ## [Load Program] window
-- [Start Program] button
-- [Edit Program] button
-- [Return to Main] button
-
-## [Start Program] window
 - Select program
-- [Start] button
-- [Return to previous page] button
+- [Start Program] button -> [Program Information] window
+- [Edit Program] button -> [Program Edit] window
+- [Delete Program] button -> delete selected program
+- [Return] button -> return to main window 
 
-## [Start] window
-- Exercise information
-- [Done] button
-- [Pause] button
+## [Program Information] window
+- Shows selected program detail
+- [Start] button -> [Program Operation] window
+- [Pause] button -> [Pause] window
 
-## [Done] window
+## [Program operation] window
+- shows exercise detail
+- [Start] button -> start stopwatch
+- [Done] button -> [Rest] window
+- [Pause] button -> [Pause] window
+
+## [Rest] window
 - Rest time in 'mm:ss' format
+- When 'Time left' becomes 00:00, automatically start the next exercise
 
 ## [Pause] window
-- [Restore] button
+- [Resume] button
 - [Save and Exit] button
-- [Don't save and Exit] button
+- [Exit without saving] button
 
-## [Edit Program] window
-- [Select Program] button
-- [Return] button
+## [Program Edit] window
+- Shows information of selected program in [Create Program] window format 
+- [Save] button -> save the changes
+- [Return] button -> return to [Load Program] window
 
-## [Edit Program] -> [Select Program] window
-- Show Program detail and let it editable
-- [Save] button
-- [Delete] button
-  - show message box saying "Are you sure to delete the program?"
-- [Exit] button
-  - if not saved, show message box asking whether to save or not
+## [Performance Archive] window
+- Select the program archive to be shown
+- [Return] button -> return to main window
+- [Delete] button -> delete the selected program archive
+- [View] button -> [Archive view] window
 
+## [Archive View] window
+- [Week - Division] tab
+  - Exercise Name
+  - Set
+  - Reps
+  - Weight
+  - Rest
+  - Time consumed
+- [Return] button -> return to [Performance Archive] window
