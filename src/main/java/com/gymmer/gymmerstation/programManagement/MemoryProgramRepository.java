@@ -14,8 +14,8 @@ public class MemoryProgramRepository implements ProgramRepository{
     }
 
     @Override
-    public List<String> showProgramList() {
-        return list.stream().map(p -> p.getName()).collect(Collectors.toList());
+    public List<Program> showProgramList() {
+        return list;
     }
 
     @Override

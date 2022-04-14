@@ -11,4 +11,6 @@ module com.gymmer.gymmerstation {
     exports com.gymmer.gymmerstation.exerciseManagement;
     opens com.gymmer.gymmerstation.programOperation to javafx.fxml;
     exports com.gymmer.gymmerstation.programOperation;
+    opens com.gymmer.gymmerstation.performanceArchive to javafx.fxml;
+    exports com.gymmer.gymmerstation.performanceArchive;
 }
