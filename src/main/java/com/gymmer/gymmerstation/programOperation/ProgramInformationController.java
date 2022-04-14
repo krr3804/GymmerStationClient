@@ -65,7 +65,12 @@ public class ProgramInformationController implements Initializable {
 
         for(Exercise exercise : program.getExerciseMap().get(division)) {
             String timeConsumed = loadOperationStage(exercise);
-            odeList.add(new OperationDataExercise(exercise,timeConsumed));
+            odeList.add(new OperationDataExercise(exercise.getName(),
+                    exercise.getSet(),
+                    exercise.getRep(),
+                    exercise.getWeight(),
+                    exercise.getMinute()+":"+exercise.getSecond(),
+                    timeConsumed));
         }
 
         programOperationService.saveProgramData(program,week,division,odeList);
