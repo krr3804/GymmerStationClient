@@ -15,4 +15,6 @@ public interface ProgramOperationService {
     int getCurrentWeek(Program program);
 
     int getCurrentDivision(Program program);
+
+    List<String> getPerformanceArchiveList();
 }

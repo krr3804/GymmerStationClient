@@ -8,6 +8,7 @@ import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ProgramOperationServiceImpl implements ProgramOperationService{
     private final OperationDataRepository operationDataRepository;
@@ -35,5 +36,21 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     @Override
     public int getCurrentDivision(Program program) {
         return operationDataRepository.getCurrentDivision(program);
+    }
+
+    @Override
+    public List<String> getPerformanceArchiveList() {
+        List<String> list = new ArrayList<>();
+        Map<Program,List<OperationDataProgram>> map = operationDataRepository.getPerformanceArchiveMap();
+        for(Program program: map.keySet()) {
+            StringBuilder sb = new StringBuilder();
+            String programName = program.getName();
+            String progress = "" + map.get(program).size();
+            String total = "" + (program.getLength() * program.getExerciseMap().size());
+            sb.append(programName).append("(").append(progress).append("/").append(total).append(")");
+            list.add(sb.toString());
+        }
+
+        return list;
     }
 }

@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.gymmer.gymmerstation.MainController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymmer.gymmerstation.MainController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
@@ -14,6 +14,7 @@
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gymmer Station" textAlignment="CENTER" />
       <Button fx:id="btnCreateProgram" text="Create Program" />
       <Button fx:id="btnLoadProgram" text="Load Program" />
+      <Button fx:id="btnPerformanceArchive" mnemonicParsing="false" text="Performance Archive" />
       <Button fx:id="btnExit" text="Exit" />
    </children>
 </VBox>

@@ -2,29 +2,58 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView prefHeight="280.0" prefWidth="600.0" />
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="66.0" prefWidth="600.0">
          <children>
+            <Label alignment="CENTER" prefHeight="56.0" prefWidth="112.0" text="Program" />
             <Button mnemonicParsing="false" text="Return">
                <HBox.margin>
-                  <Insets right="100.0" />
+                  <Insets left="400.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Delete">
-               <HBox.margin>
-                  <Insets right="100.0" />
-               </HBox.margin>
-            </Button>
-            <Button mnemonicParsing="false" text="View" />
          </children>
       </HBox>
+      <TabPane prefHeight="390.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Untitled Tab 1">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ScrollPane prefHeight="358.0" prefWidth="600.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="342.0" prefWidth="590.0">
+                                 <children>
+                                    <TableView prefHeight="342.0" prefWidth="582.0">
+                                      <columns>
+                                        <TableColumn prefWidth="96.0" text="Exercise Name" />
+                                        <TableColumn prefWidth="96.0" text="Set" />
+                                          <TableColumn prefWidth="96.0" text="Reps" />
+                                          <TableColumn prefWidth="96.0" text="Weight" />
+                                          <TableColumn prefWidth="96.0" text="Rest" />
+                                          <TableColumn prefWidth="96.0" text="Time Consumed" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </VBox>

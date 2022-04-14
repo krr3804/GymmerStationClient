@@ -7,22 +7,23 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymmer.gymmerstation.performanceArchive.PerformanceArchiveListController">
    <children>
-      <ListView prefHeight="280.0" prefWidth="600.0" />
+      <ListView fx:id="programList" prefHeight="280.0" prefWidth="600.0" />
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button mnemonicParsing="false" text="Return">
+            <Button fx:id="btnReturn" mnemonicParsing="false" text="Return">
                <HBox.margin>
                   <Insets right="100.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Delete">
+            <Button fx:id="btnDelete" mnemonicParsing="false" text="Delete">
                <HBox.margin>
                   <Insets right="100.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="View" />
+            <Button fx:id="btnView" mnemonicParsing="false" text="View" />
          </children>
       </HBox>
    </children>
