@@ -13,18 +13,22 @@ import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class MainController implements Initializable {
     @FXML
-    Button btnCreateProgram;
+    private Button btnCreateProgram;
 
     @FXML
-    Button btnLoadProgram;
+    private Button btnLoadProgram;
 
     @FXML
-    Button btnExit;
+    private Button btnPerformanceArchive;
+
+    @FXML
+    private Button btnExit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         btnCreateProgram.setOnAction(event -> loadStage("create-program-view.fxml",btnCreateProgram.getScene()));
         btnLoadProgram.setOnAction(event -> loadStage("load-program-view.fxml",btnLoadProgram.getScene()));
+        btnPerformanceArchive.setOnAction(event -> loadStage("performance-archive-list-view.fxml",btnPerformanceArchive.getScene()));
         btnExit.setOnAction(event -> Platform.exit());
     }
 }
