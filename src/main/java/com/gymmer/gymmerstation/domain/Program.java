@@ -10,6 +10,8 @@ public class Program {
     Long length;
     Map<Integer,List<Exercise>> exerciseMap;
 
+    public Program() {}
+
     public Program(String name, String purpose, Long length, Map<Integer,List<Exercise>> exerciseMap) {
         this.name = name;
         this.purpose = purpose;
