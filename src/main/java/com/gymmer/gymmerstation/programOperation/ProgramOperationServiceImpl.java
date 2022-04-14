@@ -9,6 +9,7 @@ import com.gymmer.gymmerstation.domain.Program;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProgramOperationServiceImpl implements ProgramOperationService{
     private final OperationDataRepository operationDataRepository;
@@ -25,7 +26,10 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public void deleteProgramData(Program program) {
+    public void deleteProgramData(int index) {
+        List<Program> programList = operationDataRepository.getPerformanceArchiveMap().keySet().stream().collect(Collectors.toList());
+        Program program = programList.get(index);
+        operationDataRepository.delete(program);
     }
 
     @Override

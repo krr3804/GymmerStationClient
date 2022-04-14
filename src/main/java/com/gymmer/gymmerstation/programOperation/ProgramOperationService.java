@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProgramOperationService {
     void saveProgramData(Program program, int week, int division, List<OperationDataExercise> odeList);
 
-    void deleteProgramData(Program program);
+    void deleteProgramData(int index);
 
     int getCurrentWeek(Program program);
 
