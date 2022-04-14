@@ -17,4 +17,8 @@ public interface ProgramOperationService {
     int getCurrentDivision(Program program);
 
     List<String> getPerformanceArchiveList();
+
+    Program getProgramByIndex(int index);
+
+    List<OperationDataProgram> getODPList(Program program);
 }

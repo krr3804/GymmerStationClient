@@ -6,7 +6,11 @@ import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,8 +31,7 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
 
     @Override
     public void deleteProgramData(int index) {
-        List<Program> programList = operationDataRepository.getPerformanceArchiveMap().keySet().stream().collect(Collectors.toList());
-        Program program = programList.get(index);
+        Program program = getProgramByIndex(index);
         operationDataRepository.delete(program);
     }
 
@@ -48,13 +51,23 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
         Map<Program,List<OperationDataProgram>> map = operationDataRepository.getPerformanceArchiveMap();
         for(Program program: map.keySet()) {
             StringBuilder sb = new StringBuilder();
-            String programName = program.getName();
-            String progress = "" + map.get(program).size();
-            String total = "" + (program.getLength() * program.getExerciseMap().size());
-            sb.append(programName).append("(").append(progress).append("/").append(total).append(")");
+            sb.append(program.getName()).append("(")
+                    .append(map.get(program).size()).append("/")
+                    .append((program.getLength() * program.getExerciseMap().size())).append(")");
             list.add(sb.toString());
         }
 
         return list;
+    }
+
+    @Override
+    public Program getProgramByIndex(int index) {
+        List<Program> programList = operationDataRepository.getPerformanceArchiveMap().keySet().stream().collect(Collectors.toList());
+        return programList.get(index);
+    }
+
+    @Override
+    public List<OperationDataProgram> getODPList(Program program) {
+        return operationDataRepository.getODPList(program);
     }
 }
