@@ -3,6 +3,7 @@ package com.gymmer.gymmerstation.programOperation;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.OperationDataExercise;
+import com.gymmer.gymmerstation.util.Util;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,6 +13,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -22,6 +25,7 @@ public class ProgramOperationController implements Initializable {
     private String secInfo;
     private long sec;
     private boolean stop;
+    private String pauseOption = "resume";
 
     @FXML
     private Label exerciseInfo, setInfo, repsInfo, weightInfo, minute, second;
@@ -61,21 +65,32 @@ public class ProgramOperationController implements Initializable {
 
     private void handleBtnPauseAction(ActionEvent event) {
         stop = true;
-    }
-
-    private void handleBtnDoneAction(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("rest-time-view.fxml"));
+            loader.setLocation(Main.class.getResource("pause-view.fxml"));
             Parent root = loader.load();
-            RestTimeController restTimeController = loader.getController();
-            restTimeController.initData(minInfo, secInfo);
-            Stage stage = (Stage) btnDone.getScene().getWindow();
+            Stage currentStage = (Stage) btnPause.getScene().getWindow();
+            Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(currentStage);
+            PauseController pauseController = loader.getController();
+            stage.showAndWait();
+            pauseOption = pauseController.returnOption();
+            if(!pauseOption.equals("return")) {
+                currentStage.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String returnOption() {
+        return pauseOption;
+    }
+
+    private void handleBtnDoneAction(ActionEvent event) {
+        Util.closeStage(btnDone);
     }
 
     public void initData(Exercise exercise) {

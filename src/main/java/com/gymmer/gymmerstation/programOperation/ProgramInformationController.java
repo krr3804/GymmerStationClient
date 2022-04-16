@@ -34,6 +34,8 @@ public class ProgramInformationController implements Initializable {
     private int index;
     private int week;
     private int division;
+    private String timeConsumed;
+    private String pauseOption;
 
     @FXML
     private Label programNameInfo;
@@ -62,29 +64,43 @@ public class ProgramInformationController implements Initializable {
     private void handleBtnStartAction(ActionEvent event) {
         Program program = programService.getProgram(index);
         List<OperationDataExercise> odeList = new ArrayList<>();
-
+        Stage currentStage = (Stage) btnStart.getScene().getWindow();
+        currentStage.hide();
         for(Exercise exercise : program.getExerciseMap().get(division)) {
-            String timeConsumed = loadOperationStage(exercise);
-            odeList.add(new OperationDataExercise(exercise.getName(),
-                    exercise.getSet(),
-                    exercise.getRep(),
-                    exercise.getWeight(),
-                    exercise.getMinute()+":"+exercise.getSecond(),
-                    timeConsumed));
+            loadOperationStage(exercise);
+            odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(), exercise.getRep(), exercise.getWeight(), exercise.getMinute()+":"+exercise.getSecond(), timeConsumed));
+            if(pauseOption.equals("saveAndExit")) {
+                break;
+            }
+            if(pauseOption.equals("exit")) {
+                exit();
+                return;
+            }
+            loadRestTimeStage(exercise);
+            if(pauseOption.equals("saveAndExit")) {
+                break;
+            }
+            if(pauseOption.equals("exit")) {
+                exit();
+                return;
+            }
+            pauseOption = "";
+            timeConsumed = "";
         }
 
         programOperationService.saveProgramData(program,week,division,odeList);
-        btnStart.setText("Completed");
-        btnStart.setDisable(true);
+        currentStage.show();
+        Platform.runLater(() -> {
+            btnStart.setText("Completed");
+            btnStart.setDisable(true);
+        });
     }
 
-    private String loadOperationStage(Exercise exercise) {
-        String timeConsumed = "";
+    private void loadOperationStage(Exercise exercise) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
             Parent root = loader.load();
-            Stage currentStage = (Stage) btnStart.getScene().getWindow();
             ProgramOperationController programOperationController = loader.getController();
             programOperationController.initData(exercise);
             Stage stage = new Stage();
@@ -92,14 +108,34 @@ public class ProgramInformationController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(btnStart.getScene().getWindow());
             stage.showAndWait();
-
-            timeConsumed += programOperationController.getTimeConsumed();
+            pauseOption = programOperationController.returnOption();
+            timeConsumed = programOperationController.getTimeConsumed();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return timeConsumed;
     }
 
+    private void loadRestTimeStage(Exercise exercise) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("rest-time-view.fxml"));
+            Parent root = loader.load();
+            RestTimeController restTimeController = loader.getController();
+            restTimeController.initData(exercise.getMinute(),exercise.getSecond());
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(btnStart.getScene().getWindow());
+            stage.showAndWait();
+            pauseOption = restTimeController.returnPauseOption();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void exit() {
+        loadStage("main-view.fxml",btnStart.getScene());
+    }
 
     private void handleBtnExitAction(ActionEvent event) {
         loadStage("load-program-view.fxml",btnExit.getScene());

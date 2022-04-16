@@ -1,12 +1,17 @@
 package com.gymmer.gymmerstation.programOperation;
 
+import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -18,6 +23,7 @@ import static com.gymmer.gymmerstation.util.Util.closeStage;
 public class RestTimeController implements Initializable {
     private boolean stop;
     private long sec;
+    private String pauseOption = "return";
 
     @FXML
     private Label minute, second;
@@ -65,11 +71,30 @@ public class RestTimeController implements Initializable {
     private void handleBtnPauseAction(ActionEvent event) {
         if(!stop) {
             stop = true;
-            btnPause.setText("Resume");
-        } else {
-            start();
-            btnPause.setText("Pause");
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(Main.class.getResource("pause-view.fxml"));
+                Parent root = loader.load();
+                Stage currentStage = (Stage) btnPause.getScene().getWindow();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(currentStage);
+                PauseController pauseController = loader.getController();
+                stage.showAndWait();
+                pauseOption = pauseController.returnOption();
+                if(!pauseOption.equals("return")) {
+                    currentStage.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        start();
+    }
+
+    public String returnPauseOption() {
+        return pauseOption;
     }
 
     public void initData(String minInfo, String secInfo) {
