@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 public class Main extends javafx.application.Application {
     private static ProgramService programService = AppConfig.programService();
 
@@ -36,12 +35,10 @@ public class Main extends javafx.application.Application {
         Exercise exercise1 = new Exercise("Leg Press",3L,4L,100L,"00","02");
         Exercise exercise2 = new Exercise("Front Squat",3L,10L,80L,"00","03");
         List<Exercise> tmp1 = new ArrayList<>();
-        List<Exercise> tmp2 = new ArrayList<>();
         tmp1.add(exercise1);
-        tmp2.add(exercise2);
+        tmp1.add(exercise2);
         Map<Integer,List<Exercise>> exerciseMap = new LinkedHashMap<>();
         exerciseMap.put(1,tmp1);
-        exerciseMap.put(2,tmp2);
         Program program = new Program("Leg buster","To increase leg weight limit",7L,exerciseMap);
         programService.addProgram(program);
     }

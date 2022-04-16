@@ -6,18 +6,18 @@
 
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1">
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymmer.gymmerstation.programOperation.PauseController">
    <children>
-      <Button mnemonicParsing="false" text="Resume">
+      <Button fx:id="btnResume" mnemonicParsing="false" text="Resume">
          <VBox.margin>
             <Insets bottom="50.0" />
          </VBox.margin>
       </Button>
-      <Button mnemonicParsing="false" text="Save and Exit">
+      <Button fx:id="btnSaveAndExit" mnemonicParsing="false" text="Save and Exit">
          <VBox.margin>
             <Insets bottom="50.0" />
          </VBox.margin>
       </Button>
-      <Button mnemonicParsing="false" text="Exit" />
+      <Button fx:id="btnExit" mnemonicParsing="false" text="Exit" />
    </children>
 </VBox>

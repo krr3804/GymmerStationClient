@@ -1,6 +1,7 @@
 module com.gymmer.gymmerstation {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
     opens com.gymmer.gymmerstation to javafx.fxml;
