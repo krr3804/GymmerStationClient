@@ -31,16 +31,14 @@ public class ProgramOperationController implements Initializable {
     private Label exerciseInfo, setInfo, repsInfo, weightInfo, minute, second;
 
     @FXML
-    private Button btnPause, btnStart, btnDone;
+    private Button btnStart, btnDone;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         btnStart.setOnAction(event -> handleBtnStartAction(event));
-        btnPause.setOnAction(event -> handleBtnPauseAction(event));
         btnDone.setOnAction(event -> handleBtnDoneAction(event));
     }
-
-    private void handleBtnStartAction(ActionEvent event) {
+    private void start() {
         stop = false;
         Thread thread = new Thread(() -> {
             while (!stop && sec < 3600) {
@@ -63,13 +61,22 @@ public class ProgramOperationController implements Initializable {
         thread.start();
     }
 
-    private void handleBtnPauseAction(ActionEvent event) {
+    private void handleBtnStartAction(ActionEvent event) {
+        if(btnStart.getText().equals("Start")) {
+            start();
+            btnStart.setText("Pause");
+            return;
+        }
+        handlePauseAction();
+    }
+
+    private void handlePauseAction() {
         stop = true;
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("pause-view.fxml"));
             Parent root = loader.load();
-            Stage currentStage = (Stage) btnPause.getScene().getWindow();
+            Stage currentStage = (Stage) btnStart.getScene().getWindow();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
@@ -83,6 +90,7 @@ public class ProgramOperationController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        start();
     }
 
     public String returnOption() {
