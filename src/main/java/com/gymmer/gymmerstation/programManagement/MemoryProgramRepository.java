@@ -1,5 +1,6 @@
 package com.gymmer.gymmerstation.programManagement;
 
+import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.LinkedList;
@@ -19,17 +20,18 @@ public class MemoryProgramRepository implements ProgramRepository{
     }
 
     @Override
-    public void editProgram(int index, Program program) {
-        list.set(index,program);
+    public void editProgram(Program program, List<Exercise> additionList, List<Exercise> deletionList) {
+        int index = list.indexOf(getProgramById(program.getId()));
+        list.set(index, program);
     }
 
     @Override
-    public Program getProgramByIndex(int index) {
-        return list.get(index);
+    public Program getProgramById(Long id) {
+        return list.stream().filter(program -> program.getId().equals(id)).findAny().get();
     }
 
     @Override
-    public void deleteProgram(int index) {
-        list.remove(index);
+    public void deleteProgram(Long id) {
+        list.remove(id);
     }
 }

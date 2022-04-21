@@ -1,5 +1,6 @@
 package com.gymmer.gymmerstation.programManagement;
 
+import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.List;
@@ -9,9 +10,9 @@ public interface ProgramRepository {
 
     List<Program> showProgramList();
 
-    void editProgram(int index, Program program);
+    void editProgram(Program program, List<Exercise> additionList, List<Exercise> deletionList);
 
-    Program getProgramByIndex(int index);
+    Program getProgramById(Long id);
 
-    void deleteProgram(int index);
+    void deleteProgram(Long id);
 }
