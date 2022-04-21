@@ -32,6 +32,6 @@ public class MemoryProgramRepository implements ProgramRepository{
 
     @Override
     public void deleteProgram(Long id) {
-        list.remove(id);
+        list.removeIf(program -> program.getId().equals(id));
     }
 }
