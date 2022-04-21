@@ -9,15 +9,16 @@ public class Exercise {
     Long weight;
     String minute;
     String second;
+    Long division;
 
-    public Exercise(String name, Long set, Long rep, Long weight, String minute, String second
-    ) {
+    public Exercise(String name, Long set, Long rep, Long weight, String minute, String second, Long division) {
         this.name = name;
         this.set = set;
         this.rep = rep;
         this.weight = weight;
         this.minute = minute;
         this.second = second;
+        this.division = division;
     }
 
     public String getName() {
@@ -42,5 +43,13 @@ public class Exercise {
 
     public String getSecond() {
         return second;
+    }
+
+    public Long getDivision() {
+        return division;
+    }
+
+    public void decreaseDivisionSequence(Long division) {
+        this.division = division-1;
     }
 }
