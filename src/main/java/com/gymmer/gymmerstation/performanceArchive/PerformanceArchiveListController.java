@@ -2,6 +2,7 @@ package com.gymmer.gymmerstation.performanceArchive;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
+import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import com.gymmer.gymmerstation.util.Util;
@@ -60,7 +61,8 @@ public class PerformanceArchiveListController implements Initializable {
     private void handleBtnDeleteAction(ActionEvent event) {
         selectedItemIndex = programList.getSelectionModel().getSelectedIndex();
         try {
-            programOperationService.deleteProgramData(selectedItemIndex);
+            Program program = programOperationService.getProgramByIndex(selectedItemIndex);
+            programOperationService.deleteProgramData(program);
             selectedItemIndex = -1;
             programList.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
         } catch (Exception e) {

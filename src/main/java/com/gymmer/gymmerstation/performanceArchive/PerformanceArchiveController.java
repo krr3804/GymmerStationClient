@@ -4,6 +4,7 @@ import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -40,7 +41,7 @@ public class PerformanceArchiveController implements Initializable {
     }
 
     private void setTabPane() {
-        for(OperationDataProgram dataProgram : programOperationService.getODPList(currentProgram)) {
+        for(OperationDataProgram dataProgram : programOperationService.getProgramDataList(currentProgram)) {
             StringBuilder title = new StringBuilder();
             title.append(dataProgram.getWeek()).append("-").append(dataProgram.getDivision());
             tabPane.getTabs().add(addTab(title.toString(),dataProgram));
