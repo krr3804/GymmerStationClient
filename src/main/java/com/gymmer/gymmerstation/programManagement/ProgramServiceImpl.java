@@ -4,10 +4,7 @@ import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ProgramServiceImpl implements ProgramService {
@@ -28,27 +25,18 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void editProgram(int index,Program program) {
-        programRepository.editProgram(index,program);
+    public void editProgram(Program program, List<Exercise> additionList, List<Exercise> deletionList) {
+        programRepository.editProgram(program,additionList,deletionList);
     }
 
     @Override
-    public Program getProgram(int index) {
-        return programRepository.getProgramByIndex(index);
+    public Program getProgramById(int index) {
+        Long id = programRepository.showProgramList().get(index).getId();
+        return programRepository.getProgramById(id);
     }
 
     @Override
     public void deleteProgram(int index) {
-        programRepository.deleteProgram(index);
-    }
-
-    @Override
-    public Map<Integer,List<Exercise>> createExerciseMap(int divCount) {
-        Map<Integer,List<Exercise>> exerciseMap = new LinkedHashMap<>();
-        for(int i = 1; i <= divCount; i++) {
-            List<Exercise> exerciseList = new ArrayList<>();
-            exerciseMap.put(i,exerciseList);
-        }
-        return exerciseMap;
+        programRepository.deleteProgram(programRepository.showProgramList().get(index).getId());
     }
 }
