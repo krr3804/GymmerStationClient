@@ -20,9 +20,9 @@ public class MemoryProgramRepository implements ProgramRepository{
     }
 
     @Override
-    public void editProgram(Program program, List<Exercise> additionList, List<Exercise> deletionList) {
-        int index = list.indexOf(getProgramById(program.getId()));
-        list.set(index, program);
+    public void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList) {
+        int index = list.indexOf(getProgramById(oldProgram.getId()));
+        list.set(index, newProgram);
     }
 
     @Override

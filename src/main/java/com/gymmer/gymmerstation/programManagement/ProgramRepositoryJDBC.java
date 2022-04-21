@@ -125,20 +125,22 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
     }
 
     @Override
-    public void editProgram(Program program, List<Exercise> additionList, List<Exercise> deletionList) {
+    public void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
+        String query;
         try {
-            String query = "UPDATE program SET name = ?, purpose = ?, length = ? WHERE program_id = ?;";
-            psmt = conn.prepareStatement(query);
-            psmt.setString(1,program.getName());
-            psmt.setString(2,program.getPurpose());
-            psmt.setLong(3,program.getLength());
-            psmt.setLong(4,program.getId());
-            psmt.executeUpdate();
-            psmt.clearParameters();
-            Long program_id = program.getId();
-
+            Long program_id = oldProgram.getId();
+            if(!oldProgram.getName().equals(newProgram.getName()) || !oldProgram.getPurpose().equals(newProgram.getPurpose()) || !oldProgram.getLength().equals(newProgram.getLength())) {
+                query = "UPDATE program SET name = ?, purpose = ?, length = ? WHERE program_id = ?;";
+                psmt = conn.prepareStatement(query);
+                psmt.setString(1, newProgram.getName());
+                psmt.setString(2, newProgram.getPurpose());
+                psmt.setLong(3, newProgram.getLength());
+                psmt.setLong(4, program_id);
+                psmt.executeUpdate();
+                psmt.clearParameters();
+            }
             if(!additionList.isEmpty()) {
                 query = "INSERT INTO exercise values (?,?,?,?,?,?,?,?);";
                 psmt = conn.prepareStatement(query);

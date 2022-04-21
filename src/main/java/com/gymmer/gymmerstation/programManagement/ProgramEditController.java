@@ -67,10 +67,8 @@ public class ProgramEditController implements Initializable {
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
-        program.setName(inpName.getText());
-        program.setPurpose(inpPurpose.getText());
-        program.setLength(Long.parseLong(inpLength.getText()));
-        programService.editProgram(program,additionList,deletionList);
+        Program programEdited = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.getExerciseList());
+        programService.editProgram(program,programEdited,additionList,deletionList);
     }
 
     private void handleBtnExitAction(ActionEvent event) {

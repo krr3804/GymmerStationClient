@@ -25,8 +25,8 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void editProgram(Program program, List<Exercise> additionList, List<Exercise> deletionList) {
-        programRepository.editProgram(program,additionList,deletionList);
+    public void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList) {
+        programRepository.editProgram(oldProgram, newProgram,additionList,deletionList);
     }
 
     @Override
