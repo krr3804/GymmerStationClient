@@ -25,14 +25,14 @@ public class MemoryOperationDataRepository implements OperationDataRepository {
 
     @Override
     public int getCurrentWeek(Program program) {
-        int divisionCount = program.getExerciseMap().size();
+        int divisionCount = program.countDivision();
         int lastWeek = map.getOrDefault(program,new ArrayList<>()).size()/divisionCount;
         return lastWeek + 1;
     }
 
     @Override
     public int getCurrentDivision(Program program) {
-        int divisionCount = program.getExerciseMap().size();
+        int divisionCount = program.countDivision();
         int lastDivision = map.getOrDefault(program,new ArrayList<>()).size()%divisionCount;
         return lastDivision + 1;
     }

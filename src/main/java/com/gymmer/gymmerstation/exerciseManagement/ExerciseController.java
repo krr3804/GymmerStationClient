@@ -1,6 +1,7 @@
 package com.gymmer.gymmerstation.exerciseManagement;
 
 import com.gymmer.gymmerstation.domain.Exercise;
+import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,10 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ExerciseController implements Initializable {
-    private List<Exercise> exerciseList = new ArrayList<>();
+    private Program currentProgram = null;
+    private Long currentDivision = null;
+    private List<Exercise> additionList = new ArrayList<>();
+    private List<Exercise> deletionList = new ArrayList<>();
 
     @FXML
     private ListView<String> exerciseListView;
@@ -56,9 +60,10 @@ public class ExerciseController implements Initializable {
         btnExit.setOnAction(event -> handleBtnExitAction(event));
     }
 
-    public void initExerciseList(List<Exercise> list) {
-        exerciseList.addAll(list);
-        exerciseListView.setItems(FXCollections.observableList(exerciseList.stream().map(Exercise::getName).collect(Collectors.toList())));
+    public void initData(Program program, Long division) {
+        currentProgram = program;
+        currentDivision = division;
+        exerciseListView.setItems(showExerciseList());
     }
 
     private void initTimer() {
@@ -76,29 +81,36 @@ public class ExerciseController implements Initializable {
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
-        String name = inpName.getText();
-        Long set = Long.parseLong(inpSets.getText());
-        Long rep = Long.parseLong(inpReps.getText());
-        Long weight = Long.parseLong(inpWeight.getText());
-        String minute = ""+inpMinute.getValue();
-        String second = ""+inpSecond.getValue();
-        exerciseList.add(new Exercise(name,set,rep,weight,minute,second));
-        exerciseListView.setItems(FXCollections.observableList(exerciseList.stream().map(Exercise::getName).collect(Collectors.toList())));
+        Exercise exercise = new Exercise(inpName.getText(),Long.parseLong(inpSets.getText()),
+                Long.parseLong(inpReps.getText()), Long.parseLong(inpWeight.getText()),
+                inpMinute.getValue(),inpSecond.getValue(), currentDivision);
+        currentProgram.getExerciseList().add(exercise);
+        exerciseListView.setItems(showExerciseList());
+        additionList.add(exercise);
+    }
+
+    private ObservableList<String> showExerciseList() {
+        return FXCollections.observableList(currentProgram.getExerciseByDivision(currentDivision)
+                .stream().map(Exercise::getName).collect(Collectors.toList()));
     }
 
     private void handleBtnDeleteAction(ActionEvent event) {
-        if(!exerciseList.isEmpty()) {
-            int idx = exerciseListView.getSelectionModel().getSelectedIndex();
-            exerciseList.remove(idx);
-        }
-        exerciseListView.setItems(FXCollections.observableList(exerciseList.stream().map(Exercise::getName).collect(Collectors.toList())));
+        String name = exerciseListView.getSelectionModel().getSelectedItem();
+        Exercise exercise = currentProgram.removeExercise(currentDivision,name);
+        exerciseListView.setItems(showExerciseList());
+        deletionList.add(exercise);
     }
 
     private void handleBtnExitAction(ActionEvent event) {
         Util.closeStage(btnExit);
     }
 
-    public List<Exercise> getExerciseList() {
-        return exerciseList;
+    public List<Exercise> getAdditionList() {
+        return additionList;
     }
+
+    public List<Exercise> getDeletionList() {
+        return deletionList;
+    }
+
 }

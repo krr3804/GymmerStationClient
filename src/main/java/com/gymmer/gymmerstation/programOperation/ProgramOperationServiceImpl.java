@@ -53,7 +53,7 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
             StringBuilder sb = new StringBuilder();
             sb.append(program.getName()).append("(")
                     .append(map.get(program).size()).append("/")
-                    .append((program.getLength() * program.getExerciseMap().size())).append(")");
+                    .append((program.getLength() * program.countDivision())).append(")");
             list.add(sb.toString());
         }
 

@@ -23,7 +23,7 @@ import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class PerformanceArchiveController implements Initializable {
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
-    private Program currentProgram = new Program();
+    private Program currentProgram = null;
 
     @FXML
     private Label programName;

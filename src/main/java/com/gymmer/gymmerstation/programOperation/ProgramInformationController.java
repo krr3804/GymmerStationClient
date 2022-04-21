@@ -62,11 +62,12 @@ public class ProgramInformationController implements Initializable {
     }
 
     private void handleBtnStartAction(ActionEvent event) {
-        Program program = programService.getProgram(index);
+        Program program = programService.getProgramById(index);
         List<OperationDataExercise> odeList = new ArrayList<>();
         Stage currentStage = (Stage) btnStart.getScene().getWindow();
         currentStage.hide();
-        for(Exercise exercise : program.getExerciseMap().get(division)) {
+        Long divisionNumber = 0L + division;
+        for(Exercise exercise : program.getExerciseByDivision(divisionNumber)) {
             loadOperationStage(exercise);
             odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(), exercise.getRep(), exercise.getWeight(), exercise.getMinute()+":"+exercise.getSecond(), timeConsumed));
             if(pauseOption.equals("saveAndExit")) {
@@ -142,7 +143,7 @@ public class ProgramInformationController implements Initializable {
     }
 
     public void initProgramData(int index) {
-        Program program = programService.getProgram(index);
+        Program program = programService.getProgramById(index);
         programNameInfo.setText(program.getName());
         purposeInfo.setText(program.getPurpose());
         lengthInfo.setText(program.getLength().toString());

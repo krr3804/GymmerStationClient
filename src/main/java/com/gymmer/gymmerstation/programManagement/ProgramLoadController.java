@@ -98,5 +98,6 @@ public class ProgramLoadController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        index=-1;
     }
 }

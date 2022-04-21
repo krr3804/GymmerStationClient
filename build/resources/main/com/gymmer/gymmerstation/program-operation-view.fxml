@@ -47,12 +47,11 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="71.0" prefWidth="600.0">
          <children>
-            <Button fx:id="btnPause" mnemonicParsing="false" text="Pause">
+            <Button fx:id="btnStart" mnemonicParsing="false" text="Start">
                <HBox.margin>
                   <Insets right="70.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnStart" mnemonicParsing="false" text="Start" />
             <Button fx:id="btnDone" mnemonicParsing="false" text="Done">
                <HBox.margin>
                   <Insets left="70.0" />

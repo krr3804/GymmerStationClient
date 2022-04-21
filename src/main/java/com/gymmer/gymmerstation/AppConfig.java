@@ -8,7 +8,7 @@ import com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImpl;
 
 public class AppConfig {
     public static ProgramRepository programRepository() {
-        return new MemoryProgramRepository();
+        return new ProgramRepositoryJDBC();
     }
 
     public static ProgramService programService() {
