@@ -1,23 +1,19 @@
 package com.gymmer.gymmerstation.domain;
 
-import java.text.SimpleDateFormat;
-
 public class Exercise {
     String name;
     Long set;
     Long rep;
     Long weight;
-    String minute;
-    String second;
+    String restTime;
     Long division;
 
-    public Exercise(String name, Long set, Long rep, Long weight, String minute, String second, Long division) {
+    public Exercise(String name, Long set, Long rep, Long weight, String restTime, Long division) {
         this.name = name;
         this.set = set;
         this.rep = rep;
         this.weight = weight;
-        this.minute = minute;
-        this.second = second;
+        this.restTime = restTime;
         this.division = division;
     }
 
@@ -37,12 +33,8 @@ public class Exercise {
         return weight;
     }
 
-    public String getMinute() {
-        return minute;
-    }
-
-    public String getSecond() {
-        return second;
+    public String getRestTime() {
+        return restTime;
     }
 
     public Long getDivision() {

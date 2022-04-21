@@ -29,7 +29,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
             rs.close();
             psmt.clearParameters();
 
-            query = "INSERT INTO exercise values (?,?,?,?,?,?,?,?)";
+            query = "INSERT INTO exercise values (?,?,?,?,?,?,?)";
             psmt = conn.prepareStatement(query);
             for(Exercise exercise : program.getExerciseList()) {
                 psmt = addExerciseData(psmt,exercise,key);
@@ -48,10 +48,9 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
         psmt.setLong(2,exercise.getSet());
         psmt.setLong(3,exercise.getRep());
         psmt.setLong(4,exercise.getWeight());
-        psmt.setString(5,exercise.getMinute());
-        psmt.setString(6,exercise.getSecond());
-        psmt.setLong(7,exercise.getDivision());
-        psmt.setLong(8,programId);
+        psmt.setString(5,exercise.getRestTime());
+        psmt.setLong(6,exercise.getDivision());
+        psmt.setLong(7,programId);
         psmt.addBatch();
         psmt.clearParameters();
         return psmt;
@@ -118,8 +117,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
                 rs.getLong("sets"),
                 rs.getLong("reps"),
                 rs.getLong("weight"),
-                rs.getString("rest_min"),
-                rs.getString("rest_sec"),
+                rs.getString("rest"),
                 rs.getLong("division"));
         return exercise;
     }

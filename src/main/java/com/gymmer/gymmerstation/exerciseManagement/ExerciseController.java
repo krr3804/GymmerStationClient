@@ -81,9 +81,10 @@ public class ExerciseController implements Initializable {
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
+        String restTime = inpMinute.getValue() + ":" + inpSecond.getValue();
         Exercise exercise = new Exercise(inpName.getText(),Long.parseLong(inpSets.getText()),
                 Long.parseLong(inpReps.getText()), Long.parseLong(inpWeight.getText()),
-                inpMinute.getValue(),inpSecond.getValue(), currentDivision);
+                restTime, currentDivision);
         currentProgram.getExerciseList().add(exercise);
         exerciseListView.setItems(showExerciseList());
         additionList.add(exercise);

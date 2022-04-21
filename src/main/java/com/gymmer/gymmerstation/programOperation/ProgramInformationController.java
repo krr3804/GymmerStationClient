@@ -4,6 +4,7 @@ import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.OperationDataExercise;
+import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.util.Util;
@@ -69,7 +70,7 @@ public class ProgramInformationController implements Initializable {
         Long divisionNumber = 0L + division;
         for(Exercise exercise : program.getExerciseByDivision(divisionNumber)) {
             loadOperationStage(exercise);
-            odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(), exercise.getRep(), exercise.getWeight(), exercise.getMinute()+":"+exercise.getSecond(), timeConsumed));
+            odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(), exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), timeConsumed));
             if(pauseOption.equals("saveAndExit")) {
                 break;
             }
@@ -89,7 +90,7 @@ public class ProgramInformationController implements Initializable {
             timeConsumed = "";
         }
 
-        programOperationService.saveProgramData(program,week,division,odeList);
+        programOperationService.saveProgramData(new OperationDataProgram(program,week,division,odeList));
         currentStage.show();
         Platform.runLater(() -> {
             btnStart.setText("Completed");
@@ -122,7 +123,7 @@ public class ProgramInformationController implements Initializable {
             loader.setLocation(Main.class.getResource("rest-time-view.fxml"));
             Parent root = loader.load();
             RestTimeController restTimeController = loader.getController();
-            restTimeController.initData(exercise.getMinute(),exercise.getSecond());
+            restTimeController.initData(exercise.getRestTime().substring(0,2),exercise.getRestTime().substring(3,5));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
