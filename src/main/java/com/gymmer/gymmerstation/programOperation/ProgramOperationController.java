@@ -106,8 +106,8 @@ public class ProgramOperationController implements Initializable {
         setInfo.setText(exercise.getSet().toString());
         repsInfo.setText(exercise.getRep().toString());
         weightInfo.setText(exercise.getWeight().toString());
-        minInfo = exercise.getMinute();
-        secInfo = exercise.getSecond();
+        minInfo = exercise.getRestTime().substring(0,2);
+        secInfo = exercise.getRestTime().substring(3,5);
     }
 
     public String getTimeConsumed() {

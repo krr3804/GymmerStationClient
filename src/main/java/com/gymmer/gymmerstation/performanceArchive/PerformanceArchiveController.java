@@ -77,7 +77,7 @@ public class PerformanceArchiveController implements Initializable {
 
         TableColumn<OperationDataExercise, String> restColumn = new TableColumn<>("Rest");
         restColumn.setMinWidth(100);
-        restColumn.setCellValueFactory(new PropertyValueFactory<>("rest"));
+        restColumn.setCellValueFactory(new PropertyValueFactory<>("restTime"));
 
         TableColumn<OperationDataExercise, String> consumedTimeColumn = new TableColumn<>("TIME CONSUMED");
         consumedTimeColumn.setMinWidth(100);

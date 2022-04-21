@@ -1,15 +1,14 @@
 package com.gymmer.gymmerstation.domain;
 
 import java.util.List;
-import java.util.Map;
 
 public class OperationDataProgram {
     private Program program;
-    private int week;
-    private int division;
+    private Long week;
+    private Long division;
     private List<OperationDataExercise> odExerciseList;
 
-    public OperationDataProgram(Program program, int week, int division, List<OperationDataExercise> odExerciseList) {
+    public OperationDataProgram(Program program, Long week, Long division, List<OperationDataExercise> odExerciseList) {
         this.program = program;
         this.week = week;
         this.division = division;
@@ -20,11 +19,11 @@ public class OperationDataProgram {
         return program;
     }
 
-    public int getWeek() {
+    public Long getWeek() {
         return week;
     }
 
-    public int getDivision() {
+    public Long getDivision() {
         return division;
     }
 

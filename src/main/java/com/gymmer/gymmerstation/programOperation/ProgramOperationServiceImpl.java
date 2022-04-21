@@ -38,15 +38,15 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public int getCurrentWeek(Program program) {
+    public Long getCurrentWeek(Program program) {
         int divisionCount = program.countDivision();
-        return operationDataRepository.getProgress(program)/divisionCount + 1;
+        return (long)(operationDataRepository.getProgress(program)/divisionCount + 1);
     }
 
     @Override
-    public int getCurrentDivision(Program program) {
+    public Long getCurrentDivision(Program program) {
         int divisionCount = program.countDivision();
-        return operationDataRepository.getProgress(program)%divisionCount + 1;
+        return (long) (operationDataRepository.getProgress(program)%divisionCount + 1);
 
     }
 

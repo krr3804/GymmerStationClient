@@ -14,9 +14,9 @@ public interface ProgramOperationService {
 
     List<OperationDataProgram> getProgramDataList(Program program);
 
-    int getCurrentWeek(Program program);
+    Long getCurrentWeek(Program program);
 
-    int getCurrentDivision(Program program);
+    Long getCurrentDivision(Program program);
 
     List<String> getPerformanceArchiveList();
 

@@ -33,8 +33,8 @@ public class ProgramInformationController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private int index;
-    private int week;
-    private int division;
+    private Long week;
+    private Long division;
     private String timeConsumed;
     private String pauseOption;
 
@@ -70,7 +70,7 @@ public class ProgramInformationController implements Initializable {
         Long divisionNumber = 0L + division;
         for(Exercise exercise : program.getExerciseByDivision(divisionNumber)) {
             loadOperationStage(exercise);
-            odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(), exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), timeConsumed));
+            odeList.add(new OperationDataExercise(exercise.getName(),exercise.getSet(),exercise.getRep(),exercise.getWeight(),exercise.getRestTime(), exercise.getDivision(),timeConsumed));
             if(pauseOption.equals("saveAndExit")) {
                 break;
             }
