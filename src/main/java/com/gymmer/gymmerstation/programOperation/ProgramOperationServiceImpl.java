@@ -23,36 +23,40 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public void saveProgramData(Program program, int week, int division, List<OperationDataExercise> odeList) {
-        List<OperationDataProgram> list = new ArrayList<>(operationDataRepository.getODPList(program));
-        list.add(new OperationDataProgram(week,division,odeList));
-        operationDataRepository.save(program,list);
+    public void saveProgramData(OperationDataProgram operationDataProgram) {
+        operationDataRepository.save(operationDataProgram);
     }
 
     @Override
-    public void deleteProgramData(int index) {
-        Program program = getProgramByIndex(index);
+    public void deleteProgramData(Program program) {
         operationDataRepository.delete(program);
     }
 
     @Override
+    public List<OperationDataProgram> getProgramDataList(Program program) {
+        return operationDataRepository.getDataListByProgram(program);
+    }
+
+    @Override
     public int getCurrentWeek(Program program) {
-        return operationDataRepository.getCurrentWeek(program);
+        int divisionCount = program.countDivision();
+        return operationDataRepository.getProgress(program)/divisionCount + 1;
     }
 
     @Override
     public int getCurrentDivision(Program program) {
-        return operationDataRepository.getCurrentDivision(program);
+        int divisionCount = program.countDivision();
+        return operationDataRepository.getProgress(program)%divisionCount + 1;
+
     }
 
     @Override
     public List<String> getPerformanceArchiveList() {
         List<String> list = new ArrayList<>();
-        Map<Program,List<OperationDataProgram>> map = operationDataRepository.getPerformanceArchiveMap();
-        for(Program program: map.keySet()) {
+        for(Program program: operationDataRepository.getProgramsInProgress()) {
             StringBuilder sb = new StringBuilder();
             sb.append(program.getName()).append("(")
-                    .append(map.get(program).size()).append("/")
+                    .append(operationDataRepository.getProgress(program)).append("/")
                     .append((program.getLength() * program.countDivision())).append(")");
             list.add(sb.toString());
         }
@@ -62,12 +66,6 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
 
     @Override
     public Program getProgramByIndex(int index) {
-        List<Program> programList = operationDataRepository.getPerformanceArchiveMap().keySet().stream().collect(Collectors.toList());
-        return programList.get(index);
-    }
-
-    @Override
-    public List<OperationDataProgram> getODPList(Program program) {
-        return operationDataRepository.getODPList(program);
+        return operationDataRepository.getProgramsInProgress().get(index);
     }
 }

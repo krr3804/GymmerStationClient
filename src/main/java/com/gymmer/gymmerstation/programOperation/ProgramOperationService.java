@@ -8,9 +8,11 @@ import com.gymmer.gymmerstation.domain.Program;
 import java.util.List;
 
 public interface ProgramOperationService {
-    void saveProgramData(Program program, int week, int division, List<OperationDataExercise> odeList);
+    void saveProgramData(OperationDataProgram operationDataProgram);
 
-    void deleteProgramData(int index);
+    void deleteProgramData(Program program);
+
+    List<OperationDataProgram> getProgramDataList(Program program);
 
     int getCurrentWeek(Program program);
 
@@ -19,6 +21,4 @@ public interface ProgramOperationService {
     List<String> getPerformanceArchiveList();
 
     Program getProgramByIndex(int index);
-
-    List<OperationDataProgram> getODPList(Program program);
 }
