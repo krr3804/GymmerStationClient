@@ -5,8 +5,8 @@ import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
-import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,22 +15,21 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static com.gymmer.gymmerstation.util.Util.loadExerciseWindow;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramCreateController implements Initializable {
 
     private final ProgramService programService = AppConfig.programService();
-
-    private Map<Integer,List<Exercise>> exerciseMap = new LinkedHashMap<>();
-    private static Integer selectedDivision;
+    private Program program = new Program(new ArrayList<>());
+    private List<Integer> divisionList = new ArrayList<>();
 
     @FXML
     private TextField inpName;
@@ -42,13 +41,13 @@ public class ProgramCreateController implements Initializable {
     private TextField inpLength;
 
     @FXML
-    private ChoiceBox<String> inpDivision;
-
-    @FXML
     private ListView<Integer> divisionListView;
 
     @FXML
-    Button btnAddExercise;
+    Button btnAddDivision;
+
+    @FXML
+    Button btnRemoveDivision;
 
     @FXML
     Button btnSave;
@@ -58,8 +57,9 @@ public class ProgramCreateController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        inpDivision.setOnAction(event -> showDivisionList(event));
-        btnAddExercise.setOnAction(event -> handleBtnAddExerciseEvent(event));
+        divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
+        btnAddDivision.setOnAction(event -> handleBtnAddDivisionEvent(event));
+        btnRemoveDivision.setOnAction(event -> handleBtnRemoveDivisionEvent(event));
         btnSave.setOnAction(event -> handleBtnSaveAction(event));
         btnExit.setOnAction(event -> handleBtnExitAction(event));
     }
@@ -69,26 +69,57 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
-        String name = inpName.getText();
-        String purpose = inpPurpose.getText();
-        Long length = Long.parseLong(inpLength.getText());
-        Program program = new Program(name,purpose,length,exerciseMap);
+        List<Exercise> list = program.getExerciseList();
+        program = new Program(null,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),list);
         programService.addProgram(program);
     }
 
-    private void showDivisionList(ActionEvent event) {
-        int divCount = Integer.parseInt(inpDivision.getValue());
-        exerciseMap = new LinkedHashMap<Integer,List<Exercise>>(programService.createExerciseMap(divCount));
-        divisionListView.setItems(FXCollections.observableList(new ArrayList<>(exerciseMap.keySet())));
+    private void handleBtnAddDivisionEvent(ActionEvent event) {
+        divisionList.add(divisionList.size()+1);
+        divisionListView.setItems(getDivision());
     }
 
-    public void handleBtnAddExerciseEvent(ActionEvent event) {
-        selectedDivision = divisionListView.getSelectionModel().getSelectedItem();
-        try {
-            exerciseMap.put(selectedDivision, loadExerciseWindow(exerciseMap,selectedDivision,event));
-        } catch (Exception e) {
-            return;
+    private void handleBtnRemoveDivisionEvent(ActionEvent event) {
+        Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
+        int index = divisionListView.getSelectionModel().getSelectedIndex();
+        divisionList.remove(index);
+        for (int i = index; i < divisionList.size(); i++) {
+            divisionList.set(index,divisionList.get(index)-1);
         }
-        selectedDivision = null;
+        program.removeExerciseInDivision(selectedDivision);
+        divisionListView.setItems(getDivision());
+    }
+
+    private ObservableList<Integer> getDivision() {
+        return FXCollections.observableList(divisionList);
+    }
+
+    private void handleListDoubleClickEvent(MouseEvent event) {
+        if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
+            try {
+                loadExerciseWindow(program, selectedDivision, event);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void loadExerciseWindow(Program program, Long division, MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("exercise-form-view.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            ExerciseController exerciseController = loader.getController();
+            exerciseController.initData(program,division);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
