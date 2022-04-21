@@ -45,7 +45,19 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
 
     @Override
     public void delete(Program program) {
-
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        try {
+            String query = "DELETE FROM performanceData where program = ?";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1,program.getId());
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
     }
 
     @Override
