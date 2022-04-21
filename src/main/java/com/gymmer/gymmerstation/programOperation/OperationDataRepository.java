@@ -8,15 +8,13 @@ import java.util.Map;
 import java.util.Set;
 
 public interface OperationDataRepository {
-    void save(Program program, List<OperationDataProgram> list);
+    void save(OperationDataProgram dataProgram);
 
     void delete(Program program);
 
-    List<OperationDataProgram> getODPList(Program program);
+    List<OperationDataProgram> getDataListByProgram(Program program);
 
-    int getCurrentWeek(Program program);
+    int getProgress(Program program);
 
-    int getCurrentDivision(Program program);
-
-    Map<Program,List<OperationDataProgram>> getPerformanceArchiveMap();
+    List<Program> getProgramsInProgress();
 }

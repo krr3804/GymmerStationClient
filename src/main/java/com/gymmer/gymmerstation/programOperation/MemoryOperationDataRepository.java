@@ -4,41 +4,33 @@ import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MemoryOperationDataRepository implements OperationDataRepository {
-    private static Map<Program, List<OperationDataProgram>> map = new LinkedHashMap<>();
+    private static List<OperationDataProgram> list = new LinkedList<>();
 
     @Override
-    public void save(Program program,List<OperationDataProgram> list) {
-        map.put(program,list);
+    public void save(OperationDataProgram dataProgram) {
+        list.add(dataProgram);
     }
 
     @Override
     public void delete(Program program) {
-        map.remove(program);
+        list.removeIf(dataProgram -> dataProgram.getProgram().getId().equals(program.getId()));
     }
 
     @Override
-    public List<OperationDataProgram> getODPList(Program program) {
-        return map.getOrDefault(program,new ArrayList<>());
+    public List<OperationDataProgram> getDataListByProgram(Program program) {
+        return list.stream().filter(dataProgram -> dataProgram.getProgram().getId().equals(program.getId())).collect(Collectors.toList());
     }
 
     @Override
-    public int getCurrentWeek(Program program) {
-        int divisionCount = program.countDivision();
-        int lastWeek = map.getOrDefault(program,new ArrayList<>()).size()/divisionCount;
-        return lastWeek + 1;
+    public int getProgress(Program program) {
+        return list.stream().filter(dataProgram -> dataProgram.getProgram().getId().equals(program.getId())).collect(Collectors.toList()).size();
     }
 
     @Override
-    public int getCurrentDivision(Program program) {
-        int divisionCount = program.countDivision();
-        int lastDivision = map.getOrDefault(program,new ArrayList<>()).size()%divisionCount;
-        return lastDivision + 1;
-    }
-
-    @Override
-    public Map<Program,List<OperationDataProgram>> getPerformanceArchiveMap() {
-        return map;
+    public List<Program> getProgramsInProgress() {
+        return list.stream().map(dataProgram -> dataProgram.getProgram()).distinct().collect(Collectors.toList());
     }
 }
