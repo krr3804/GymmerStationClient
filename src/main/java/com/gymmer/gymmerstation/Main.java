@@ -37,7 +37,7 @@ public class Main extends javafx.application.Application {
         tmp.add(exercise1);
         tmp.add(exercise2);
         tmp.add(exercise3);
-        Program program = new Program(null,"Leg buster","To increase leg weight limit",7L,tmp);
+        Program program = new Program(null,"Leg buster","To increase leg weight limit",7L,2L,tmp);
         programService.addProgram(program);
     }
 }

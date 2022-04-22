@@ -30,6 +30,7 @@ public class ProgramEditController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private Program program = null;
     private List<Integer> divisionList = new ArrayList<>();
+    private List<Long> removedDivisions = new ArrayList<>();
     private List<Exercise> additionList = new ArrayList<>();
     private List<Exercise> deletionList = new ArrayList<>();
 
@@ -67,8 +68,8 @@ public class ProgramEditController implements Initializable {
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
-        Program programEdited = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.getExerciseList());
-        programService.editProgram(program,programEdited,additionList,deletionList);
+        Program programEdited = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.countDivision(),program.getExerciseList());
+        programService.editProgram(program,programEdited,removedDivisions,additionList,deletionList);
     }
 
     private void handleBtnExitAction(ActionEvent event) {
@@ -87,8 +88,8 @@ public class ProgramEditController implements Initializable {
         for (int i = index; i < divisionList.size(); i++) {
             divisionList.set(index,divisionList.get(index)-1);
         }
-        deletionList.addAll(program.getExerciseList().stream().filter(exercise -> exercise.getDivision().equals(selectedDivision)).collect(Collectors.toList()));
         program.removeExerciseInDivision(selectedDivision);
+        removedDivisions.add(selectedDivision);
         divisionListView.setItems(getDivision());
     }
 
@@ -112,7 +113,7 @@ public class ProgramEditController implements Initializable {
         inpName.setText(program.getName());
         inpPurpose.setText(program.getPurpose());
         inpLength.setText(program.getLength().toString());
-        for(int i = 1; i <= program.countDivision(); i++) {
+        for(int i = 1; i <= program.getDivisionQty(); i++) {
             divisionList.add(i);
         }
         divisionListView.setItems(getDivision());

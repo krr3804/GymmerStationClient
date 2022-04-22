@@ -11,17 +11,27 @@ public class Program {
     private String name;
     private String purpose;
     private Long length;
+    private Long divisionQty;
     private List<Exercise> exerciseList;
 
     public Program(List<Exercise> exerciseList) {
         this.exerciseList = exerciseList;
     }
 
-    public Program(Long id, String name, String purpose, Long length,List<Exercise> exerciseList) {
+    public Program(Long id, String name, String purpose, Long length, Long divisionQty) {
         this.id = id;
         this.name = name;
         this.purpose = purpose;
         this.length = length;
+        this.divisionQty = divisionQty;
+    }
+
+    public Program(Long id, String name, String purpose, Long length, Long divisionQty, List<Exercise> exerciseList) {
+        this.id = id;
+        this.name = name;
+        this.purpose = purpose;
+        this.length = length;
+        this.divisionQty = divisionQty;
         this.exerciseList = exerciseList;
     }
 
@@ -51,8 +61,12 @@ public class Program {
         return exerciseList;
     }
 
-    public int countDivision() {
-        return (int)exerciseList.stream().map(Exercise::getDivision).distinct().count();
+    public Long getDivisionQty() {
+        return divisionQty;
+    }
+
+    public Long countDivision() {
+        return exerciseList.stream().map(Exercise::getDivision).distinct().count();
     }
 
     public List<Exercise> getExerciseByDivision(Long divisionNumber) {
@@ -60,7 +74,7 @@ public class Program {
     }
 
     public void removeExerciseInDivision(Long division) {
-        exerciseList.removeIf(exercise -> exercise.division.equals(division));
+        exerciseList.removeIf(exercise -> exercise.getDivision().equals(division));
         exerciseList.stream().filter(exercise -> exercise.division > division).forEach(exercise -> exercise.decreaseDivisionSequence(exercise.division));
     }
 

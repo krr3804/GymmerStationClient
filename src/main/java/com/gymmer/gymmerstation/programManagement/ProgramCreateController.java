@@ -70,7 +70,7 @@ public class ProgramCreateController implements Initializable {
 
     private void handleBtnSaveAction(ActionEvent event) {
         List<Exercise> list = program.getExerciseList();
-        program = new Program(null,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),list);
+        program = new Program(null,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()), program.countDivision(),list);
         programService.addProgram(program);
     }
 
