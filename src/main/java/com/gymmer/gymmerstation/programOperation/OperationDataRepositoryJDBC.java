@@ -20,19 +20,15 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         Long division = dataProgram.getDivision();
 
         try {
-            String query = "INSERT INTO performanceData VALUES (?,?,?,?,?,?,?,?,?,?)";
+            String query = "INSERT INTO UserPerformanceData VALUES (?,?,?,?,?,?)";
             psmt = conn.prepareStatement(query);
             for(OperationDataExercise dataExercise : dataProgram.getOdExerciseList()) {
                 psmt.setLong(1,week);
                 psmt.setLong(2,division);
                 psmt.setString(3,dataExercise.getTimeConsumed());
                 psmt.setString(4,dataExercise.getName());
-                psmt.setLong(5,dataExercise.getSet());
-                psmt.setLong(6,dataExercise.getRep());
-                psmt.setLong(7,dataExercise.getWeight());
-                psmt.setString(8,dataExercise.getRestTime());
-                psmt.setLong(9,dataExercise.getDivision());
-                psmt.setLong(10,program_id);
+                psmt.setLong(5,dataExercise.getDivision());
+                psmt.setLong(6,program_id);
                 psmt.addBatch();
                 psmt.clearParameters();
             }
@@ -50,7 +46,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         try {
-            String query = "DELETE FROM performanceData where program = ?";
+            String query = "DELETE FROM UserPerformanceData where program = ?";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,program.getId());
             psmt.executeUpdate();
@@ -69,7 +65,9 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         ResultSet rs = null;
         List<OperationDataProgram> list = new ArrayList<>();
         try {
-            String query = "SELECT * FROM performanceData WHERE program = ?";
+            String query = "SELECT * FROM userperformancedata INNER JOIN exercise on exercise.program = userperformancedata.program " +
+                    " and exercise.exercise_name = userperformancedata.exercise_name and " +
+                    "exercise.division = userperformancedata.exercise_division where userperformancedata.program = ?;";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,program.getId());
             rs = psmt.executeQuery();
@@ -78,7 +76,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
                 Long week = rs.getLong("week");
                 Long division = rs.getLong("division");
                 if (currentDataProgram == null) {
-                    mapOperationDataProgram(program,week,division,rs);
+                    currentDataProgram = mapOperationDataProgram(program,week,division,rs);
                 } else if(!currentDataProgram.getWeek().equals(week) || !currentDataProgram.getDivision().equals(division)) {
                     list.add(currentDataProgram);
                     currentDataProgram = mapOperationDataProgram(program,week,division,rs);
@@ -108,21 +106,68 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
 
     private OperationDataExercise mapOperationDataExercise(ResultSet rs) throws SQLException {
         OperationDataExercise dataExercise = new OperationDataExercise(
-                rs.getString("exercise_name"), rs.getLong("exercise_sets"), rs.getLong("exercise_reps"),
-                rs.getLong("exercise_weight"), rs.getString("exercise_rest"), rs.getLong("exercise_division"),
-                rs.getString("timeConsumed")
+                rs.getString("exercise.exercise_name"), rs.getLong("exercise.sets"), rs.getLong("exercise.reps"),
+                rs.getLong("exercise.weight"), rs.getString("exercise.rest"), rs.getLong("exercise.division"),
+                rs.getString("userperformancedata.timeConsumed")
         );
         return dataExercise;
     }
 
     @Override
     public int getProgress(Program program) {
-        return 0;
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        int progress = 0;
+        try {
+            String query = "SELECT COUNT(DISTINCT(CONCAT(week,'-',division))) AS PROGRESS FROM UserPerformanceData WHERE program = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1,program.getId());
+            ResultSet rs = psmt.executeQuery();
+            while (rs.next()) {
+                progress = rs.getInt("progress");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
+        return progress;
     }
 
     @Override
     public List<Program> getProgramsInProgress() {
-        return null;
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        ResultSet rs = null;
+        List<Program> programList = new ArrayList<>();
+        try {
+            String query = "SELECT program.program_id, program.name, program.purpose, program.length, program.divisionQty FROM UserPerformanceData " +
+                    "INNER JOIN program ON UserPerformanceData.program = program.program_id GROUP BY userperformancedata.program;";
+            psmt = conn.prepareStatement(query);
+            rs = psmt.executeQuery();
+            while (rs.next()) {
+                programList.add(mapProgram(rs));
+            }
+            rs.close();;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
+        return programList;
+    }
+
+    private Program mapProgram(ResultSet rs) throws SQLException {
+        Program program = new Program(
+                rs.getLong("program.program_id"),
+                rs.getString("program.name"),
+                rs.getString("program.purpose"),
+                rs.getLong("program.length"),
+                rs.getLong("program.divisionQty")
+        );
+        return program;
     }
 
     private Connection getConnection() {

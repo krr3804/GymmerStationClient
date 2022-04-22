@@ -39,15 +39,24 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
 
     @Override
     public Long getCurrentWeek(Program program) {
-        int divisionCount = program.countDivision();
-        return (long)(operationDataRepository.getProgress(program)/divisionCount + 1);
+        long res = 0L;
+        try {
+            res = operationDataRepository.getProgress(program) / program.getDivisionQty() + 1;
+        } catch (Exception e) {
+            System.err.println("error : " + e.getMessage());
+        }
+        return res;
     }
 
     @Override
     public Long getCurrentDivision(Program program) {
-        int divisionCount = program.countDivision();
-        return (long) (operationDataRepository.getProgress(program)%divisionCount + 1);
-
+        long res = 0L;
+        try {
+            res = operationDataRepository.getProgress(program) % program.getDivisionQty() + 1;
+        } catch (Exception e) {
+            System.err.println("error : " + e.getMessage());
+        }
+        return res;
     }
 
     @Override
@@ -57,7 +66,7 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
             StringBuilder sb = new StringBuilder();
             sb.append(program.getName()).append("(")
                     .append(operationDataRepository.getProgress(program)).append("/")
-                    .append((program.getLength() * program.countDivision())).append(")");
+                    .append((program.getLength() * program.getDivisionQty())).append(")");
             list.add(sb.toString());
         }
 

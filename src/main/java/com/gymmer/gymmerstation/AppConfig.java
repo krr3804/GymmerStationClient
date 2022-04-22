@@ -1,10 +1,7 @@
 package com.gymmer.gymmerstation;
 
 import com.gymmer.gymmerstation.programManagement.*;
-import com.gymmer.gymmerstation.programOperation.MemoryOperationDataRepository;
-import com.gymmer.gymmerstation.programOperation.OperationDataRepository;
-import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
-import com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImpl;
+import com.gymmer.gymmerstation.programOperation.*;
 
 public class AppConfig {
     public static ProgramRepository programRepository() {
@@ -20,7 +17,7 @@ public class AppConfig {
     }
 
     public static OperationDataRepository operationDataRepository() {
-        return new MemoryOperationDataRepository();
+        return new OperationDataRepositoryJDBC();
     }
 
 }
