@@ -12,12 +12,13 @@
   - Name
   - Purpose
   - Length
-  - Division
-  - [Add Exercise] button -> [Add Exercise] window
+  - [Add Division],[Remove Division] -> add or remove division quantity
+  - Double-click on specific division number -> [Add Exercise] window
 - Save button
 - Exit button
 
 ## [Add Exercise] window
+- Show list of exercises
 - Add Exercise
   - Exercise name
   - Sets
@@ -36,12 +37,12 @@
 
 ## [Program Information] window
 - Shows selected program detail
-- [Start] button -> [Program Operation] window
-- [Pause] button -> [Pause] window
+- [Start] button -> [Program Operation] window -> start program on current week and division
+- [Exit] button -> return to [Load Program] window
 
 ## [Program operation] window
 - shows exercise detail
-- [Start] button -> start stopwatch
+- [Start] button -> start stopwatch -> switch to [Pause] button
 - [Done] button -> [Rest] window
 - [Pause] button -> [Pause] window
 
