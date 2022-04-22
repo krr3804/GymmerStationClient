@@ -15,11 +15,12 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         try {
-            String query = "INSERT INTO program values (null,?,?,?);";
+            String query = "INSERT INTO program values (null,?,?,?,?);";
             psmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             psmt.setString(1, program.getName());
             psmt.setString(2, program.getPurpose());
             psmt.setLong(3, program.getLength());
+            psmt.setLong(4, program.getDivisionQty());
             psmt.executeUpdate();
 
             ResultSet rs = psmt.getGeneratedKeys();
@@ -28,41 +29,15 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
             }
             rs.close();
             psmt.clearParameters();
-
-            query = "INSERT INTO exercise values (?,?,?,?,?,?,?)";
+            query = "INSERT INTO exercise values (?,?,?,?,?,?,?);";
             psmt = conn.prepareStatement(query);
-            for(Exercise exercise : program.getExerciseList()) {
-                psmt = addExerciseData(psmt,exercise,key);
-            }
-            psmt.executeBatch();
+            addExercises(psmt,key,program.getExerciseList());
         } catch (SQLException e) {
             System.err.println("SQL error : " + e.getMessage());
         } finally {
             closePreparedStatement(psmt);
             closeConnection(conn);
         }
-    }
-
-    private PreparedStatement addExerciseData(PreparedStatement psmt, Exercise exercise, Long programId) throws SQLException{
-        psmt.setString(1,exercise.getName());
-        psmt.setLong(2,exercise.getSet());
-        psmt.setLong(3,exercise.getRep());
-        psmt.setLong(4,exercise.getWeight());
-        psmt.setString(5,exercise.getRestTime());
-        psmt.setLong(6,exercise.getDivision());
-        psmt.setLong(7,programId);
-        psmt.addBatch();
-        psmt.clearParameters();
-        return psmt;
-    }
-
-    private PreparedStatement deleteExerciseData(PreparedStatement psmt, Exercise exercise, Long programId) throws SQLException {
-        psmt.setString(1,exercise.getName());
-        psmt.setLong(2, exercise.getDivision());
-        psmt.setLong(3,programId);
-        psmt.addBatch();
-        psmt.clearParameters();
-        return psmt;
     }
 
     @Override
@@ -107,6 +82,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
                 rs.getString("name"),
                 rs.getString("purpose"),
                 rs.getLong("length"),
+                rs.getLong("divisionQty"),
                 new ArrayList<>());
         return program;
     }
@@ -123,39 +99,34 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
     }
 
     @Override
-    public void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList) {
+    public void editProgram(Program oldProgram, Program newProgram, List<Long> removedDivisions, List<Exercise> addedExercises, List<Exercise> deletedExercises) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         String query;
         try {
             Long program_id = oldProgram.getId();
             if(!oldProgram.getName().equals(newProgram.getName()) || !oldProgram.getPurpose().equals(newProgram.getPurpose()) || !oldProgram.getLength().equals(newProgram.getLength())) {
-                query = "UPDATE program SET name = ?, purpose = ?, length = ? WHERE program_id = ?;";
+                query = "UPDATE program SET name = ?, purpose = ?, length = ?, divisionQty = ? WHERE program_id = ?;";
                 psmt = conn.prepareStatement(query);
-                psmt.setString(1, newProgram.getName());
-                psmt.setString(2, newProgram.getPurpose());
-                psmt.setLong(3, newProgram.getLength());
-                psmt.setLong(4, program_id);
-                psmt.executeUpdate();
-                psmt.clearParameters();
+                updateProgramData(psmt,oldProgram,newProgram);
             }
-            if(!additionList.isEmpty()) {
-                query = "INSERT INTO exercise values (?,?,?,?,?,?,?,?);";
+            if(!oldProgram.getDivisionQty().equals(newProgram.getDivisionQty())) {
+                query = "UPDATE program SET divisionQty = ? WHERE program_id = ?;";
                 psmt = conn.prepareStatement(query);
-                for (Exercise exercise : additionList) {
-                    psmt = addExerciseData(psmt, exercise, program_id);
-                }
-                psmt.executeBatch();
-                psmt.clearParameters();
+                updateDivision(psmt,program_id,newProgram.getDivisionQty());
             }
-
-            if(!deletionList.isEmpty()) {
+            if (!removedDivisions.isEmpty()) {
+                removeEntireDivision(conn,psmt,program_id,removedDivisions);
+            }
+            if (!deletedExercises.isEmpty()) {
                 query = "DELETE FROM exercise WHERE exercise_name = ? AND division = ? AND program = ?;";
                 psmt = conn.prepareStatement(query);
-                for (Exercise exercise : deletionList) {
-                    psmt = deleteExerciseData(psmt,exercise,program_id);
-                }
-                psmt.executeBatch();
+                deleteExercises(psmt,program_id,deletedExercises);
+            }
+            if (!addedExercises.isEmpty()) {
+                query = "INSERT INTO exercise values (?,?,?,?,?,?,?);";
+                psmt = conn.prepareStatement(query);
+                addExercises(psmt,program_id,addedExercises);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,6 +135,65 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
             closePreparedStatement(psmt);
             closeConnection(conn);
         }
+    }
+
+    private void updateProgramData(PreparedStatement psmt, Program oldProgram, Program newProgram) throws SQLException{
+        psmt.setString(1, newProgram.getName());
+        psmt.setString(2, newProgram.getPurpose());
+        psmt.setLong(3, newProgram.getLength());
+        psmt.setLong(4,newProgram.getDivisionQty());
+        psmt.setLong(5, oldProgram.getId());
+        psmt.executeUpdate();
+    }
+
+    private void updateDivision(PreparedStatement psmt, Long programId, Long divisionCount) throws SQLException {
+        psmt.setLong(1,divisionCount);
+        psmt.setLong(2,programId);
+        psmt.executeUpdate();
+    }
+
+    private void removeEntireDivision(Connection conn, PreparedStatement psmt, Long programId, List<Long> removedDivisions) throws SQLException {
+        for(Long removedDivision : removedDivisions) {
+            String query = "DELETE FROM exercise WHERE division = ? AND program = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1, removedDivision);
+            psmt.setLong(2, programId);
+            psmt.executeUpdate();
+            psmt.clearParameters();
+
+            query = "UPDATE exercise SET division = division - 1 WHERE division > ? AND program = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1, removedDivision);
+            psmt.setLong(2, programId);
+            psmt.executeUpdate();
+            psmt.clearParameters();
+        }
+    }
+
+    private void deleteExercises(PreparedStatement psmt, Long programId, List<Exercise> deletedExercises) throws SQLException{
+        for(Exercise exercise : deletedExercises) {
+            psmt.setString(1,exercise.getName());
+            psmt.setLong(2, exercise.getDivision());
+            psmt.setLong(3,programId);
+            psmt.addBatch();
+            psmt.clearParameters();
+        }
+        psmt.executeBatch();
+    }
+
+    private void addExercises(PreparedStatement psmt, Long programId, List<Exercise> addedExercises) throws SQLException{
+        for(Exercise exercise : addedExercises) {
+            psmt.setString(1,exercise.getName());
+            psmt.setLong(2,exercise.getSet());
+            psmt.setLong(3,exercise.getRep());
+            psmt.setLong(4,exercise.getWeight());
+            psmt.setString(5,exercise.getRestTime());
+            psmt.setLong(6,exercise.getDivision());
+            psmt.setLong(7,programId);
+            psmt.addBatch();
+            psmt.clearParameters();
+        }
+        psmt.executeBatch();
     }
 
     @Override
@@ -198,7 +228,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         try {
-            String query = "delete from exercise where program.program_id = ?;";
+            String query = "delete from exercise where program = ?;";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,id);
             psmt.executeUpdate();
