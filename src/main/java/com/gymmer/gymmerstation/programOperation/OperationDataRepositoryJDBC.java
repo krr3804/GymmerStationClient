@@ -20,15 +20,16 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         Long division = dataProgram.getDivision();
 
         try {
-            String query = "INSERT INTO UserPerformanceData VALUES (?,?,?,?,?,?)";
+            String query = "INSERT INTO UserPerformanceData VALUES (?,?,?,?,?,?,?)";
             psmt = conn.prepareStatement(query);
             for(OperationDataExercise dataExercise : dataProgram.getOdExerciseList()) {
                 psmt.setLong(1,week);
                 psmt.setLong(2,division);
-                psmt.setString(3,dataExercise.getTimeConsumed());
-                psmt.setString(4,dataExercise.getName());
-                psmt.setLong(5,dataExercise.getDivision());
-                psmt.setLong(6,program_id);
+                psmt.setLong(3,dataExercise.getCurrentSet());
+                psmt.setString(4,dataExercise.getTimeConsumed());
+                psmt.setString(5,dataExercise.getName());
+                psmt.setLong(6,dataExercise.getDivision());
+                psmt.setLong(7,program_id);
                 psmt.addBatch();
                 psmt.clearParameters();
             }
@@ -108,7 +109,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         OperationDataExercise dataExercise = new OperationDataExercise(
                 rs.getString("exercise.exercise_name"), rs.getLong("exercise.sets"), rs.getLong("exercise.reps"),
                 rs.getLong("exercise.weight"), rs.getString("exercise.rest"), rs.getLong("exercise.division"),
-                rs.getString("userperformancedata.timeConsumed")
+                rs.getLong("userperformancedata.current_set"),rs.getString("userperformancedata.timeConsumed")
         );
         return dataExercise;
     }

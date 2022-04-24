@@ -67,27 +67,30 @@ public class ProgramInformationController implements Initializable {
         List<OperationDataExercise> odeList = new ArrayList<>();
         Stage currentStage = (Stage) btnStart.getScene().getWindow();
         currentStage.hide();
-        Long divisionNumber = 0L + division;
-        for(Exercise exercise : program.getExerciseByDivision(divisionNumber)) {
-            loadOperationStage(exercise);
-            odeList.add(new OperationDataExercise(exercise.getName(),exercise.getSet(),exercise.getRep(),exercise.getWeight(),exercise.getRestTime(), exercise.getDivision(),timeConsumed));
-            if(pauseOption.equals("saveAndExit")) {
-                break;
+        OuterLoop:
+        for(Exercise exercise : program.getExerciseByDivision(division)) {
+            for(long set = 1; set <= exercise.getSet(); set++) {
+                loadOperationStage(exercise,set);
+                odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(),
+                        exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), exercise.getDivision(), set, timeConsumed));
+                if (pauseOption.equals("saveAndExit")) {
+                    break OuterLoop;
+                }
+                if (pauseOption.equals("exit")) {
+                    exit();
+                    return;
+                }
+                loadRestTimeStage(exercise);
+                if (pauseOption.equals("saveAndExit")) {
+                    break OuterLoop;
+                }
+                if (pauseOption.equals("exit")) {
+                    exit();
+                    return;
+                }
+                pauseOption = "";
+                timeConsumed = "";
             }
-            if(pauseOption.equals("exit")) {
-                exit();
-                return;
-            }
-            loadRestTimeStage(exercise);
-            if(pauseOption.equals("saveAndExit")) {
-                break;
-            }
-            if(pauseOption.equals("exit")) {
-                exit();
-                return;
-            }
-            pauseOption = "";
-            timeConsumed = "";
         }
 
         programOperationService.saveProgramData(new OperationDataProgram(program,week,division,odeList));
@@ -98,13 +101,13 @@ public class ProgramInformationController implements Initializable {
         });
     }
 
-    private void loadOperationStage(Exercise exercise) {
+    private void loadOperationStage(Exercise exercise, Long currentSet) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
             Parent root = loader.load();
             ProgramOperationController programOperationController = loader.getController();
-            programOperationController.initData(exercise);
+            programOperationController.initData(exercise,currentSet);
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);

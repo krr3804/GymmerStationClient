@@ -101,9 +101,9 @@ public class ProgramOperationController implements Initializable {
         Util.closeStage(btnDone);
     }
 
-    public void initData(Exercise exercise) {
+    public void initData(Exercise exercise, Long currentSet) {
         exerciseInfo.setText(exercise.getName());
-        setInfo.setText(exercise.getSet().toString());
+        setInfo.setText(currentSet.toString());
         repsInfo.setText(exercise.getRep().toString());
         weightInfo.setText(exercise.getWeight().toString());
         minInfo = exercise.getRestTime().substring(0,2);
