@@ -14,32 +14,32 @@
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name :" />
-            <TextField fx:id="inpName" />
+            <TextField fx:id="Name" />
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sets :" />
-            <TextField fx:id="inpSets" />
+            <TextField fx:id="Sets" />
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reps :" />
-            <TextField fx:id="inpReps" />
+            <TextField fx:id="Reps" />
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Weight :" />
-            <TextField fx:id="inpWeight" />
+            <TextField fx:id="Weight" />
          </children>
       </HBox>
       <HBox prefHeight="30.0" prefWidth="600.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rest Time :" />
-            <Spinner fx:id="inpMinute" prefHeight="22.0" prefWidth="52.0" />
-            <Spinner fx:id="inpSecond" prefHeight="22.0" prefWidth="52.0" />
+            <Spinner fx:id="Minute" prefHeight="22.0" prefWidth="52.0" />
+            <Spinner fx:id="Second" prefHeight="22.0" prefWidth="52.0" />
          </children>
       </HBox>
       <Button fx:id="btnSave" mnemonicParsing="false" text="Save" />

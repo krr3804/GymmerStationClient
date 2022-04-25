@@ -2,6 +2,7 @@ package com.gymmer.gymmerstation.exerciseManagement;
 
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.CommonValidation;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
@@ -10,13 +11,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
+import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
+import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
 
 public class ExerciseController implements Initializable {
@@ -29,22 +32,10 @@ public class ExerciseController implements Initializable {
     private ListView<String> exerciseListView;
 
     @FXML
-    private TextField inpName;
+    private TextField Name, Sets, Reps, Weight;
 
     @FXML
-    private TextField inpSets;
-
-    @FXML
-    private TextField inpReps;
-
-    @FXML
-    private TextField inpWeight;
-
-    @FXML
-    private Spinner<String> inpMinute;
-
-    @FXML
-    private Spinner<String> inpSecond;
+    private Spinner<String> Minute, Second;
 
     @FXML
     private Button btnSave;
@@ -58,9 +49,12 @@ public class ExerciseController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTimer();
-        btnSave.setOnAction(event -> checkValidation(event));
-        btnDelete.setOnAction(event -> checkValidation(event));
-        btnExit.setOnAction(event -> checkValidation(event));
+        Sets.setOnKeyReleased(event -> checkInputEventValidation(event));
+        Reps.setOnKeyReleased(event -> checkInputEventValidation(event));
+        Weight.setOnKeyReleased(event -> checkInputEventValidation(event));
+        btnSave.setOnAction(event -> checkButtonEventValidation(event));
+        btnDelete.setOnAction(event -> checkButtonEventValidation(event));
+        btnExit.setOnAction(event -> checkButtonEventValidation(event));
     }
 
     public void initData(Program program, Long division) {
@@ -69,7 +63,18 @@ public class ExerciseController implements Initializable {
         exerciseListView.setItems(showExerciseList());
     }
 
-    private void checkValidation(ActionEvent event) {
+    private void checkInputEventValidation(KeyEvent event) {
+        TextField field = (TextField) event.getSource();
+        try {
+            String fieldName = field.getId();
+            InputValidation.inputMismatchValidationNumber(field.getText(),fieldName);
+        } catch (IllegalArgumentException e) {
+            field.clear();
+            generateErrorAlert(e.getMessage()).showAndWait();
+        }
+    }
+
+    private void checkButtonEventValidation(ActionEvent event) {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
@@ -81,31 +86,38 @@ public class ExerciseController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if(e.getMessage().equals("No Item Selected!")) {
+            if(e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") || e.getMessage().equals("Rest Time Is 00:00!")) {
                 generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
-
     }
 
     private void initTimer() {
-        List<String> time = new ArrayList<>();
+        List<String> minute = new ArrayList<>(60);
+        List<String> second = new ArrayList<>(11);
         for(int i = 0; i < 60; i++) {
-            time.add(String.format("%02d",i));
+            if(i % 5 == 0) {
+                second.add(String.format("%02d",i));
+            }
+            minute.add(String.format("%02d",i));
         }
-        ObservableList<String> observableList = FXCollections.observableArrayList(time);
-        SpinnerValueFactory<String> valueFactoryMinute = new SpinnerValueFactory.ListSpinnerValueFactory<String>(observableList);
-        SpinnerValueFactory<String> valueFactorySecond = new SpinnerValueFactory.ListSpinnerValueFactory<String>(observableList);
-        valueFactoryMinute.setValue("00");
-        valueFactorySecond.setValue("00");
-        inpMinute.setValueFactory(valueFactoryMinute);
-        inpSecond.setValueFactory(valueFactorySecond);
+        SpinnerValueFactory<String> valueFactoryMinute = new SpinnerValueFactory.ListSpinnerValueFactory<>(FXCollections.observableArrayList(minute));
+        SpinnerValueFactory<String> valueFactorySecond = new SpinnerValueFactory.ListSpinnerValueFactory<>(FXCollections.observableArrayList(second));
+        Minute.setValueFactory(valueFactoryMinute);
+        Second.setValueFactory(valueFactorySecond);
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
-        String restTime = inpMinute.getValue() + ":" + inpSecond.getValue();
-        Exercise exercise = new Exercise(inpName.getText(),Long.parseLong(inpSets.getText()),
-                Long.parseLong(inpReps.getText()), Long.parseLong(inpWeight.getText()),
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("Name",Name.getText());
+        map.put("Sets", Sets.getText());
+        map.put("Reps", Reps.getText());
+        map.put("Weight", Weight.getText());
+        inputBlankValidation(map);
+        String restTime = Minute.getValue() + ":" + Second.getValue();
+        inputMismatchValidationRestTime(restTime);
+        Exercise exercise = new Exercise(Name.getText(),Long.parseLong(Sets.getText()),
+                Long.parseLong(Reps.getText()), Long.parseLong(Weight.getText()),
                 restTime, currentDivision);
         currentProgram.getExerciseList().add(exercise);
         exerciseListView.setItems(showExerciseList());
@@ -118,7 +130,7 @@ public class ExerciseController implements Initializable {
     }
 
     private void handleBtnDeleteAction(ActionEvent event) {
-        CommonValidation.noItemSelectedValidation(exerciseListView.getSelectionModel().getSelectedItem());
+        noItemSelectedValidation(exerciseListView.getSelectionModel().getSelectedItem());
         String name = exerciseListView.getSelectionModel().getSelectedItem();
         Exercise exercise = currentProgram.removeExercise(currentDivision,name);
         exerciseListView.setItems(showExerciseList());

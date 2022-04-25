@@ -5,6 +5,7 @@ import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
+import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.CommonValidation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,14 +16,21 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
@@ -60,14 +68,27 @@ public class ProgramCreateController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
+        inpLength.setOnKeyReleased(event -> checkInputEventValidation(event));
         btnAddDivision.setOnAction(event -> handleBtnAddDivisionEvent(event));
-        btnRemoveDivision.setOnAction(event -> checkEventValidation(event));
-        btnSave.setOnAction(event -> handleBtnSaveAction(event));
-        btnExit.setOnAction(event -> checkEventValidation(event));
+        btnRemoveDivision.setOnAction(event -> checkButtonEventValidation(event));
+        btnSave.setOnAction(event -> checkButtonEventValidation(event));
+        btnExit.setOnAction(event -> checkButtonEventValidation(event));
     }
 
-    private void checkEventValidation(ActionEvent event) {
+    private void checkInputEventValidation(KeyEvent event) {
         try {
+            InputValidation.inputMismatchValidationNumber(inpLength.getText(), "Length");
+        } catch (IllegalArgumentException e) {
+            inpLength.clear();
+            generateErrorAlert(e.getMessage()).showAndWait();
+        }
+    }
+
+    private void checkButtonEventValidation(ActionEvent event) {
+        try {
+            if (event.getSource().equals(btnSave)) {
+                handleBtnSaveAction(event);
+            }
             if (event.getSource().equals(btnRemoveDivision)) {
                 handleBtnRemoveDivisionEvent(event);
             }
@@ -75,35 +96,40 @@ public class ProgramCreateController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if(e.getMessage().equals("No Item Selected!")) {
+            if (e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!")) {
                 generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        loadStage("main-view.fxml",btnExit.getScene());
+        loadStage("main-view.fxml", btnExit.getScene());
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("Name", inpName.getText());
+        map.put("Purpose", inpPurpose.getText());
+        map.put("Length", inpLength.getText());
+        InputValidation.inputBlankValidation(map);
         List<Exercise> list = program.getExerciseList();
-        program = new Program(null,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()), program.countDivision(),list);
+        program = new Program(null, inpName.getText(), inpPurpose.getText(), Long.parseLong(inpLength.getText()), program.countDivision(), list);
         programService.addProgram(program);
-        loadStage("main-view.fxml",btnExit.getScene());
+        loadStage("main-view.fxml", btnExit.getScene());
     }
 
     private void handleBtnAddDivisionEvent(ActionEvent event) {
-        divisionList.add(divisionList.size()+1);
+        divisionList.add(divisionList.size() + 1);
         divisionListView.setItems(getDivision());
     }
 
     private void handleBtnRemoveDivisionEvent(ActionEvent event) {
-        CommonValidation.noItemSelectedValidation( divisionListView.getSelectionModel().getSelectedItem());
-        Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
+        CommonValidation.noItemSelectedValidation(divisionListView.getSelectionModel().getSelectedItem());
+        Long selectedDivision = divisionListView.getSelectionModel().getSelectedItem().longValue();
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);
         for (int i = index; i < divisionList.size(); i++) {
-            divisionList.set(index,divisionList.get(index)-1);
+            divisionList.set(index, divisionList.get(index) - 1);
         }
         program.removeExerciseInDivision(selectedDivision);
         divisionListView.setItems(getDivision());
@@ -114,8 +140,8 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleListDoubleClickEvent(MouseEvent event) {
-        if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-            Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
+        if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+            Long selectedDivision = divisionListView.getSelectionModel().getSelectedItem().longValue();
             try {
                 loadExerciseWindow(program, selectedDivision, event);
             } catch (Exception e) {
@@ -132,9 +158,9 @@ public class ProgramCreateController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             ExerciseController exerciseController = loader.getController();
-            exerciseController.initData(program,division);
+            exerciseController.initData(program, division);
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
             stage.showAndWait();
 
         } catch (Exception e) {
