@@ -5,6 +5,7 @@ import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
+import com.gymmer.gymmerstation.util.CommonValidation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 
+import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramCreateController implements Initializable {
@@ -59,9 +61,24 @@ public class ProgramCreateController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
         btnAddDivision.setOnAction(event -> handleBtnAddDivisionEvent(event));
-        btnRemoveDivision.setOnAction(event -> handleBtnRemoveDivisionEvent(event));
+        btnRemoveDivision.setOnAction(event -> checkEventValidation(event));
         btnSave.setOnAction(event -> handleBtnSaveAction(event));
-        btnExit.setOnAction(event -> handleBtnExitAction(event));
+        btnExit.setOnAction(event -> checkEventValidation(event));
+    }
+
+    private void checkEventValidation(ActionEvent event) {
+        try {
+            if (event.getSource().equals(btnRemoveDivision)) {
+                handleBtnRemoveDivisionEvent(event);
+            }
+            if (event.getSource().equals(btnExit)) {
+                handleBtnExitAction(event);
+            }
+        } catch (IllegalArgumentException e) {
+            if(e.getMessage().equals("No Item Selected!")) {
+                generateErrorAlert(e.getMessage()).showAndWait();
+            }
+        }
     }
 
     private void handleBtnExitAction(ActionEvent event) {
@@ -72,6 +89,7 @@ public class ProgramCreateController implements Initializable {
         List<Exercise> list = program.getExerciseList();
         program = new Program(null,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()), program.countDivision(),list);
         programService.addProgram(program);
+        loadStage("main-view.fxml",btnExit.getScene());
     }
 
     private void handleBtnAddDivisionEvent(ActionEvent event) {
@@ -80,6 +98,7 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleBtnRemoveDivisionEvent(ActionEvent event) {
+        CommonValidation.noItemSelectedValidation( divisionListView.getSelectionModel().getSelectedItem());
         Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);

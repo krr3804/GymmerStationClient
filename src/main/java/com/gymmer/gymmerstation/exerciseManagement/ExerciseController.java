@@ -2,6 +2,7 @@ package com.gymmer.gymmerstation.exerciseManagement;
 
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.util.CommonValidation;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
 
 public class ExerciseController implements Initializable {
     private Program currentProgram = null;
@@ -55,15 +58,34 @@ public class ExerciseController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTimer();
-        btnSave.setOnAction(event -> handleBtnSaveAction(event));
-        btnDelete.setOnAction(event -> handleBtnDeleteAction(event));
-        btnExit.setOnAction(event -> handleBtnExitAction(event));
+        btnSave.setOnAction(event -> checkValidation(event));
+        btnDelete.setOnAction(event -> checkValidation(event));
+        btnExit.setOnAction(event -> checkValidation(event));
     }
 
     public void initData(Program program, Long division) {
         currentProgram = program;
         currentDivision = division;
         exerciseListView.setItems(showExerciseList());
+    }
+
+    private void checkValidation(ActionEvent event) {
+        try {
+            if (event.getSource().equals(btnSave)) {
+                handleBtnSaveAction(event);
+            }
+            if (event.getSource().equals(btnDelete)) {
+                handleBtnDeleteAction(event);
+            }
+            if (event.getSource().equals(btnExit)) {
+                handleBtnExitAction(event);
+            }
+        } catch (IllegalArgumentException e) {
+            if(e.getMessage().equals("No Item Selected!")) {
+                generateErrorAlert(e.getMessage()).showAndWait();
+            }
+        }
+
     }
 
     private void initTimer() {
@@ -96,6 +118,7 @@ public class ExerciseController implements Initializable {
     }
 
     private void handleBtnDeleteAction(ActionEvent event) {
+        CommonValidation.noItemSelectedValidation(exerciseListView.getSelectionModel().getSelectedItem());
         String name = exerciseListView.getSelectionModel().getSelectedItem();
         Exercise exercise = currentProgram.removeExercise(currentDivision,name);
         exerciseListView.setItems(showExerciseList());

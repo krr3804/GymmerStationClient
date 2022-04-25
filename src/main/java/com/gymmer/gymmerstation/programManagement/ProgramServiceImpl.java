@@ -31,12 +31,13 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Override
     public Program getProgramById(int index) {
-        Long id = programRepository.showProgramList().get(index).getId();
-        return programRepository.getProgramById(id);
+        List<Program> programList = programRepository.showProgramList();
+        return programRepository.getProgramById(programList.get(index).getId());
     }
 
     @Override
     public void deleteProgram(int index) {
-        programRepository.deleteProgram(programRepository.showProgramList().get(index).getId());
+        List<Program> programList = programRepository.showProgramList();
+        programRepository.deleteProgram(programList.get(index).getId());
     }
 }

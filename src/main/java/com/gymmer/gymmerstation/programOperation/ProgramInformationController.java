@@ -7,13 +7,11 @@ import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
-import com.gymmer.gymmerstation.util.Util;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,7 +22,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import static com.gymmer.gymmerstation.util.Util.loadStage;
@@ -33,6 +30,7 @@ public class ProgramInformationController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private int index;
+    private Program currentProgram = null;
     private Long week;
     private Long division;
     private String timeConsumed;
@@ -63,12 +61,11 @@ public class ProgramInformationController implements Initializable {
     }
 
     private void handleBtnStartAction(ActionEvent event) {
-        Program program = programService.getProgramById(index);
         List<OperationDataExercise> odeList = new ArrayList<>();
         Stage currentStage = (Stage) btnStart.getScene().getWindow();
         currentStage.hide();
         OuterLoop:
-        for(Exercise exercise : program.getExerciseByDivision(division)) {
+        for(Exercise exercise : currentProgram.getExerciseByDivision(division)) {
             for(long set = 1; set <= exercise.getSet(); set++) {
                 loadOperationStage(exercise,set);
                 odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(),
@@ -93,7 +90,7 @@ public class ProgramInformationController implements Initializable {
             }
         }
 
-        programOperationService.saveProgramData(new OperationDataProgram(program,week,division,odeList));
+        programOperationService.saveProgramData(new OperationDataProgram(currentProgram,week,division,odeList));
         currentStage.show();
         Platform.runLater(() -> {
             btnStart.setText("Completed");
@@ -147,12 +144,12 @@ public class ProgramInformationController implements Initializable {
     }
 
     public void initProgramData(int index) {
-        Program program = programService.getProgramById(index);
-        programNameInfo.setText(program.getName());
-        purposeInfo.setText(program.getPurpose());
-        lengthInfo.setText(program.getLength().toString());
-        week = programOperationService.getCurrentWeek(program);
-        division = programOperationService.getCurrentDivision(program);
+        currentProgram = programService.getProgramById(index);
+        programNameInfo.setText(currentProgram.getName());
+        purposeInfo.setText(currentProgram.getPurpose());
+        lengthInfo.setText(currentProgram.getLength().toString());
+        week = programOperationService.getCurrentWeek(currentProgram);
+        division = programOperationService.getCurrentDivision(currentProgram);
         divisionInfo.setText("Week " + week + " - " + division);
         this.index = index;
     }
