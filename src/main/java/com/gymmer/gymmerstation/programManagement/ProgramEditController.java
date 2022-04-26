@@ -27,6 +27,9 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.noDivisionValidation;
+import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.noExerciseValidation;
+import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
@@ -105,6 +108,8 @@ public class ProgramEditController implements Initializable {
         map.put("Purpose", inpPurpose.getText());
         map.put("Length", inpLength.getText());
         InputValidation.inputBlankValidation(map);
+        noDivisionValidation(divisionList);
+        noExerciseValidation(program,divisionList);
         Program programEdited = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.countDivision(),program.getExerciseList());
         programService.editProgram(program,programEdited,removedDivisions,additionList,deletionList);
     }
@@ -114,12 +119,13 @@ public class ProgramEditController implements Initializable {
     }
 
     private void handleBtnAddDivisionEvent(ActionEvent event) {
+        noExerciseValidation(program,divisionList);
         divisionList.add(divisionList.size()+1);
         divisionListView.setItems(getDivision());
     }
 
     private void handleBtnRemoveDivisionEvent(ActionEvent event) {
-        CommonValidation.noItemSelectedValidation( divisionListView.getSelectionModel().getSelectedItem());
+        noItemSelectedValidation( divisionListView.getSelectionModel().getSelectedItem());
         Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);

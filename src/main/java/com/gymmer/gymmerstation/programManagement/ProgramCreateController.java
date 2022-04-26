@@ -5,6 +5,7 @@ import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
+import com.gymmer.gymmerstation.programManagement.validations.DivisionValidation;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.CommonValidation;
 import javafx.collections.FXCollections;
@@ -32,6 +33,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
+import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
@@ -69,7 +72,7 @@ public class ProgramCreateController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
         inpLength.setOnKeyReleased(event -> checkInputEventValidation(event));
-        btnAddDivision.setOnAction(event -> handleBtnAddDivisionEvent(event));
+        btnAddDivision.setOnAction(event -> checkButtonEventValidation(event));
         btnRemoveDivision.setOnAction(event -> checkButtonEventValidation(event));
         btnSave.setOnAction(event -> checkButtonEventValidation(event));
         btnExit.setOnAction(event -> checkButtonEventValidation(event));
@@ -89,6 +92,9 @@ public class ProgramCreateController implements Initializable {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
             }
+            if (event.getSource().equals(btnAddDivision)) {
+                handleBtnAddDivisionEvent(event);
+            }
             if (event.getSource().equals(btnRemoveDivision)) {
                 handleBtnRemoveDivisionEvent(event);
             }
@@ -96,7 +102,8 @@ public class ProgramCreateController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!")) {
+            if (e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") ||
+                    e.getMessage().contains("No Exercise Found In Division ") || e.getMessage().equals("No Division Found!")) {
                 generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
@@ -112,6 +119,8 @@ public class ProgramCreateController implements Initializable {
         map.put("Purpose", inpPurpose.getText());
         map.put("Length", inpLength.getText());
         InputValidation.inputBlankValidation(map);
+        noDivisionValidation(divisionList);
+        noExerciseValidation(program,divisionList);
         List<Exercise> list = program.getExerciseList();
         program = new Program(null, inpName.getText(), inpPurpose.getText(), Long.parseLong(inpLength.getText()), program.countDivision(), list);
         programService.addProgram(program);
@@ -119,12 +128,13 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleBtnAddDivisionEvent(ActionEvent event) {
+        noExerciseValidation(program,divisionList);
         divisionList.add(divisionList.size() + 1);
         divisionListView.setItems(getDivision());
     }
 
     private void handleBtnRemoveDivisionEvent(ActionEvent event) {
-        CommonValidation.noItemSelectedValidation(divisionListView.getSelectionModel().getSelectedItem());
+        noItemSelectedValidation(divisionListView.getSelectionModel().getSelectedItem());
         Long selectedDivision = divisionListView.getSelectionModel().getSelectedItem().longValue();
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);
