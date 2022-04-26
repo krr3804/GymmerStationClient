@@ -2,6 +2,7 @@ package com.gymmer.gymmerstation.exerciseManagement;
 
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.programManagement.validations.DuplicateExerciseValidation;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.CommonValidation;
 import com.gymmer.gymmerstation.util.Util;
@@ -17,6 +18,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.gymmer.gymmerstation.programManagement.validations.DuplicateExerciseValidation.*;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
@@ -86,7 +88,8 @@ public class ExerciseController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if(e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") || e.getMessage().equals("Rest Time Is 00:00!")) {
+            if(e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") ||
+                    e.getMessage().equals("Rest Time Is 00:00!") || e.getMessage().equals("Exercise Already In The List!")) {
                 generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
@@ -116,6 +119,7 @@ public class ExerciseController implements Initializable {
         inputBlankValidation(map);
         String restTime = Minute.getValue() + ":" + Second.getValue();
         inputMismatchValidationRestTime(restTime);
+        duplicateExerciseValidation(currentProgram.getExerciseByDivision(currentDivision),Name.getText());
         Exercise exercise = new Exercise(Name.getText(),Long.parseLong(Sets.getText()),
                 Long.parseLong(Reps.getText()), Long.parseLong(Weight.getText()),
                 restTime, currentDivision);
