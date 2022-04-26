@@ -96,20 +96,18 @@
   - When non-numeric value is typed in text fields requiring numeric value  
   - [ERROR MESSAGE] "Cell name" must be numeric!
   - When value given is less than or equal to 0
-  - [ERROR MESSAGE] "Cell name" must be bigger than 0!
+  - [ERROR MESSAGE] "Cell name" must be no less than 0!
 - Input mismatch validation(Rest Time)
   - When, trying to save program with rest time cell equal to '00:00'
-  - [ERROR MESSAGE] Rest Time must be bigger than 00:00!
+  - [ERROR MESSAGE] Rest Time is 00:00!
 - Duplicate exercises in division validation
   - When, trying to save exercise already in the list
   - [ERROR MESSAGE] Exercise already in the list!
-- [Delete Division] button validation
-  - When [Delete Division] is pressed with an empty division list
-  - [ERROR MESSAGE] No Division Found!
-- [Delete Exercise] button validation
-  - When [Delete] button is pressed with an empty exercise list
-  - [ERROR MESSAGE] No Exercise Found!
+- No division found validation
+  - When, trying to save without any division
+  - [ERROR MESSAGE] NO Division Found!
 - No exercise found validation
+  - When, trying to add division quantity in existing division list containing empty exercise list
   - When [Save] button is pressed with a division containing empty exercise list
   - [ERROR MESSAGE] No Exercise Found In Division "Division number"!
 
