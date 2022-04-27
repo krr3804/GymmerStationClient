@@ -67,7 +67,7 @@ public class ProgramEditController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
-        inpLength.setOnKeyReleased(event -> checkInputEventValidation(event));
+        inpLength.setOnKeyTyped(event -> checkInputEventValidation(event));
         btnAddDivision.setOnAction(event -> handleBtnAddDivisionEvent(event));
         btnRemoveDivision.setOnAction(event -> checkButtonEventValidation(event));
         btnSave.setOnAction(event -> checkButtonEventValidation(event));
@@ -87,7 +87,7 @@ public class ProgramEditController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
-                generateInformationAlert("Data Edited!");
+                generateInformationAlert("Program Edited!").showAndWait();
             }
             if (event.getSource().equals(btnRemoveDivision)) {
                 handleBtnRemoveDivisionEvent(event);
@@ -174,6 +174,7 @@ public class ProgramEditController implements Initializable {
             exerciseController.initData(program,division);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+            handleCloseWindowAction(stage);
             stage.showAndWait();
 
             additionList.addAll(exerciseController.getAdditionList());

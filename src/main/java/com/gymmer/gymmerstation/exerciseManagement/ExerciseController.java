@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
@@ -22,8 +23,7 @@ import static com.gymmer.gymmerstation.programManagement.validations.DuplicateEx
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
-import static com.gymmer.gymmerstation.util.Util.generateInformationAlert;
+import static com.gymmer.gymmerstation.util.Util.*;
 
 public class ExerciseController implements Initializable {
     private Program currentProgram = null;
@@ -52,9 +52,9 @@ public class ExerciseController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTimer();
-        Sets.setOnKeyReleased(event -> checkInputEventValidation(event));
-        Reps.setOnKeyReleased(event -> checkInputEventValidation(event));
-        Weight.setOnKeyReleased(event -> checkInputEventValidation(event));
+        Sets.setOnKeyTyped(event -> checkInputEventValidation(event));
+        Reps.setOnKeyTyped(event -> checkInputEventValidation(event));
+        Weight.setOnKeyTyped(event -> checkInputEventValidation(event));
         btnSave.setOnAction(event -> checkButtonEventValidation(event));
         btnDelete.setOnAction(event -> checkButtonEventValidation(event));
         btnExit.setOnAction(event -> checkButtonEventValidation(event));
@@ -81,11 +81,11 @@ public class ExerciseController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
-                generateInformationAlert("Exercise Saved!");
+                generateInformationAlert("Exercise Saved!").showAndWait();
             }
             if (event.getSource().equals(btnDelete)) {
                 handleBtnDeleteAction(event);
-                generateInformationAlert("Exercise Deleted!");
+                generateInformationAlert("Exercise Deleted!").showAndWait();
             }
             if (event.getSource().equals(btnExit)) {
                 handleBtnExitAction(event);

@@ -66,7 +66,7 @@ public class PerformanceArchiveListController implements Initializable {
             programOperationService.deleteProgramData(program);
             selectedItemIndex = -1;
             programList.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
-            generateInformationAlert("Data Deleted!");
+            generateInformationAlert("Data Deleted!").showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
