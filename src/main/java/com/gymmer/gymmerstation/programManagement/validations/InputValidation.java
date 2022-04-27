@@ -26,6 +26,9 @@ public class InputValidation {
 
     public static void inputMismatchValidationNumber(String input, String field) {
         Long num;
+        if(input.isBlank()) {
+            input = "1";
+        }
         try {
             num = Long.parseLong(input);
         } catch (Exception e) {
