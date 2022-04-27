@@ -24,6 +24,7 @@ import static com.gymmer.gymmerstation.programManagement.validations.InputValida
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.*;
+import static javafx.collections.FXCollections.observableList;
 
 public class ExerciseController implements Initializable {
     private Program currentProgram = null;
@@ -139,9 +140,15 @@ public class ExerciseController implements Initializable {
     private void handleBtnDeleteAction(ActionEvent event) {
         noItemSelectedValidation(exerciseListView.getSelectionModel().getSelectedItem());
         String name = exerciseListView.getSelectionModel().getSelectedItem();
-        Exercise exercise = currentProgram.removeExercise(currentDivision,name);
-        exerciseListView.setItems(showExerciseList());
-        deletionList.add(exercise);
+        Alert alert = generateDeleteDataAlert(name);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Exercise exercise = currentProgram.removeExercise(currentDivision,name);
+            exerciseListView.setItems(showExerciseList());
+            deletionList.add(exercise);
+        } else {
+            alert.close();
+        }
     }
 
     private void handleBtnExitAction(ActionEvent event) {

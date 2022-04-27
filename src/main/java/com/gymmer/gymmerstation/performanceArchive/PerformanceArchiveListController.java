@@ -13,15 +13,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.util.Util.generateInformationAlert;
-import static com.gymmer.gymmerstation.util.Util.loadStage;
+import static com.gymmer.gymmerstation.util.CommonValidation.noIndexSelectedValidation;
+import static com.gymmer.gymmerstation.util.Util.*;
+import static javafx.collections.FXCollections.observableList;
 
 public class PerformanceArchiveListController implements Initializable {
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
@@ -61,14 +65,17 @@ public class PerformanceArchiveListController implements Initializable {
 
     private void handleBtnDeleteAction(ActionEvent event) {
         selectedItemIndex = programList.getSelectionModel().getSelectedIndex();
-        try {
-            Program program = programOperationService.getProgramByIndex(selectedItemIndex);
+        noIndexSelectedValidation(selectedItemIndex);
+        Program program = programOperationService.getProgramByIndex(selectedItemIndex);
+        Alert alert = generateDeleteDataAlert(programList.getSelectionModel().getSelectedItem());
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
             programOperationService.deleteProgramData(program);
             selectedItemIndex = -1;
             programList.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
             generateInformationAlert("Data Deleted!").showAndWait();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            alert.close();
         }
     }
 

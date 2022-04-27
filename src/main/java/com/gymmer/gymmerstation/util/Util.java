@@ -54,11 +54,11 @@ public class Util {
         });
     }
 
-    public static Alert generateConfirmationAlert(String message) {
+    public static Alert generateDeleteDataAlert(String data) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("ARE YOU SURE?");
-        alert.setContentText(message);
+        alert.setHeaderText("Are You Sure To Delete?");
+        alert.setContentText(data);
         return alert;
     }
 

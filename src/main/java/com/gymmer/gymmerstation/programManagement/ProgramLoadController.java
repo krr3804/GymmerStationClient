@@ -11,13 +11,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.util.CommonValidation.noIndexSelectedValidation;
 import static com.gymmer.gymmerstation.util.Util.*;
 import static javafx.collections.FXCollections.observableList;
 
@@ -68,7 +72,7 @@ public class ProgramLoadController implements Initializable {
 
     private void handleBtnStart(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
-        CommonValidation.noIndexSelectedValidation(index);
+        noIndexSelectedValidation(index);
         try {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(Main.class.getResource("program-information-view.fxml"));
@@ -86,15 +90,21 @@ public class ProgramLoadController implements Initializable {
 
     private void handleBtnDelete(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
-        CommonValidation.noIndexSelectedValidation(index);
-        programService.deleteProgram(index);
-        programList.setItems(observableList(programService.showProgramList()));
-        index = -1;
+        noIndexSelectedValidation(index);
+        Alert alert = generateDeleteDataAlert(programList.getSelectionModel().getSelectedItem());
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            programService.deleteProgram(index);
+            programList.setItems(observableList(programService.showProgramList()));
+            index = -1;
+        } else {
+            alert.close();
+        }
     }
 
     private void handleBtnEdit(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
-        CommonValidation.noIndexSelectedValidation(index);
+        noIndexSelectedValidation(index);
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("edit-program-view.fxml"));
