@@ -56,7 +56,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
                 if(currentProgram == null) {
                     currentProgram = mapProgram(rs);
                 }
-                if(id != currentProgram.getId()) {
+                if(!id.equals(currentProgram.getId())) {
                     list.add(currentProgram);
                     currentProgram = mapProgram(rs);
                 }
@@ -73,6 +73,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
             closePreparedStatement(psmt);
             closeConnection(conn);
         }
+
         return list;
     }
 
