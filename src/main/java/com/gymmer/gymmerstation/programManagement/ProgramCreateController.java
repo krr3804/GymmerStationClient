@@ -5,12 +5,14 @@ import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
+import com.gymmer.gymmerstation.programManagement.validations.DataUnsavedValidation;
 import com.gymmer.gymmerstation.programManagement.validations.DivisionValidation;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.CommonValidation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -96,14 +98,27 @@ public class ProgramCreateController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") ||
-                    e.getMessage().contains("No Exercise Found In Division ") || e.getMessage().equals("No Division Found!")) {
+            if(e.getMessage().equals("Data Unsaved!")) {
+                Alert alert = generateSaveAlert();
+                alert.getButtonTypes().remove(ButtonType.OK);
+                alert.getButtonTypes().add(ButtonType.YES);
+                alert.getButtonTypes().add(ButtonType.NO);
+                Optional<ButtonType> result = alert.showAndWait();
+                if(result.get() == ButtonType.YES) {
+                    btnSave.fire();
+                } else if(result.get() == ButtonType.NO) {
+                    loadStage("main-view.fxml", btnExit.getScene());
+                } else {
+                    alert.close();
+                }
+            } else {
                 generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
     }
 
     private void handleBtnExitAction(ActionEvent event) {
+        DataUnsavedValidation.dataUnsavedValidationCreation(program,inpName.getText(),inpPurpose.getText(),inpLength.getText());
         loadStage("main-view.fxml", btnExit.getScene());
     }
 
