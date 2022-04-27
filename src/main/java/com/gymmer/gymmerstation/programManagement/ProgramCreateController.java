@@ -35,8 +35,7 @@ import java.util.ResourceBundle;
 
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
-import static com.gymmer.gymmerstation.util.Util.loadStage;
+import static com.gymmer.gymmerstation.util.Util.*;
 
 public class ProgramCreateController implements Initializable {
 
@@ -91,6 +90,7 @@ public class ProgramCreateController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
+                generateInformationAlert("Program Saved!");
             }
             if (event.getSource().equals(btnAddDivision)) {
                 handleBtnAddDivisionEvent(event);

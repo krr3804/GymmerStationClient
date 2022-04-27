@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.gymmer.gymmerstation.util.Util.generateInformationAlert;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class PerformanceArchiveListController implements Initializable {
@@ -65,6 +66,7 @@ public class PerformanceArchiveListController implements Initializable {
             programOperationService.deleteProgramData(program);
             selectedItemIndex = -1;
             programList.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
+            generateInformationAlert("Data Deleted!");
         } catch (Exception e) {
             e.printStackTrace();
         }

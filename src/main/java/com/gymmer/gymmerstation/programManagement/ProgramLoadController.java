@@ -18,8 +18,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
-import static com.gymmer.gymmerstation.util.Util.loadStage;
+import static com.gymmer.gymmerstation.util.Util.*;
 import static javafx.collections.FXCollections.observableList;
 
 public class ProgramLoadController implements Initializable {
@@ -60,6 +59,7 @@ public class ProgramLoadController implements Initializable {
             }
             if (event.getSource().equals(btnDelete)) {
                 handleBtnDelete(event);
+                generateInformationAlert("Program Deleted!");
             }
         } catch (IllegalArgumentException e) {
             generateErrorAlert(e.getMessage()).showAndWait();

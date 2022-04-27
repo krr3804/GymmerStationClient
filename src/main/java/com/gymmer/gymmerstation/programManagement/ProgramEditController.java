@@ -30,8 +30,7 @@ import java.util.stream.Collectors;
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.noDivisionValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.noExerciseValidation;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
-import static com.gymmer.gymmerstation.util.Util.loadStage;
+import static com.gymmer.gymmerstation.util.Util.*;
 
 public class ProgramEditController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
@@ -88,6 +87,7 @@ public class ProgramEditController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
+                generateInformationAlert("Data Edited!");
             }
             if (event.getSource().equals(btnRemoveDivision)) {
                 handleBtnRemoveDivisionEvent(event);

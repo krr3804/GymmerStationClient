@@ -23,6 +23,7 @@ import static com.gymmer.gymmerstation.programManagement.validations.InputValida
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.generateErrorAlert;
+import static com.gymmer.gymmerstation.util.Util.generateInformationAlert;
 
 public class ExerciseController implements Initializable {
     private Program currentProgram = null;
@@ -80,9 +81,11 @@ public class ExerciseController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
+                generateInformationAlert("Exercise Saved!");
             }
             if (event.getSource().equals(btnDelete)) {
                 handleBtnDeleteAction(event);
+                generateInformationAlert("Exercise Deleted!");
             }
             if (event.getSource().equals(btnExit)) {
                 handleBtnExitAction(event);

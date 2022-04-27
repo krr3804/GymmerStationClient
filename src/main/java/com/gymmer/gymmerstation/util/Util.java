@@ -43,4 +43,11 @@ public class Util {
         alert.setContentText(message);
         return alert;
     }
+
+    public static Alert generateInformationAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("INFORMATION");
+        alert.setHeaderText(message);
+        return alert;
+    }
 }
