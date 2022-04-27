@@ -15,6 +15,13 @@ public class DivisionValidation {
         }
     }
 
+    public static boolean emptyDivisionValidation(Program program, Long division) {
+        if(program.getExerciseByDivision(division).isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     public static void noExerciseValidation(Program program, List<Integer> divisionList) {
         for (int currentDivision : divisionList) {
             if (program.getExerciseByDivision((long)currentDivision).isEmpty()) {

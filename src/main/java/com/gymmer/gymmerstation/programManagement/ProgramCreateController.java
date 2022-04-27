@@ -17,10 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -28,10 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
@@ -136,6 +130,20 @@ public class ProgramCreateController implements Initializable {
     private void handleBtnRemoveDivisionEvent(ActionEvent event) {
         noItemSelectedValidation(divisionListView.getSelectionModel().getSelectedItem());
         Long selectedDivision = divisionListView.getSelectionModel().getSelectedItem().longValue();
+        if(emptyDivisionValidation(program,selectedDivision)) {
+            removeDivision(selectedDivision);
+            return;
+        }
+        Alert alert = generateDeleteDivisionAlert(selectedDivision);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK) {
+            removeDivision(selectedDivision);
+        } else {
+            alert.close();
+        }
+    }
+
+    private void removeDivision(Long selectedDivision) {
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);
         for (int i = index; i < divisionList.size(); i++) {

@@ -62,6 +62,14 @@ public class Util {
         return alert;
     }
 
+    public static Alert generateDeleteDivisionAlert(Long selectedDivision) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("CONFIRMATION");
+        alert.setHeaderText("Division " + selectedDivision + " Is Not Empty!");
+        alert.setContentText("Are You Sure To Delete?");
+        return alert;
+    }
+
     public static Alert generateInformationAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("INFORMATION");

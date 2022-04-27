@@ -27,8 +27,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.noDivisionValidation;
-import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.noExerciseValidation;
+import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.*;
 
@@ -68,7 +67,7 @@ public class ProgramEditController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
         inpLength.setOnKeyTyped(event -> checkInputEventValidation(event));
-        btnAddDivision.setOnAction(event -> handleBtnAddDivisionEvent(event));
+        btnAddDivision.setOnAction(event -> checkButtonEventValidation(event));
         btnRemoveDivision.setOnAction(event -> checkButtonEventValidation(event));
         btnSave.setOnAction(event -> checkButtonEventValidation(event));
         btnExit.setOnAction(event -> checkButtonEventValidation(event));
@@ -89,6 +88,9 @@ public class ProgramEditController implements Initializable {
                 handleBtnSaveAction(event);
                 generateInformationAlert("Program Edited!").showAndWait();
             }
+            if (event.getSource().equals(btnAddDivision)) {
+                handleBtnAddDivisionEvent(event);
+            }
             if (event.getSource().equals(btnRemoveDivision)) {
                 handleBtnRemoveDivisionEvent(event);
             }
@@ -96,7 +98,8 @@ public class ProgramEditController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!")) {
+            if (e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") ||
+                    e.getMessage().contains("No Exercise Found In Division ") || e.getMessage().equals("No Division Found!")) {
                 generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
@@ -125,15 +128,28 @@ public class ProgramEditController implements Initializable {
     }
 
     private void handleBtnRemoveDivisionEvent(ActionEvent event) {
-        noItemSelectedValidation( divisionListView.getSelectionModel().getSelectedItem());
-        Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
+        noItemSelectedValidation(divisionListView.getSelectionModel().getSelectedItem());
+        Long selectedDivision = divisionListView.getSelectionModel().getSelectedItem().longValue();
+        if(emptyDivisionValidation(program,selectedDivision)) {
+            removeDivision(selectedDivision);
+            return;
+        }
+        Alert alert = generateDeleteDivisionAlert(selectedDivision);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK) {
+            removeDivision(selectedDivision);
+        } else {
+            alert.close();
+        }
+    }
+
+    private void removeDivision(Long selectedDivision) {
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);
         for (int i = index; i < divisionList.size(); i++) {
-            divisionList.set(index,divisionList.get(index)-1);
+            divisionList.set(index, divisionList.get(index) - 1);
         }
         program.removeExerciseInDivision(selectedDivision);
-        removedDivisions.add(selectedDivision);
         divisionListView.setItems(getDivision());
     }
 
