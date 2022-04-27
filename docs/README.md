@@ -77,16 +77,13 @@
 - [Return] button -> return to [Performance Archive] window
 
 ---
-# Validation Checks
+# Validation Checks & Error Message
 
 ---
 ## Common validations
 - No item selected validation
   - When any action button is pressed without item selection
   - [ERROR MESSAGE] No Item Selected!
-- Data unsaved validations
-  - When trying to exit window without saving data or window is forced to close
-  - [MESSAGE] Are You Sure To Exit Without Saving?
 
 ## Program Management validations
 - Input blank validation
@@ -111,11 +108,40 @@
   - When [Save] button is pressed with a division containing empty exercise list
   - [ERROR MESSAGE] No Exercise Found In Division "Division number"!
 
-## Program Operation validations
-- Program completion validation
-  - When program progress reaches to be equal to its total length
+---
+# Information & Confirmation Alert
+
+---
+## Information Alert
+- Program save alert
+  - [MESSAGE] Program Saved!
+- Program complete alert
   - [MESSAGE] Program Completed!
-    - Insert new performance data of the completed program in performance archive
-- Program Close Validation
-  - When program operation window is forced to close
-  - [MESSAGE] Program still in progress! Are you sure to Exit?
+- Program delete alert
+  - [MESSAGE] Program Deleted!
+- Program edit alert
+  - [MESSAGE] Program Edited!
+- Program Operation Data delete alert
+  - [MESSAGE] Data Deleted!
+- Exercise save alert
+  - [MESSAGE] Exercise Saved!
+- Exercise delete alert
+  - [MESSAGE] Exercise Deleted!
+
+## Confirmation Alert
+- Data unsaved alert
+  - Target Windows : create-program, edit-program, exercise-form
+  - When trying to exit through 'exit' button or forceful closing of window without data saved
+  - [MESSAGE] Are You Sure To Exit Without Saving?
+- Close Program while operating alert
+  - Target Windows : program-operation, rest-time, pause
+  - When trying to close program in operation through 'exit' button in 'pause' window or forceful closing of window
+  - [MESSAGE] Program Still In Progress, Are You Sure To Exit?
+- Delete alert
+  - Target Windows : load-program, exercise-form, performance-archive-list
+  - When trying to delete data
+  - [MESSAGE] Are You Sure To Delete "Data Name"
+- Delete division alert
+  - Target Windows : create-program, edit-program
+  - When trying to delete division containing more than one exercise
+  - [MESSAGE] Selected Division Is Not Empty, Are You Sure To Delete?
