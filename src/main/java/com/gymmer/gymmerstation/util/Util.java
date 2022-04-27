@@ -79,6 +79,9 @@ public class Util {
 
     public static Alert generateSaveAlert() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getButtonTypes().remove(ButtonType.OK);
+        alert.getButtonTypes().add(ButtonType.YES);
+        alert.getButtonTypes().add(ButtonType.NO);
         alert.setTitle("CONFIRMATION");
         alert.setHeaderText("Data Not Saved!");
         alert.setContentText("Would You Like To Save Before Leaving?");

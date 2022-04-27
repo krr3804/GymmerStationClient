@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 
+import static com.gymmer.gymmerstation.programManagement.validations.DataUnsavedValidation.dataUnsavedValidationCreation;
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static com.gymmer.gymmerstation.util.Util.*;
@@ -100,9 +101,6 @@ public class ProgramCreateController implements Initializable {
         } catch (IllegalArgumentException e) {
             if(e.getMessage().equals("Data Unsaved!")) {
                 Alert alert = generateSaveAlert();
-                alert.getButtonTypes().remove(ButtonType.OK);
-                alert.getButtonTypes().add(ButtonType.YES);
-                alert.getButtonTypes().add(ButtonType.NO);
                 Optional<ButtonType> result = alert.showAndWait();
                 if(result.get() == ButtonType.YES) {
                     btnSave.fire();
@@ -118,7 +116,7 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        DataUnsavedValidation.dataUnsavedValidationCreation(program,inpName.getText(),inpPurpose.getText(),inpLength.getText());
+        dataUnsavedValidationCreation(program,inpName.getText(),inpPurpose.getText(),inpLength.getText());
         loadStage("main-view.fxml", btnExit.getScene());
     }
 

@@ -5,12 +5,21 @@ import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.List;
 
-import static com.gymmer.gymmerstation.programManagement.validations.ChangeNotFoundValidation.changeNotFoundValidation;
-
 public class DataUnsavedValidation {
     private static final String DATA_UNSAVED = "Data Unsaved!";
     public static void dataUnsavedValidationCreation(Program program, String name, String purpose, String length) {
         if(!name.isBlank() || !purpose.isBlank() || !length.isBlank() || !program.getExerciseList().isEmpty()) {
+            throw new IllegalArgumentException(DATA_UNSAVED);
+        }
+    }
+
+    public static void dataUnsavedValidationEdition(Program currentProgram, String name, String purpose, String length, List<Long> removedDivisions, List<Exercise> addedExercises, List<Exercise> deletedExercises) {
+        Long tmpLength = 0L;
+        if(!length.isBlank()) {
+            tmpLength = Long.parseLong(length);
+        }
+        if(!currentProgram.getName().equals(name) || !currentProgram.getPurpose().equals(purpose) || !currentProgram.getLength().equals(tmpLength)
+                || !removedDivisions.isEmpty() || !deletedExercises.isEmpty() || !addedExercises.isEmpty()) {
             throw new IllegalArgumentException(DATA_UNSAVED);
         }
     }
