@@ -106,6 +106,18 @@ public class ProgramInformationController implements Initializable {
             ProgramOperationController programOperationController = operationLoader.getController();
             programOperationController.initData(exercise,currentSet);
             operationStage.setScene(new Scene(root));
+            operationStage.setOnCloseRequest(event -> {
+                event.consume();
+                programOperationController.handleWatchOnCloseRequest();
+                Alert alert = generateExitProgramAlert();
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    System.exit(0);
+                } else {
+                    alert.close();
+                    programOperationController.handleWatchOnCloseRequest();
+                }
+            });
             operationStage.showAndWait();
             pauseOption = programOperationController.returnOption();
             timeConsumed = programOperationController.getTimeConsumed();
@@ -121,6 +133,18 @@ public class ProgramInformationController implements Initializable {
             RestTimeController restTimeController = restLoader.getController();
             restTimeController.initData(exercise.getRestTime().substring(0,2),exercise.getRestTime().substring(3,5));
             operationStage.setScene(new Scene(root));
+            operationStage.setOnCloseRequest(event -> {
+                event.consume();
+                restTimeController.handleWatchOnCloseRequest();
+                Alert alert = generateExitProgramAlert();
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    System.exit(0);
+                } else {
+                    alert.close();
+                    restTimeController.handleWatchOnCloseRequest();
+                }
+            });
             operationStage.showAndWait();
             pauseOption = restTimeController.returnPauseOption();
         } catch (Exception e) {

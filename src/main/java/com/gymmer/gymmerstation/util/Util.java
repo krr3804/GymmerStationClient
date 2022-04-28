@@ -70,6 +70,7 @@ public class Util {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(ownerWindow);
             PauseController pauseController = loader.getController();
+            handleCloseOperationWindowAction(stage);
             stage.showAndWait();
             pauseOption = pauseController.returnOption();
             if (!pauseOption.equals("resume")) {
@@ -79,6 +80,19 @@ public class Util {
             e.printStackTrace();
         }
         return pauseOption;
+    }
+
+    private static void handleCloseOperationWindowAction(Stage window) {
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            Alert alert = generateExitProgramAlert();
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                System.exit(0);
+            } else {
+                alert.close();
+            }
+        });
     }
 
     public static Alert generateDeleteDataAlert(String data) {

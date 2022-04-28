@@ -71,6 +71,14 @@ public class RestTimeController implements Initializable {
         thread.start();
     }
 
+    public void handleWatchOnCloseRequest() {
+        if(!stop) {
+            stop = true;
+        } else {
+            start();
+        }
+    }
+
     private void handleBtnPauseAction(ActionEvent event) {
         stop = true;
         pauseOption = loadPauseWindow((Stage) btnPause.getScene().getWindow());

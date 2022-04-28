@@ -66,6 +66,14 @@ public class ProgramOperationController implements Initializable {
         thread.start();
     }
 
+    public void handleWatchOnCloseRequest() {
+        if(!stop) {
+            stop = true;
+        } else {
+            start();
+        }
+    }
+
     private void handleBtnStartAction(ActionEvent event) {
         if(btnStart.getText().equals("Start")) {
             start();
