@@ -9,21 +9,24 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.util.Util.closeStage;
+import static com.gymmer.gymmerstation.util.Util.*;
 
 public class RestTimeController implements Initializable {
     private boolean stop;
     private long sec;
-    private String pauseOption = "return";
+    private String pauseOption = "resume";
 
     @FXML
     private Label minute, second;
@@ -43,7 +46,8 @@ public class RestTimeController implements Initializable {
             while (!stop && sec >= 0) {
                 if(sec == 0) {
                     Platform.runLater(() -> {
-                        closeStage(btnPause);
+                        Stage stage = (Stage)btnPause.getScene().getWindow();
+                        stage.hide();
                     });
                 }
 
@@ -65,31 +69,11 @@ public class RestTimeController implements Initializable {
         });
         thread.setDaemon(true);
         thread.start();
-
     }
 
     private void handleBtnPauseAction(ActionEvent event) {
-        if(!stop) {
-            stop = true;
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(Main.class.getResource("pause-view.fxml"));
-                Parent root = loader.load();
-                Stage currentStage = (Stage) btnPause.getScene().getWindow();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.initOwner(currentStage);
-                PauseController pauseController = loader.getController();
-                stage.showAndWait();
-                pauseOption = pauseController.returnOption();
-                if(!pauseOption.equals("return")) {
-                    currentStage.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        stop = true;
+        pauseOption = loadPauseWindow((Stage) btnPause.getScene().getWindow());
         start();
     }
 

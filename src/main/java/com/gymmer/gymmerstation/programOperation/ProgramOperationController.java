@@ -11,14 +11,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static com.gymmer.gymmerstation.util.Util.*;
 
 public class ProgramOperationController implements Initializable {
     private String minInfo;
@@ -72,24 +77,7 @@ public class ProgramOperationController implements Initializable {
 
     private void handlePauseAction() {
         stop = true;
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("pause-view.fxml"));
-            Parent root = loader.load();
-            Stage currentStage = (Stage) btnStart.getScene().getWindow();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(currentStage);
-            PauseController pauseController = loader.getController();
-            stage.showAndWait();
-            pauseOption = pauseController.returnOption();
-            if(!pauseOption.equals("return")) {
-                currentStage.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        pauseOption = loadPauseWindow((Stage) btnStart.getScene().getWindow());
         start();
     }
 
@@ -98,7 +86,8 @@ public class ProgramOperationController implements Initializable {
     }
 
     private void handleBtnDoneAction(ActionEvent event) {
-        Util.closeStage(btnDone);
+        Stage stage = (Stage)btnDone.getScene().getWindow();
+        stage.hide();
     }
 
     public void initData(Exercise exercise, Long currentSet) {
