@@ -2,26 +2,35 @@ package com.gymmer.gymmerstation.programOperation;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.util.Util;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.util.Util.closeStage;
-import static com.gymmer.gymmerstation.util.Util.loadStage;
+import static com.gymmer.gymmerstation.util.Util.*;
+import static com.gymmer.gymmerstation.util.Util.generateSaveAlert;
 
 public class PauseController implements Initializable {
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
+    private String pauseOption;
+
     @FXML
     private Button btnResume, btnSaveAndExit, btnExit;
-    private String option;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -31,21 +40,34 @@ public class PauseController implements Initializable {
     }
 
     private void handleBtnResumeAction(ActionEvent event) {
-        option = "return";
+        pauseOption = "resume";
         closeStage(btnResume);
     }
 
     private void handleBtnSaveAndExitAction(ActionEvent event) {
-        option = "saveAndExit";
-        closeStage(btnSaveAndExit);
+        Optional<ButtonType> result = generateExitProgramAlert().showAndWait();
+        if(result.get() == ButtonType.OK) {
+            pauseOption = "saveAndExit";
+            closeStage(btnSaveAndExit);
+        }
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        option = "exit";
-        closeStage(btnExit);
+        Optional<ButtonType> resultExit = generateExitProgramAlert().showAndWait();
+        if(resultExit.get() == ButtonType.OK) {
+            Alert alert = generateSaveAlert();
+            alert.getButtonTypes().remove(ButtonType.CANCEL);
+            Optional<ButtonType> resultSave = alert.showAndWait();
+            if (resultSave.get() == ButtonType.YES) {
+                pauseOption = "saveAndExit";
+            } else {
+                pauseOption = "exit";
+            }
+            closeStage(btnExit);
+        }
     }
 
     public String returnOption() {
-        return option;
+        return pauseOption;
     }
 }
