@@ -61,6 +61,12 @@
 - [Return] button -> return to [Load Program] window
 
 ## [Performance Archive] window
+- Shows list of programs in progress
+- Shows list of programs terminated
+  - Conditions of termination
+    1. Reaches its total length
+    2. Physically terminated by user
+    3. Deleted while in progress
 - Select the program archive to be shown
 - [Return] button -> return to main window
 - [Delete] button -> delete the selected program archive
@@ -130,9 +136,13 @@
 
 ## Confirmation Alert
 - Data unsaved alert
-  - Target Windows : create-program, edit-program, exercise-form
-  - When trying to exit through 'exit' button or forceful closing of window without data saved
+  - Target Windows : create-program, edit-program, exercise-form, pause
+  - When trying to exit without data saved
   - [MESSAGE] Are You Sure To Exit Without Saving?
+- Close Program by window close request
+  - Target Windows: main, create-program, load-program, edit-program, exercise-form, program-information, performance-archive-list, performance-archive
+  - When trying to close program through window close request action
+  - [MESSAGE] Are You Sure To Exit?
 - Close Program while operating alert
   - Target Windows : program-operation, rest-time, pause
   - When trying to close program in operation through 'exit' button in 'pause' window or forceful closing of window
