@@ -20,7 +20,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         Long division = dataProgram.getDivision();
 
         try {
-            String query = "INSERT INTO UserPerformanceData VALUES (?,?,?,?,?,?,?)";
+            String query = "INSERT INTO UserPerformanceDataInProgress VALUES (?,?,?,?,?,?,?)";
             psmt = conn.prepareStatement(query);
             for(OperationDataExercise dataExercise : dataProgram.getOdExerciseList()) {
                 psmt.setLong(1,week);
@@ -47,7 +47,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         try {
-            String query = "DELETE FROM UserPerformanceData where program = ?";
+            String query = "DELETE FROM UserPerformanceDataInProgress where program = ?";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,program.getId());
             psmt.executeUpdate();
@@ -66,9 +66,9 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         ResultSet rs = null;
         List<OperationDataProgram> list = new ArrayList<>();
         try {
-            String query = "SELECT * FROM userperformancedata INNER JOIN exercise on exercise.program = userperformancedata.program " +
-                    " and exercise.exercise_name = userperformancedata.exercise_name and " +
-                    "exercise.division = userperformancedata.exercise_division where userperformancedata.program = ?;";
+            String query = "SELECT * FROM UserPerformanceDataInProgress INNER JOIN exercise on exercise.program = UserPerformanceDataInProgress.program " +
+                    " and exercise.exercise_name = UserPerformanceDataInProgress.exercise_name and " +
+                    "exercise.division = UserPerformanceDataInProgress.exercise_division where UserPerformanceDataInProgress.program = ?;";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,program.getId());
             rs = psmt.executeQuery();
@@ -109,7 +109,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         OperationDataExercise dataExercise = new OperationDataExercise(
                 rs.getString("exercise.exercise_name"), rs.getLong("exercise.sets"), rs.getLong("exercise.reps"),
                 rs.getLong("exercise.weight"), rs.getString("exercise.rest"), rs.getLong("exercise.division"),
-                rs.getLong("userperformancedata.current_set"),rs.getString("userperformancedata.timeConsumed")
+                rs.getLong("UserPerformanceDataInProgress.current_set"),rs.getString("UserPerformanceDataInProgress.timeConsumed")
         );
         return dataExercise;
     }
@@ -120,7 +120,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         PreparedStatement psmt = null;
         int progress = 0;
         try {
-            String query = "SELECT COUNT(DISTINCT(CONCAT(week,'-',division))) AS PROGRESS FROM UserPerformanceData WHERE program = ?;";
+            String query = "SELECT COUNT(DISTINCT(CONCAT(week,'-',division))) AS PROGRESS FROM UserPerformanceDataInProgress WHERE program = ?;";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,program.getId());
             ResultSet rs = psmt.executeQuery();
@@ -144,7 +144,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         List<Program> programList = new ArrayList<>();
         try {
             String query = "SELECT program.program_id, program.name, program.purpose, program.length, program.divisionQty FROM UserPerformanceData " +
-                    "INNER JOIN program ON UserPerformanceData.program = program.program_id GROUP BY userperformancedata.program;";
+                    "INNER JOIN program ON UserPerformanceData.program = program.program_id GROUP BY UserPerformanceDataInProgress.program;";
             psmt = conn.prepareStatement(query);
             rs = psmt.executeQuery();
             while (rs.next()) {

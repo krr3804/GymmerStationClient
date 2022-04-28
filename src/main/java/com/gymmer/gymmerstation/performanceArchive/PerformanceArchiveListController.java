@@ -32,7 +32,10 @@ public class PerformanceArchiveListController implements Initializable {
     private int selectedItemIndex = -1;
 
     @FXML
-    private ListView<String> programList;
+    private ListView<String> programListProgress;
+
+    @FXML
+    private ListView<String> programListTerminated;
 
     @FXML
     private Button btnView, btnDelete, btnReturn;
@@ -40,14 +43,14 @@ public class PerformanceArchiveListController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        programList.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
+        programListProgress.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
         btnView.setOnAction(event -> handleBtnViewAction(event));
         btnDelete.setOnAction(event -> handleBtnDeleteAction(event));
         btnReturn.setOnAction(event -> handleBtnReturnAction(event));
     }
 
     private void handleBtnViewAction(ActionEvent event) {
-        selectedItemIndex = programList.getSelectionModel().getSelectedIndex();
+        selectedItemIndex = programListProgress.getSelectionModel().getSelectedIndex();
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("performance-archive-view.fxml"));
@@ -64,15 +67,15 @@ public class PerformanceArchiveListController implements Initializable {
     }
 
     private void handleBtnDeleteAction(ActionEvent event) {
-        selectedItemIndex = programList.getSelectionModel().getSelectedIndex();
+        selectedItemIndex = programListProgress.getSelectionModel().getSelectedIndex();
         noIndexSelectedValidation(selectedItemIndex);
         Program program = programOperationService.getProgramByIndex(selectedItemIndex);
-        Alert alert = generateDeleteDataAlert(programList.getSelectionModel().getSelectedItem());
+        Alert alert = generateDeleteDataAlert(programListProgress.getSelectionModel().getSelectedItem());
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             programOperationService.deleteProgramData(program);
             selectedItemIndex = -1;
-            programList.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
+            programListProgress.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList()));
             generateInformationAlert("Data Deleted!").showAndWait();
         } else {
             alert.close();
