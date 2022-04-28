@@ -7,6 +7,7 @@ import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
+import com.gymmer.gymmerstation.util.Util;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,45 +15,37 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.util.Util.loadStage;
+import static com.gymmer.gymmerstation.util.Util.*;
 
 public class ProgramInformationController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
-    private int index;
     private Program currentProgram = null;
     private Long week;
     private Long division;
     private String timeConsumed;
     private String pauseOption;
+    private Stage operationStage = new Stage();
 
     @FXML
-    private Label programNameInfo;
+    private Label programNameInfo,  purposeInfo, lengthInfo, divisionInfo;
 
     @FXML
-    private Label purposeInfo;
-
-    @FXML
-    private Label lengthInfo;
-
-    @FXML
-    private Label divisionInfo;
-
-    @FXML
-    private Button btnStart;
-
-    @FXML
-    private Button btnExit;
+    private Button btnStart, btnExit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,35 +54,15 @@ public class ProgramInformationController implements Initializable {
     }
 
     private void handleBtnStartAction(ActionEvent event) {
-        List<OperationDataExercise> odeList = new ArrayList<>();
         Stage currentStage = (Stage) btnStart.getScene().getWindow();
         currentStage.hide();
-        OuterLoop:
-        for(Exercise exercise : currentProgram.getExerciseByDivision(division)) {
-            for(long set = 1; set <= exercise.getSet(); set++) {
-                loadOperationStage(exercise,set);
-                odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(),
-                        exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), exercise.getDivision(), set, timeConsumed));
-                if (pauseOption.equals("saveAndExit")) {
-                    break OuterLoop;
-                }
-                if (pauseOption.equals("exit")) {
-                    exit();
-                    return;
-                }
-                loadRestTimeStage(exercise);
-                if (pauseOption.equals("saveAndExit")) {
-                    break OuterLoop;
-                }
-                if (pauseOption.equals("exit")) {
-                    exit();
-                    return;
-                }
-                pauseOption = "";
-                timeConsumed = "";
-            }
+        List<OperationDataExercise> odeList;
+        try {
+            odeList = operateProgram();
+        } catch (Exception e) {
+            exitToMain();
+            return;
         }
-
         programOperationService.saveProgramData(new OperationDataProgram(currentProgram,week,division,odeList));
         currentStage.show();
         Platform.runLater(() -> {
@@ -98,18 +71,42 @@ public class ProgramInformationController implements Initializable {
         });
     }
 
+    private List<OperationDataExercise> operateProgram() {
+        List<OperationDataExercise> odeList = new ArrayList<>();
+        outerLoop:
+        for(Exercise exercise : currentProgram.getExerciseByDivision(division)) {
+            for(long set = 1; set <= exercise.getSet(); set++) {
+                loadOperationStage(exercise,set);
+                if (pauseOption.equals("saveAndExit")) {
+                    break outerLoop;
+                }
+                if (pauseOption.equals("exit")) {
+                    throw new IllegalArgumentException();
+                }
+                odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(),
+                        exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), exercise.getDivision(), set, timeConsumed));
+                loadRestTimeStage(exercise);
+                if (pauseOption.equals("saveAndExit")) {
+                    break outerLoop;
+                }
+                if (pauseOption.equals("exit")) {
+                    throw new IllegalArgumentException();
+                }
+                pauseOption = "";
+                timeConsumed = "";
+            }
+        }
+        return odeList;
+    }
+
     private void loadOperationStage(Exercise exercise, Long currentSet) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("program-operation-view.fxml"));
-            Parent root = loader.load();
-            ProgramOperationController programOperationController = loader.getController();
+            FXMLLoader operationLoader = new FXMLLoader(Main.class.getResource("program-operation-view.fxml"));
+            Parent root = operationLoader.load();
+            ProgramOperationController programOperationController = operationLoader.getController();
             programOperationController.initData(exercise,currentSet);
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(btnStart.getScene().getWindow());
-            stage.showAndWait();
+            operationStage.setScene(new Scene(root));
+            operationStage.showAndWait();
             pauseOption = programOperationController.returnOption();
             timeConsumed = programOperationController.getTimeConsumed();
         } catch (Exception e) {
@@ -119,23 +116,19 @@ public class ProgramInformationController implements Initializable {
 
     private void loadRestTimeStage(Exercise exercise) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("rest-time-view.fxml"));
-            Parent root = loader.load();
-            RestTimeController restTimeController = loader.getController();
+            FXMLLoader restLoader = new FXMLLoader(Main.class.getResource("rest-time-view.fxml"));
+            Parent root = restLoader.load();
+            RestTimeController restTimeController = restLoader.getController();
             restTimeController.initData(exercise.getRestTime().substring(0,2),exercise.getRestTime().substring(3,5));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner(btnStart.getScene().getWindow());
-            stage.showAndWait();
+            operationStage.setScene(new Scene(root));
+            operationStage.showAndWait();
             pauseOption = restTimeController.returnPauseOption();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void exit() {
+    private void exitToMain() {
         loadStage("main-view.fxml",btnStart.getScene());
     }
 
@@ -151,6 +144,5 @@ public class ProgramInformationController implements Initializable {
         week = programOperationService.getCurrentWeek(currentProgram);
         division = programOperationService.getCurrentDivision(currentProgram);
         divisionInfo.setText("Week " + week + " - " + division);
-        this.index = index;
     }
 }
