@@ -95,6 +95,26 @@ public class Util {
         });
     }
 
+    public static Alert generateCompletionMessage(String name) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("INFORMATION");
+        alert.setHeaderText("Congratulations!");
+        alert.setContentText("You Completed " + name + "!");
+        return alert;
+    }
+
+    public static Alert generateTerminateProgramAlert(String name) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getButtonTypes().remove(ButtonType.OK);
+        alert.getButtonTypes().remove(ButtonType.CANCEL);
+        alert.getButtonTypes().add(ButtonType.YES);
+        alert.getButtonTypes().add(ButtonType.NO);
+        alert.setTitle("CONFIRMATION");
+        alert.setHeaderText("You Still Got Way To Go!");
+        alert.setContentText("Are You Sure To End " +  name + "?");
+        return alert;
+    }
+
     public static Alert generateDeleteDataAlert(String data) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("CONFIRMATION");
