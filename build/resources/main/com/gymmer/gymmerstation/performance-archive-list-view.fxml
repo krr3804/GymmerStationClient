@@ -5,12 +5,23 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-      prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymmer.gymmerstation.performanceArchive.PerformanceArchiveListController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+      xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gymmer.gymmerstation.performanceArchive.PerformanceArchiveListController">
    <children>
-      <ListView fx:id="programList" prefHeight="280.0" prefWidth="600.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="In Progress">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" top="10.0" />
+         </VBox.margin>
+      </Text>
+      <ListView fx:id="programListInProgress" prefHeight="200.0" prefWidth="600.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Complete">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" top="10.0" />
+         </VBox.margin>
+      </Text>
+      <ListView fx:id="programListTerminated" prefHeight="200.0" prefWidth="600.0" />
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
             <Button fx:id="btnReturn" mnemonicParsing="false" text="Return">

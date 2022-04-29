@@ -15,12 +15,16 @@ public class MemoryOperationDataRepository implements OperationDataRepository {
     }
 
     @Override
-    public void delete(Program program) {
+    public void terminate(Program program) {
+    }
+
+    @Override
+    public void delete(Program program, boolean status) {
         list.removeIf(dataProgram -> dataProgram.getProgram().getId().equals(program.getId()));
     }
 
     @Override
-    public List<OperationDataProgram> getDataListByProgram(Program program) {
+    public List<OperationDataProgram> getProgramData(Program program) {
         return list.stream().filter(dataProgram -> dataProgram.getProgram().getId().equals(program.getId())).collect(Collectors.toList());
     }
 
@@ -30,7 +34,7 @@ public class MemoryOperationDataRepository implements OperationDataRepository {
     }
 
     @Override
-    public List<Program> getProgramsInProgress() {
+    public List<Program> getPrograms(boolean status) {
         return list.stream().map(dataProgram -> dataProgram.getProgram()).distinct().collect(Collectors.toList());
     }
 }

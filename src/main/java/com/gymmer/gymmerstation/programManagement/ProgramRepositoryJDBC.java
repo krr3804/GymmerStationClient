@@ -15,7 +15,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         try {
-            String query = "INSERT INTO program values (null,?,?,?,?);";
+            String query = "INSERT INTO program values (null,?,?,?,?,false);";
             psmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             psmt.setString(1, program.getName());
             psmt.setString(2, program.getPurpose());
@@ -47,7 +47,7 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
         PreparedStatement psmt = null;
         ResultSet rs = null;
         try {
-            String query = "select * from program left join exercise on exercise.program = program.program_id;";
+            String query = "select * from program left join exercise on exercise.program = program.program_id where program.termination_status = false;";
             psmt = conn.prepareStatement(query);
             rs = psmt.executeQuery(query);
             Program currentProgram = null;

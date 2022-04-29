@@ -10,7 +10,9 @@ import java.util.List;
 public interface ProgramOperationService {
     void saveProgramData(OperationDataProgram operationDataProgram);
 
-    void deleteProgramData(Program program);
+    void terminateProgram(Program program);
+
+    void deleteProgramData(Program program, boolean status);
 
     List<OperationDataProgram> getProgramDataList(Program program);
 
@@ -18,7 +20,7 @@ public interface ProgramOperationService {
 
     Long getCurrentDivision(Program program);
 
-    List<String> getPerformanceArchiveList();
+    List<String> getPerformanceArchiveList(boolean status);
 
-    Program getProgramByIndex(int index);
+    Program getProgramByIndex(int index, boolean status);
 }

@@ -4,23 +4,17 @@ import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface OperationDataRepository {
     void save(OperationDataProgram dataProgram);
 
     void terminate(Program program);
 
-    void deleteDataInProgress(Program program);
+    void delete(Program program, boolean status);
 
-    void deleteDataTerminated(int index);
-
-    List<OperationDataProgram> getProgramDataInProgress(Program program);
-
-    List<OperationDataProgram> getProgramDataTerminated(int index);
+    List<OperationDataProgram> getProgramData(Program program);
 
     int getProgress(Program program);
 
-    List<Program> getProgramsInProgress();
+    List<Program> getPrograms(boolean status);
 }

@@ -1,9 +1,6 @@
 package com.gymmer.gymmerstation.programOperation;
 
-import com.gymmer.gymmerstation.domain.Exercise;
-import com.gymmer.gymmerstation.domain.OperationDataExercise;
-import com.gymmer.gymmerstation.domain.OperationDataProgram;
-import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.domain.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         Long week = dataProgram.getWeek();
         Long division = dataProgram.getDivision();
         try {
-            String query = "INSERT INTO performance_data_exercise VALUES (?,?,?,?,?,?,?,?,?,null)";
+            String query = "INSERT INTO performance_data_exercise VALUES (?,?,?,?,?,?,?,?,?)";
             psmt = conn.prepareStatement(query);
             for(OperationDataExercise dataExercise : dataProgram.getOdExerciseList()) {
                 psmt.setString(1,dataExercise.getName());
@@ -44,14 +41,26 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public void deleteDataInProgress(Program program) {
+    public void terminate(Program program) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
+        long key = 0L;
         try {
-            String query = "DELETE FROM performance_data_exercise USING program LEFT JOIN " +
-                    "performance_data_exercise ON program_id = performance_data_exercise.program where program.program_id = ?";
-            psmt = conn.prepareStatement(query);
+            String query = "INSERT INTO program SELECT null, name, purpose, length, divisionQty, true FROM program where program_id = ?";
+            psmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             psmt.setLong(1,program.getId());
+            psmt.executeUpdate();
+
+            ResultSet rs = psmt.getGeneratedKeys();
+            if(rs.next()) {
+                key = rs.getLong(1);
+            }
+            rs.close();
+
+            query =  "UPDATE performance_data_exercise SET program = ? WHERE program = ?";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1,key);
+            psmt.setLong(2,program.getId());
             psmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -62,7 +71,33 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public List<OperationDataProgram> getProgramDataInProgress(Program program) {
+    public void delete(Program program, boolean status) {
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        String query;
+        try {
+            query = "DELETE FROM performance_data_exercise USING program LEFT JOIN " +
+                    "performance_data_exercise ON program_id = performance_data_exercise.program where program.program_id = ?";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1,program.getId());
+            psmt.executeUpdate();
+            if(status) {
+                query = "DELETE FROM program where program_id = ?";
+                psmt = conn.prepareStatement(query);
+                psmt.setLong(1,program.getId());
+                psmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
+    }
+
+
+    @Override
+    public List<OperationDataProgram> getProgramData(Program program) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         ResultSet rs;
@@ -97,6 +132,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
         }
         return list;
     }
+
 
     private OperationDataProgram mapOperationDataProgram(Program program, Long week, Long division) {
         OperationDataProgram dataProgram = new OperationDataProgram(
@@ -136,15 +172,17 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public List<Program> getProgramsInProgress() {
+    public List<Program> getPrograms(boolean status) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         ResultSet rs = null;
         List<Program> programList = new ArrayList<>();
         try {
-            String query = "SELECT program.program_id, program.name, program.purpose, program.length, program.divisionQty FROM performance_data_exercise" +
-                    "INNER JOIN program ON performance_data_exercise.program = program.program_id GROUP BY performance_data_exercise.program;";
+            String query = "SELECT program.program_id, program.name, program.purpose, program.length, program.divisionQty FROM performance_data_exercise " +
+                    "INNER JOIN program ON performance_data_exercise.program = program.program_id WHERE program.termination_status = ? " +
+                    "GROUP BY performance_data_exercise.program ;";
             psmt = conn.prepareStatement(query);
+            psmt.setBoolean(1,status);
             rs = psmt.executeQuery();
             while (rs.next()) {
                 programList.add(mapProgram(rs));

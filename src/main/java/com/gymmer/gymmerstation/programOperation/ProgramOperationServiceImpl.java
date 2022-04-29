@@ -28,13 +28,18 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public void deleteProgramData(Program program) {
-        operationDataRepository.delete(program);
+    public void terminateProgram(Program program) {
+        operationDataRepository.terminate(program);
+    }
+
+    @Override
+    public void deleteProgramData(Program program, boolean status) {
+        operationDataRepository.delete(program, status);
     }
 
     @Override
     public List<OperationDataProgram> getProgramDataList(Program program) {
-        return operationDataRepository.getDataListByProgram(program);
+        return operationDataRepository.getProgramData(program);
     }
 
     @Override
@@ -60,13 +65,17 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public List<String> getPerformanceArchiveList() {
+    public List<String> getPerformanceArchiveList(boolean status) {
         List<String> list = new ArrayList<>();
-        for(Program program: operationDataRepository.getProgramsInProgress()) {
+        for(Program program: operationDataRepository.getPrograms(status)) {
             StringBuilder sb = new StringBuilder();
-            sb.append(program.getName()).append("(")
-                    .append(operationDataRepository.getProgress(program)).append("/")
-                    .append((program.getLength() * program.getDivisionQty())).append(")");
+            sb.append(program.getName()).append("(");
+            if(status) {
+                sb.append("complete");
+            } else {
+                sb.append(operationDataRepository.getProgress(program)).append("/").append((program.getLength() * program.getDivisionQty()));
+            }
+            sb.append(")");
             list.add(sb.toString());
         }
 
@@ -74,7 +83,7 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public Program getProgramByIndex(int index) {
-        return operationDataRepository.getProgramsInProgress().get(index);
+    public Program getProgramByIndex(int index, boolean status) {
+        return operationDataRepository.getPrograms(status).get(index);
     }
 }

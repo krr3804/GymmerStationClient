@@ -16,7 +16,7 @@
          </VBox.margin>
       </Text>
       <ListView fx:id="programListInProgress" prefHeight="200.0" prefWidth="600.0" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Terminated">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Complete">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" top="10.0" />
          </VBox.margin>
