@@ -43,6 +43,11 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
+    public int getProgress(Program program) {
+        return operationDataRepository.getProgress(program);
+    }
+
+    @Override
     public Long getCurrentWeek(Program program) {
         long res = 0L;
         try {
