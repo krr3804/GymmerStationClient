@@ -57,8 +57,11 @@ public class PerformanceArchiveListController implements Initializable {
         if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
             selectedItemIndex  = programListInProgress.getSelectionModel().getSelectedIndex();
             Program program = programOperationService.getProgramByIndex(selectedItemIndex,false);
-            programOperationService.terminateProgram(program);
-            setListView();
+            Optional<ButtonType> result = generateTerminateProgramAlert(program.getName()).showAndWait();
+            if(result.get() == ButtonType.YES) {
+                programOperationService.terminateProgram(program);
+                setListView();
+            }
         }
     }
 
