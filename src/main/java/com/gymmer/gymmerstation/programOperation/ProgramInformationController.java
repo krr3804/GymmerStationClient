@@ -83,8 +83,7 @@ public class ProgramInformationController implements Initializable {
                 if (pauseOption.equals("exit")) {
                     throw new IllegalArgumentException();
                 }
-                odeList.add(new OperationDataExercise(exercise.getName(), exercise.getSet(),
-                        exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), exercise.getDivision(), set, timeConsumed));
+                odeList.add(new OperationDataExercise(exercise.getName(), set, exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), timeConsumed));
                 loadRestTimeStage(exercise);
                 if (pauseOption.equals("saveAndExit")) {
                     break outerLoop;

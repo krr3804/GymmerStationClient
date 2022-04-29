@@ -10,9 +10,15 @@ import java.util.Set;
 public interface OperationDataRepository {
     void save(OperationDataProgram dataProgram);
 
-    void delete(Program program);
+    void terminate(Program program);
 
-    List<OperationDataProgram> getDataListByProgram(Program program);
+    void deleteDataInProgress(Program program);
+
+    void deleteDataTerminated(int index);
+
+    List<OperationDataProgram> getProgramDataInProgress(Program program);
+
+    List<OperationDataProgram> getProgramDataTerminated(int index);
 
     int getProgress(Program program);
 

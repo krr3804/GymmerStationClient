@@ -1,13 +1,37 @@
 package com.gymmer.gymmerstation.domain;
 
-public class OperationDataExercise extends Exercise {
-    private String timeConsumed;
+public class OperationDataExercise {
+    private String name;
     private Long currentSet;
+    private Long rep;
+    private Long weight;
+    private String restTime;
+    private String timeConsumed;
 
-    public OperationDataExercise(String name, Long set, Long rep, Long weight, String restTime, Long division, Long currentSet, String timeConsumed) {
-        super(name, set, rep, weight, restTime, division);
+
+    public OperationDataExercise(String name, Long currentSet, Long rep, Long weight, String restTime, String timeConsumed) {
+        this.name = name;
         this.currentSet = currentSet;
+        this.rep = rep;
+        this.weight = weight;
+        this.restTime = restTime;
         this.timeConsumed = timeConsumed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getRep() {
+        return rep;
+    }
+
+    public Long getWeight() {
+        return weight;
+    }
+
+    public String getRestTime() {
+        return restTime;
     }
 
     public Long getCurrentSet() {
