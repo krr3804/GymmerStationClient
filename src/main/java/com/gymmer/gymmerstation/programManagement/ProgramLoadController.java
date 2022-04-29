@@ -2,7 +2,9 @@ package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
+import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programOperation.ProgramInformationController;
+import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import com.gymmer.gymmerstation.util.CommonValidation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,6 +29,7 @@ import static javafx.collections.FXCollections.observableList;
 
 public class ProgramLoadController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
+    private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private static int index = -1;
 
     @FXML
@@ -91,10 +94,12 @@ public class ProgramLoadController implements Initializable {
     private void handleBtnDelete(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
         noIndexSelectedValidation(index);
-        Alert alert = generateDeleteDataAlert(programList.getSelectionModel().getSelectedItem());
+        Program program = programService.getProgramById(index);
+        Alert alert = generateDeleteDataAlert(program.getName());
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            programService.deleteProgram(index);
+            programOperationService.terminateProgram(program);
+            programService.deleteProgram(program.getId());
             programList.setItems(observableList(programService.showProgramList()));
             index = -1;
         } else {
