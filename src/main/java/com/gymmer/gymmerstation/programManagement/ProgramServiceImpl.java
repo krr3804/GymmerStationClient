@@ -36,8 +36,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void deleteProgram(int index) {
-        List<Program> programList = programRepository.showProgramList();
-        programRepository.deleteProgram(programList.get(index).getId());
+    public void deleteProgram(Long id) {
+        programRepository.deleteProgram(id);
     }
 }

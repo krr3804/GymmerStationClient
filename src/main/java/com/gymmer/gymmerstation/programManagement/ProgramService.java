@@ -14,5 +14,5 @@ public interface ProgramService {
 
     Program getProgramById(int index);
 
-    void deleteProgram(int index);
+    void deleteProgram(Long id);
 }
