@@ -64,11 +64,19 @@ public class ProgramInformationController implements Initializable {
             return;
         }
         programOperationService.saveProgramData(new OperationDataProgram(currentProgram,week,division,odeList));
+        checkProgramCompletion();
         currentStage.show();
         Platform.runLater(() -> {
             btnStart.setText("Completed");
             btnStart.setDisable(true);
         });
+    }
+
+    private void checkProgramCompletion() {
+        if(programOperationService.getProgress(currentProgram) == currentProgram.getLength() * currentProgram.getDivisionQty()) {
+            programOperationService.terminateProgram(currentProgram);
+            generateCompletionMessage(currentProgram.getName()).showAndWait();
+        }
     }
 
     private List<OperationDataExercise> operateProgram() {
