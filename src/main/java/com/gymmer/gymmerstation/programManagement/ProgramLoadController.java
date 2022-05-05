@@ -66,7 +66,6 @@ public class ProgramLoadController implements Initializable {
             }
             if (event.getSource().equals(btnDelete)) {
                 handleBtnDelete(event);
-                generateInformationAlert("Program Deleted!").showAndWait();
             }
         } catch (IllegalArgumentException e) {
             generateErrorAlert(e.getMessage()).showAndWait();
@@ -102,6 +101,7 @@ public class ProgramLoadController implements Initializable {
             programService.deleteProgram(program.getId());
             programList.setItems(observableList(programService.showProgramList()));
             index = -1;
+            generateInformationAlert("Program Deleted!").showAndWait();
         } else {
             alert.close();
         }
