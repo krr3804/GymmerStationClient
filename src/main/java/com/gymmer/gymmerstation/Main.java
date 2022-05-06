@@ -7,6 +7,7 @@ import com.gymmer.gymmerstation.util.Util;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,13 +21,21 @@ public class Main extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("Gymmer Station");
-        handleCloseWindowAction(primaryStage);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        temp();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+            Scene scene = new Scene(root);
+            Image ico = new Image("file:src/main/resources/com/gymmer/gymmerstation/images/dumbbell.png");
+            primaryStage.getIcons().add(ico);
+            primaryStage.setTitle("Gymmer Station");
+            handleCloseWindowAction(primaryStage);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            temp();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+
+
     }
 
     public static void main(String[] args) {
