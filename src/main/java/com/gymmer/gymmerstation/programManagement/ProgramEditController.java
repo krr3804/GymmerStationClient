@@ -57,20 +57,19 @@ public class ProgramEditController implements Initializable {
     private ListView<Integer> divisionListView;
 
     @FXML
-    Button btnAddDivision;
-
-    @FXML
-    Button btnRemoveDivision;
-
-    @FXML
-    Button btnSave;
-
-    @FXML
-    Button btnExit;
+    private Button btnAddDivision, btnRemoveDivision, btnSave, btnExit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
+        divisionListView.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if(btnRemoveDivision.isFocused()) {
+                return;
+            }
+            if(!newVal) {
+                divisionListView.getSelectionModel().clearSelection();
+            }
+        });
         inpLength.setOnKeyTyped(event -> checkInputEventValidation(event));
         btnAddDivision.setOnAction(event -> checkButtonEventValidation(event));
         btnRemoveDivision.setOnAction(event -> checkButtonEventValidation(event));
@@ -175,13 +174,14 @@ public class ProgramEditController implements Initializable {
     }
 
     private void handleListDoubleClickEvent(MouseEvent event) {
-        if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-            Long selectedDivision  = divisionListView.getSelectionModel().getSelectedItem().longValue();
-            try {
+        try {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                noItemSelectedValidation(divisionListView.getSelectionModel().getSelectedItem());
+                Long selectedDivision = divisionListView.getSelectionModel().getSelectedItem().longValue();
                 loadExerciseWindow(program, selectedDivision, event);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (IllegalArgumentException e) {
+            generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
