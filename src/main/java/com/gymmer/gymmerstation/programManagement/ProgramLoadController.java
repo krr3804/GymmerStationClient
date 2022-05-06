@@ -13,10 +13,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -33,27 +33,41 @@ public class ProgramLoadController implements Initializable {
     private static int index = -1;
 
     @FXML
-    ListView<String> programList;
+    private ListView<String> programList;
 
     @FXML
-    Button btnStart;
+    private Label progressTxt;
 
     @FXML
-    Button btnEdit;
+    private ProgressBar progressBar;
 
     @FXML
-    Button btnDelete;
-
-    @FXML
-    Button btnReturn;
+    private Button btnStart, btnEdit, btnDelete, btnReturn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         programList.setItems(observableList(programService.showProgramList()));
+        programList.setOnMouseClicked(event -> handleProgressBar(event));
         btnReturn.setOnAction(event -> loadStage("main-view.fxml",btnReturn.getScene()));
         btnStart.setOnAction(event -> handleButtonEvents(event));
         btnEdit.setOnAction(event -> handleButtonEvents(event));
         btnDelete.setOnAction(event -> handleButtonEvents(event));
+    }
+
+    private void handleProgressBar (MouseEvent event) {
+        if (!programList.getSelectionModel().isEmpty()) {
+            index = programList.getSelectionModel().getSelectedIndex();
+            noIndexSelectedValidation(index);
+            Program selectedProgram = programService.getProgramById(index);
+            int workDone = programOperationService.getProgress(selectedProgram);
+            long totalWork = selectedProgram.getLength() * selectedProgram.getDivisionQty();
+            progressTxt.setText(workDone + "/" + totalWork);
+            double progress = (double)workDone / totalWork;
+            progressBar.setProgress(progress);
+        } else {
+            progressTxt.setText("");
+            progressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        }
     }
 
     private void handleButtonEvents(ActionEvent event) {
@@ -100,6 +114,7 @@ public class ProgramLoadController implements Initializable {
             programOperationService.terminateProgram(program);
             programService.deleteProgram(program.getId());
             programList.setItems(observableList(programService.showProgramList()));
+            programList.getSelectionModel().clearSelection();
             index = -1;
             generateInformationAlert("Program Deleted!").showAndWait();
         } else {
