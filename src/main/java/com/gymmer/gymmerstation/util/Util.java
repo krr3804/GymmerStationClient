@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -63,9 +64,12 @@ public class Util {
         String pauseOption = "";
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("pause-view.fxml"));
+            loader.setLocation(Main.class.getResource("fxml files/pause-view.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
+            Image ico = new Image("file:src/main/resources/com/gymmer/gymmerstation/images/dumbbell.png");
+            stage.getIcons().add(ico);
+            stage.setTitle("Gymmer Station");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(ownerWindow);

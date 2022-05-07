@@ -48,7 +48,7 @@ public class ProgramLoadController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         programList.setItems(observableList(programService.showProgramList()));
         programList.setOnMouseClicked(event -> handleProgressBar(event));
-        btnReturn.setOnAction(event -> loadStage("main-view.fxml",btnReturn.getScene()));
+        btnReturn.setOnAction(event -> loadStage("fxml files/main-view.fxml",btnReturn.getScene()));
         btnStart.setOnAction(event -> handleButtonEvents(event));
         btnEdit.setOnAction(event -> handleButtonEvents(event));
         btnDelete.setOnAction(event -> handleButtonEvents(event));
@@ -91,7 +91,7 @@ public class ProgramLoadController implements Initializable {
         noIndexSelectedValidation(index);
         try {
                 FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(Main.class.getResource("program-information-view.fxml"));
+                loader.setLocation(Main.class.getResource("fxml files/program-information-view.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));
@@ -127,7 +127,7 @@ public class ProgramLoadController implements Initializable {
         noIndexSelectedValidation(index);
         try{
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("edit-program-view.fxml"));
+            loader.setLocation(Main.class.getResource("fxml files/edit-program-view.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnEdit.getScene().getWindow();
             stage.setScene(new Scene(root));

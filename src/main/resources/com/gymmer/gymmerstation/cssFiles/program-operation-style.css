@@ -6,9 +6,10 @@
     -fx-background-position : center center;
 }
 
-.text-field {
-    -fx-alignment : center;
+.label {
     -fx-font-size : 14;
+    -fx-text-fill : midnightblue;
+    -fx-font-weight : bold;
 }
 
 .button {
@@ -19,33 +20,15 @@
     -fx-effect : dropshadow( three-pass-box, rgba(0,0,0,0.6), 5, 0.0, 0, 1 );
 }
 
-#btnAddDivision, #btnRemoveDivision {
-    -fx-font-size : 12;
-}
-
 .button:hover {
     -fx-background-color : linear-gradient(#328BDB 100%, #207BCF 75%, #1973C9 25%, #0A65BF 0%);
 }
 
-.label {
-    -fx-font-size : 14;
-    -fx-text-fill : midnightblue;
-    -fx-font-weight : bold;
+#minute, #second {
+    -fx-font-size : 32;
+    -fx-text-fill : #202020;
 }
 
-.list-cell {
-    -fx-font-family : sans-serif;
-    -fx-font-size : 14;
-    -fx-text-fill : midnightblue;
-    -fx-alignment : center;
-}
-
-.list-cell:filled:selected:focused {
-    -fx-background-color : linear-gradient(#328BDB 0%, #207BCF 25%, #1973C9 75%, #0A65BF 100%);
-    -fx-text-fill : white;
-}
-
-.list-cell:filled:hover {
-    -fx-background-color : #0093ff;
-    -fx-text-fill : white;
+#timeLeft {
+    -fx-font-size : 24;
 }

@@ -60,27 +60,27 @@ public class PerformanceArchiveController implements Initializable {
         tableView.setItems(FXCollections.observableList(list));
 
         TableColumn<OperationDataExercise, String> nameColumn = new TableColumn<>("NAME");
-        nameColumn.setMinWidth(100);
+        nameColumn.setPrefWidth(180);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         TableColumn<OperationDataExercise, Long> setColumn = new TableColumn<>("SET");
-        setColumn.setMinWidth(100);
+        setColumn.setPrefWidth(60);
         setColumn.setCellValueFactory(new PropertyValueFactory<>("currentSet"));
 
         TableColumn<OperationDataExercise, Long> repColumn = new TableColumn<>("REP");
-        repColumn.setMinWidth(100);
+        repColumn.setPrefWidth(60);
         repColumn.setCellValueFactory(new PropertyValueFactory<>("rep"));
 
         TableColumn<OperationDataExercise, Long> weightColumn = new TableColumn<>("WEIGHT");
-        weightColumn.setMinWidth(100);
+        weightColumn.setPrefWidth(90);
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
 
         TableColumn<OperationDataExercise, String> restColumn = new TableColumn<>("Rest");
-        restColumn.setMinWidth(100);
+        restColumn.setPrefWidth(90);
         restColumn.setCellValueFactory(new PropertyValueFactory<>("restTime"));
 
         TableColumn<OperationDataExercise, String> consumedTimeColumn = new TableColumn<>("TIME CONSUMED");
-        consumedTimeColumn.setMinWidth(100);
+        consumedTimeColumn.setPrefWidth(120);
         consumedTimeColumn.setCellValueFactory(new PropertyValueFactory<>("timeConsumed"));
 
         tableView.getColumns().addAll(nameColumn,setColumn,repColumn,weightColumn,restColumn,consumedTimeColumn);
@@ -88,7 +88,7 @@ public class PerformanceArchiveController implements Initializable {
     }
 
     private void handleBtnReturnAction(ActionEvent event) {
-        loadStage("performance-archive-list-view.fxml", btnReturn.getScene());
+        loadStage("fxml files/performance-archive-list-view.fxml", btnReturn.getScene());
     }
 
     public void initData(int index, boolean status) {

@@ -1,6 +1,6 @@
 .root {
     -fx-font-family : "Arial Black";
-    -fx-background-image : url("images/background.jpg");
+    -fx-background-image : url("../images/background.jpg");
     -fx-background-repeat : no-repeat;
     -fx-background-size : 600 400;
     -fx-background-position : center center;

@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -134,7 +135,7 @@ public class ProgramEditController implements Initializable {
 
     private void handleBtnExitAction(ActionEvent event) {
         dataUnsavedValidationEdition(program,inpName.getText(),inpPurpose.getText(),inpLength.getText(),removedDivisions,additionList,deletionList);
-        loadStage("load-program-view.fxml",btnExit.getScene());
+        loadStage("fxml files/load-program-view.fxml",btnExit.getScene());
     }
 
     private void handleBtnAddDivisionEvent(ActionEvent event) {
@@ -199,9 +200,12 @@ public class ProgramEditController implements Initializable {
     private void loadExerciseWindow(Program program, Long division, MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("exercise-form-view.fxml"));
+            loader.setLocation(Main.class.getResource("fxml files/exercise-form-view.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
+            Image ico = new Image("file:src/main/resources/com/gymmer/gymmerstation/images/dumbbell.png");
+            stage.getIcons().add(ico);
+            stage.setTitle("Gymmer Station");
             stage.setScene(new Scene(root));
             ExerciseController exerciseController = loader.getController();
             exerciseController.initData(program,division);

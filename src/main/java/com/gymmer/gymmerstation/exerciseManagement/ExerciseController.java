@@ -130,6 +130,16 @@ public class ExerciseController implements Initializable {
         currentProgram.getExerciseList().add(exercise);
         exerciseListView.setItems(showExerciseList());
         additionList.add(exercise);
+        clearData();
+    }
+
+    private void clearData() {
+        Name.setText("");
+        Sets.setText("");
+        Reps.setText("");
+        Weight.setText("");
+        Minute.getValueFactory().setValue("00");
+        Second.getValueFactory().setValue("00");
     }
 
     private ObservableList<String> showExerciseList() {

@@ -19,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -39,16 +40,17 @@ public class ProgramInformationController implements Initializable {
     private Long division;
     private String timeConsumed;
     private String pauseOption;
-    private Stage operationStage = new Stage();
+    private Stage operationStage;
 
     @FXML
-    private Label programNameInfo,  purposeInfo, lengthInfo, divisionInfo;
+    private Label programNameInfo, purposeInfo, divisionInfo;
 
     @FXML
     private Button btnStart, btnExit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setOperationStage();
         btnStart.setOnAction(event -> handleBtnStartAction(event));
         btnExit.setOnAction(event -> handleBtnExitAction(event));
     }
@@ -77,6 +79,13 @@ public class ProgramInformationController implements Initializable {
             programOperationService.terminateProgram(currentProgram);
             generateCompletionMessage(currentProgram.getName()).showAndWait();
         }
+    }
+
+    private void setOperationStage() {
+        operationStage = new Stage();
+        Image ico = new Image("file:src/main/resources/com/gymmer/gymmerstation/images/dumbbell.png");
+        operationStage.getIcons().add(ico);
+        operationStage.setTitle("Gymmer Station");
     }
 
     private List<OperationDataExercise> operateProgram() {
@@ -108,7 +117,7 @@ public class ProgramInformationController implements Initializable {
 
     private void loadOperationStage(Exercise exercise, Long currentSet) {
         try {
-            FXMLLoader operationLoader = new FXMLLoader(Main.class.getResource("program-operation-view.fxml"));
+            FXMLLoader operationLoader = new FXMLLoader(Main.class.getResource("fxml files/program-operation-view.fxml"));
             Parent root = operationLoader.load();
             ProgramOperationController programOperationController = operationLoader.getController();
             programOperationController.initData(exercise,currentSet);
@@ -135,7 +144,7 @@ public class ProgramInformationController implements Initializable {
 
     private void loadRestTimeStage(Exercise exercise) {
         try {
-            FXMLLoader restLoader = new FXMLLoader(Main.class.getResource("rest-time-view.fxml"));
+            FXMLLoader restLoader = new FXMLLoader(Main.class.getResource("fxml files/rest-time-view.fxml"));
             Parent root = restLoader.load();
             RestTimeController restTimeController = restLoader.getController();
             restTimeController.initData(exercise.getRestTime().substring(0,2),exercise.getRestTime().substring(3,5));
@@ -160,18 +169,17 @@ public class ProgramInformationController implements Initializable {
     }
 
     private void exitToMain() {
-        loadStage("main-view.fxml",btnStart.getScene());
+        loadStage("fxml files/main-view.fxml",btnStart.getScene());
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        loadStage("load-program-view.fxml",btnExit.getScene());
+        loadStage("fxml files/load-program-view.fxml",btnExit.getScene());
     }
 
     public void initProgramData(int index) {
         currentProgram = programService.getProgramById(index);
         programNameInfo.setText(currentProgram.getName());
         purposeInfo.setText(currentProgram.getPurpose());
-        lengthInfo.setText(currentProgram.getLength().toString());
         week = programOperationService.getCurrentWeek(currentProgram);
         division = programOperationService.getCurrentDivision(currentProgram);
         divisionInfo.setText("Week " + week + " - " + division);

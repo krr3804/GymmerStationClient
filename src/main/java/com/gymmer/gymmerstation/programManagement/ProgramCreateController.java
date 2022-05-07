@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -116,7 +117,7 @@ public class ProgramCreateController implements Initializable {
 
     private void handleBtnExitAction(ActionEvent event) {
         dataUnsavedValidationCreation(program,inpName.getText(),inpPurpose.getText(),inpLength.getText());
-        loadStage("main-view.fxml", btnExit.getScene());
+        loadStage("fxml files/main-view.fxml", btnExit.getScene());
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
@@ -130,7 +131,7 @@ public class ProgramCreateController implements Initializable {
         List<Exercise> list = program.getExerciseList();
         program = new Program(null, inpName.getText(), inpPurpose.getText(), Long.parseLong(inpLength.getText()), program.countDivision(), list);
         programService.addProgram(program);
-        loadStage("main-view.fxml", btnExit.getScene());
+        loadStage("fxml files/main-view.fxml", btnExit.getScene());
     }
 
     private void handleBtnAddDivisionEvent(ActionEvent event) {
@@ -184,9 +185,12 @@ public class ProgramCreateController implements Initializable {
     private void loadExerciseWindow(Program program, Long division, MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("exercise-form-view.fxml"));
+            loader.setLocation(Main.class.getResource("fxml files/exercise-form-view.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
+            Image ico = new Image("file:src/main/resources/com/gymmer/gymmerstation/images/dumbbell.png");
+            stage.getIcons().add(ico);
+            stage.setTitle("Gymmer Station");
             stage.setScene(new Scene(root));
             ExerciseController exerciseController = loader.getController();
             exerciseController.initData(program, division);
