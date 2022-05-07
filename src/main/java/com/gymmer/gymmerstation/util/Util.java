@@ -2,23 +2,13 @@ package com.gymmer.gymmerstation.util;
 
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.programOperation.PauseController;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
-
-import java.util.Optional;
 
 public class Util {
     public static void loadStage(String fxml, Scene scene) {
@@ -37,29 +27,6 @@ public class Util {
         stage.close();
     }
 
-    public static Alert generateErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("ERROR MESSAGE");
-        alert.setHeaderText("ERROR!");
-        alert.setContentText(message);
-        return alert;
-    }
-
-    public static void handleCloseWindowAction(Stage window) {
-        window.setOnCloseRequest(e -> {
-            e.consume();
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("CONFIRMATION");
-            alert.setHeaderText("Are You Sure To Exit?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                System.exit(0);
-            } else {
-                alert.close();
-            }
-        });
-    }
-
     public static String loadPauseWindow(Stage ownerWindow) {
         String pauseOption = "";
         try {
@@ -74,7 +41,7 @@ public class Util {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(ownerWindow);
             PauseController pauseController = loader.getController();
-            handleCloseOperationWindowAction(stage);
+            Alerts.handleCloseOperationWindowAction(stage);
             stage.showAndWait();
             pauseOption = pauseController.returnOption();
             if (!pauseOption.equals("resume")) {
@@ -86,78 +53,4 @@ public class Util {
         return pauseOption;
     }
 
-    private static void handleCloseOperationWindowAction(Stage window) {
-        window.setOnCloseRequest(e -> {
-            e.consume();
-            Alert alert = generateExitProgramAlert();
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                System.exit(0);
-            } else {
-                alert.close();
-            }
-        });
-    }
-
-    public static Alert generateCompletionMessage(String name) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("INFORMATION");
-        alert.setHeaderText("Congratulations!");
-        alert.setContentText("You Completed " + name + "!");
-        return alert;
-    }
-
-    public static Alert generateTerminateProgramAlert(String name) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.getButtonTypes().remove(ButtonType.OK);
-        alert.getButtonTypes().remove(ButtonType.CANCEL);
-        alert.getButtonTypes().add(ButtonType.YES);
-        alert.getButtonTypes().add(ButtonType.NO);
-        alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("You Still Got Way To Go!");
-        alert.setContentText("Are You Sure To End " +  name + "?");
-        return alert;
-    }
-
-    public static Alert generateDeleteDataAlert(String data) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("Are You Sure To Delete?");
-        alert.setContentText(data);
-        return alert;
-    }
-
-    public static Alert generateDeleteDivisionAlert(Long selectedDivision) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("Division " + selectedDivision + " Is Not Empty!");
-        alert.setContentText("Are You Sure To Delete?");
-        return alert;
-    }
-
-    public static Alert generateInformationAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("INFORMATION");
-        alert.setHeaderText(message);
-        return alert;
-    }
-
-    public static Alert generateSaveAlert() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.getButtonTypes().remove(ButtonType.OK);
-        alert.getButtonTypes().add(ButtonType.YES);
-        alert.getButtonTypes().add(ButtonType.NO);
-        alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("Data Not Saved!");
-        alert.setContentText("Would You Like To Save Before Leaving?");
-        return alert;
-    }
-
-    public static Alert generateExitProgramAlert() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("CONFIRMATION");
-        alert.setHeaderText("Program Still In Progress!");
-        alert.setContentText("Are You Sure To Exit?");
-        return alert;
-    }
 }
