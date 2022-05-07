@@ -15,11 +15,12 @@
     -fx-background-color : linear-gradient(#328BDB 0%, #207BCF 25%, #1973C9 75%, #0A65BF 100%);
     -fx-border-radius : 80%;
     -fx-text-fill : white;
+    -fx-font-size : 14;
     -fx-effect : dropshadow( three-pass-box, rgba(0,0,0,0.6), 5, 0.0, 0, 1 );
 }
 
-#btnSave, #btnExit {
-    -fx-font-size : 14;
+#btnAddDivision, #btnRemoveDivision {
+    -fx-font-size : 12;
 }
 
 .button:hover {

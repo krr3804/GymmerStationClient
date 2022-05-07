@@ -43,9 +43,29 @@ public class PerformanceArchiveListController implements Initializable {
         setListView();
         formListDragDetectedAction(programListInProgress);
         formListDragDroppedAction(programListTerminated);
+        handleListViewFocus();
         btnView.setOnAction(event -> handleButtonEvents(event));
         btnDelete.setOnAction(event -> handleButtonEvents(event));
         btnReturn.setOnAction(event -> handleBtnReturnAction(event));
+    }
+
+    private void handleListViewFocus() {
+        programListInProgress.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if(btnView.isFocused() || btnDelete.isFocused()) {
+                return;
+            }
+            if(!newVal) {
+                programListInProgress.getSelectionModel().clearSelection();
+            }
+        });
+        programListTerminated.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (btnView.isFocused() || btnDelete.isFocused()) {
+                return;
+            }
+            if (!newVal) {
+                programListTerminated.getSelectionModel().clearSelection();
+            }
+        });
     }
 
     private void handleButtonEvents(ActionEvent event) {
@@ -148,7 +168,7 @@ public class PerformanceArchiveListController implements Initializable {
         noIndexSelectedValidation(selectedItemIndex);
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("performance-archive-view.fxml"));
+            loader.setLocation(Main.class.getResource("fxml files/performance-archive-view.fxml"));
             Parent root = loader.load();
             PerformanceArchiveController performanceArchiveController = loader.getController();
             performanceArchiveController.initData(selectedItemIndex,status);
@@ -161,13 +181,13 @@ public class PerformanceArchiveListController implements Initializable {
     }
 
     private void checkSelectedList() {
-        if(programListInProgress.getSelectionModel().getSelectedItem() == null && programListTerminated.getSelectionModel().getSelectedItem() != null) {
-            selectedItemIndex = programListTerminated.getSelectionModel().getSelectedIndex();
-            status = true;
-        }
         if(programListInProgress.getSelectionModel().getSelectedItem() != null && programListTerminated.getSelectionModel().getSelectedItem() == null) {
             selectedItemIndex = programListInProgress.getSelectionModel().getSelectedIndex();
             status = false;
+        }
+        if(programListInProgress.getSelectionModel().getSelectedItem() == null && programListTerminated.getSelectionModel().getSelectedItem() != null) {
+            selectedItemIndex = programListTerminated.getSelectionModel().getSelectedIndex();
+            status = true;
         }
     }
 
@@ -188,10 +208,12 @@ public class PerformanceArchiveListController implements Initializable {
             generateInformationAlert("Data Deleted!").showAndWait();
         } else {
             alert.close();
+            programListInProgress.getSelectionModel().clearSelection();
+            programListTerminated.getSelectionModel().clearSelection();
         }
     }
 
     private void handleBtnReturnAction(ActionEvent event) {
-        loadStage("main-view.fxml", btnReturn.getScene());
+        loadStage("fxml files/main-view.fxml", btnReturn.getScene());
     }
 }
