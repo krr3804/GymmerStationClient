@@ -1,9 +1,6 @@
 package com.gymmer.gymmerstation;
 
-import com.gymmer.gymmerstation.domain.Exercise;
-import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
-import com.gymmer.gymmerstation.util.Util;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,10 +8,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.gymmer.gymmerstation.util.Util.handleCloseWindowAction;
+import static com.gymmer.gymmerstation.util.Alerts.handleCloseWindowAction;
 
 public class Main extends javafx.application.Application {
     private static ProgramService programService = AppConfig.programService();

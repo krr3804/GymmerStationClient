@@ -4,6 +4,7 @@ import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
+import com.gymmer.gymmerstation.util.Alerts;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -77,7 +78,7 @@ public class PerformanceArchiveListController implements Initializable {
                 handleBtnDeleteAction(event);
             }
         } catch (IllegalArgumentException e) {
-            generateErrorAlert(e.getMessage()).showAndWait();
+            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -156,7 +157,7 @@ public class PerformanceArchiveListController implements Initializable {
 
     private void terminateProgram(DragEvent event) {
         Program program = programOperationService.getProgramByIndex(selectedItemIndex,false);
-        Optional<ButtonType> result = generateTerminateProgramAlert(program.getName()).showAndWait();
+        Optional<ButtonType> result = Alerts.generateTerminateProgramAlert(program.getName()).showAndWait();
         if(result.get() == ButtonType.YES) {
             programOperationService.terminateProgram(program);
             setListView();
@@ -200,12 +201,12 @@ public class PerformanceArchiveListController implements Initializable {
         checkSelectedList();
         noIndexSelectedValidation(selectedItemIndex);
         Program program = programOperationService.getProgramByIndex(selectedItemIndex,status);
-        Alert alert = generateDeleteDataAlert("");
+        Alert alert = Alerts.generateDeleteDataAlert("");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             programOperationService.deleteProgramData(program,status);
             setListView();
-            generateInformationAlert("Data Deleted!").showAndWait();
+            Alerts.generateInformationAlert("Data Deleted!").showAndWait();
         } else {
             alert.close();
             programListInProgress.getSelectionModel().clearSelection();

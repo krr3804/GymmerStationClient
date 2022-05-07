@@ -1,28 +1,20 @@
 package com.gymmer.gymmerstation.programOperation;
 
 import com.gymmer.gymmerstation.AppConfig;
-import com.gymmer.gymmerstation.util.Util;
-import javafx.application.Platform;
+import com.gymmer.gymmerstation.util.Alerts;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import javafx.stage.WindowEvent;
 
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.gymmer.gymmerstation.util.Util.*;
-import static com.gymmer.gymmerstation.util.Util.generateSaveAlert;
+import static com.gymmer.gymmerstation.util.Alerts.generateSaveAlert;
 
 public class PauseController implements Initializable {
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
@@ -45,7 +37,7 @@ public class PauseController implements Initializable {
     }
 
     private void handleBtnSaveAndExitAction(ActionEvent event) {
-        Optional<ButtonType> result = generateExitProgramAlert().showAndWait();
+        Optional<ButtonType> result = Alerts.generateExitProgramAlert().showAndWait();
         if(result.get() == ButtonType.OK) {
             pauseOption = "saveAndExit";
             closeStage(btnSaveAndExit);
@@ -53,7 +45,7 @@ public class PauseController implements Initializable {
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        Optional<ButtonType> resultExit = generateExitProgramAlert().showAndWait();
+        Optional<ButtonType> resultExit = Alerts.generateExitProgramAlert().showAndWait();
         if(resultExit.get() == ButtonType.OK) {
             Alert alert = generateSaveAlert();
             alert.getButtonTypes().remove(ButtonType.CANCEL);

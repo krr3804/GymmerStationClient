@@ -2,9 +2,8 @@ package com.gymmer.gymmerstation.exerciseManagement;
 
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
-import com.gymmer.gymmerstation.programManagement.validations.DuplicateExerciseValidation;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
-import com.gymmer.gymmerstation.util.CommonValidation;
+import com.gymmer.gymmerstation.util.Alerts;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
@@ -23,7 +21,6 @@ import static com.gymmer.gymmerstation.programManagement.validations.DuplicateEx
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
 import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static com.gymmer.gymmerstation.util.Util.*;
 import static javafx.collections.FXCollections.observableList;
 
 public class ExerciseController implements Initializable {
@@ -74,7 +71,7 @@ public class ExerciseController implements Initializable {
             InputValidation.inputMismatchValidationNumber(field.getText(),fieldName);
         } catch (IllegalArgumentException e) {
             field.clear();
-            generateErrorAlert(e.getMessage()).showAndWait();
+            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -82,11 +79,11 @@ public class ExerciseController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
-                generateInformationAlert("Exercise Saved!").showAndWait();
+                Alerts.generateInformationAlert("Exercise Saved!").showAndWait();
             }
             if (event.getSource().equals(btnDelete)) {
                 handleBtnDeleteAction(event);
-                generateInformationAlert("Exercise Deleted!").showAndWait();
+                Alerts.generateInformationAlert("Exercise Deleted!").showAndWait();
             }
             if (event.getSource().equals(btnExit)) {
                 handleBtnExitAction(event);
@@ -94,7 +91,7 @@ public class ExerciseController implements Initializable {
         } catch (IllegalArgumentException e) {
             if(e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") ||
                     e.getMessage().equals("Rest Time Is 00:00!") || e.getMessage().equals("Exercise Already In The List!")) {
-                generateErrorAlert(e.getMessage()).showAndWait();
+                Alerts.generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
     }
@@ -150,7 +147,7 @@ public class ExerciseController implements Initializable {
     private void handleBtnDeleteAction(ActionEvent event) {
         noItemSelectedValidation(exerciseListView.getSelectionModel().getSelectedItem());
         String name = exerciseListView.getSelectionModel().getSelectedItem();
-        Alert alert = generateDeleteDataAlert(name);
+        Alert alert = Alerts.generateDeleteDataAlert(name);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             Exercise exercise = currentProgram.removeExercise(currentDivision,name);

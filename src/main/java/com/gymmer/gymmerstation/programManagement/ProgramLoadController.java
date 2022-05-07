@@ -5,7 +5,7 @@ import com.gymmer.gymmerstation.Main;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programOperation.ProgramInformationController;
 import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
-import com.gymmer.gymmerstation.util.CommonValidation;
+import com.gymmer.gymmerstation.util.Alerts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +15,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -82,7 +80,7 @@ public class ProgramLoadController implements Initializable {
                 handleBtnDelete(event);
             }
         } catch (IllegalArgumentException e) {
-            generateErrorAlert(e.getMessage()).showAndWait();
+            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -108,7 +106,7 @@ public class ProgramLoadController implements Initializable {
         index = programList.getSelectionModel().getSelectedIndex();
         noIndexSelectedValidation(index);
         Program program = programService.getProgramById(index);
-        Alert alert = generateDeleteDataAlert(program.getName());
+        Alert alert = Alerts.generateDeleteDataAlert(program.getName());
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             programOperationService.terminateProgram(program);
@@ -116,7 +114,7 @@ public class ProgramLoadController implements Initializable {
             programList.setItems(observableList(programService.showProgramList()));
             programList.getSelectionModel().clearSelection();
             index = -1;
-            generateInformationAlert("Program Deleted!").showAndWait();
+            Alerts.generateInformationAlert("Program Deleted!").showAndWait();
         } else {
             alert.close();
         }

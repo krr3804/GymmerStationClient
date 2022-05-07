@@ -7,7 +7,7 @@ import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
-import com.gymmer.gymmerstation.util.Util;
+import com.gymmer.gymmerstation.util.Alerts;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,11 +20,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.security.spec.ECField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +75,7 @@ public class ProgramInformationController implements Initializable {
     private void checkProgramCompletion() {
         if(programOperationService.getProgress(currentProgram) == currentProgram.getLength() * currentProgram.getDivisionQty()) {
             programOperationService.terminateProgram(currentProgram);
-            generateCompletionMessage(currentProgram.getName()).showAndWait();
+            Alerts.generateCompletionMessage(currentProgram.getName()).showAndWait();
         }
     }
 
@@ -125,7 +123,7 @@ public class ProgramInformationController implements Initializable {
             operationStage.setOnCloseRequest(event -> {
                 event.consume();
                 programOperationController.handleWatchOnCloseRequest();
-                Alert alert = generateExitProgramAlert();
+                Alert alert = Alerts.generateExitProgramAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
                     System.exit(0);
@@ -152,7 +150,7 @@ public class ProgramInformationController implements Initializable {
             operationStage.setOnCloseRequest(event -> {
                 event.consume();
                 restTimeController.handleWatchOnCloseRequest();
-                Alert alert = generateExitProgramAlert();
+                Alert alert = Alerts.generateExitProgramAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
                     System.exit(0);
