@@ -109,7 +109,9 @@ public class ProgramLoadController implements Initializable {
         Alert alert = Alerts.generateDeleteDataAlert(program.getName());
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            programOperationService.terminateProgram(program);
+            if(programOperationService.getProgress(program) > 0) {
+                programOperationService.terminateProgram(program);
+            }
             programService.deleteProgram(program.getId());
             programList.setItems(observableList(programService.showProgramList()));
             programList.getSelectionModel().clearSelection();
