@@ -102,7 +102,7 @@ public class ProgramCreateController implements Initializable {
                 if(result.get() == ButtonType.YES) {
                     btnSave.fire();
                 } else if(result.get() == ButtonType.NO) {
-                    loadStage("main-view.fxml", btnExit.getScene());
+                    loadStage("fxml files/main-view.fxml", btnExit.getScene());
                 } else {
                     alert.close();
                 }
@@ -125,8 +125,10 @@ public class ProgramCreateController implements Initializable {
         InputValidation.inputBlankValidation(map);
         noDivisionValidation(divisionList);
         noExerciseValidation(program,divisionList);
-        List<Exercise> list = program.getExerciseList();
-        program = new Program(null, inpName.getText(), inpPurpose.getText(), Long.parseLong(inpLength.getText()), program.countDivision(), list);
+        program.setName(inpName.getText());
+        program.setPurpose(inpPurpose.getText());
+        program.setLength(Long.parseLong(inpLength.getText()));
+        program.setDivisionQty(program.countDivision());
         programService.addProgram(program);
         loadStage("fxml files/main-view.fxml", btnExit.getScene());
     }

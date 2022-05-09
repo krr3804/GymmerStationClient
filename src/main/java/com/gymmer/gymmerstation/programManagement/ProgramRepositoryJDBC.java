@@ -31,7 +31,18 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
             psmt.clearParameters();
             query = "INSERT INTO exercise values (?,?,?,?,?,?,?);";
             psmt = conn.prepareStatement(query);
-            addExercises(psmt,key,program.getExerciseList());
+            for(Exercise exercise : program.getExerciseList()) {
+                psmt.setString(1, exercise.getName());
+                psmt.setLong(2, exercise.getSet());
+                psmt.setLong(3, exercise.getRep());
+                psmt.setLong(4, exercise.getWeight());
+                psmt.setString(5, exercise.getRestTime());
+                psmt.setLong(6, exercise.getDivision());
+                psmt.setLong(7, key);
+                psmt.addBatch();
+                psmt.clearParameters();
+            }
+            psmt.executeBatch();
         } catch (SQLException e) {
             System.err.println("SQL error : " + e.getMessage());
         } finally {
@@ -68,13 +79,120 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             closePreparedStatement(psmt);
             closeConnection(conn);
         }
 
         return list;
+    }
+
+    @Override
+    public void removeEntireDivision(Long programId, Long removedDivision) {
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        String query;
+        try {
+            query = "UPDATE program SET divisionQty = divisionQty - 1 WHERE program_id = ?";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1,programId);
+            psmt.executeUpdate();
+            psmt.clearParameters();
+
+            query = "DELETE FROM exercise WHERE division = ? AND program = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1, removedDivision);
+            psmt.setLong(2, programId);
+            psmt.executeUpdate();
+            psmt.clearParameters();
+
+            query = "UPDATE exercise SET division = division - 1 WHERE division > ? AND program = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1, removedDivision);
+            psmt.setLong(2, programId);
+            psmt.executeUpdate();
+            psmt.clearParameters();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
+    }
+
+    @Override
+    public void addExercises(Long program_id, List<Exercise> exerciseList) {
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        String query;
+        try {
+            query = "INSERT INTO exercise values (?,?,?,?,?,?,?);";
+            psmt = conn.prepareStatement(query);
+            for (Exercise exercise : exerciseList) {
+                psmt.setString(1,exercise.getName());
+                psmt.setLong(2,exercise.getSet());
+                psmt.setLong(3,exercise.getRep());
+                psmt.setLong(4,exercise.getWeight());
+                psmt.setString(5,exercise.getRestTime());
+                psmt.setLong(6,exercise.getDivision());
+                psmt.setLong(7,program_id);
+                psmt.addBatch();
+                psmt.clearParameters();
+            }
+            psmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
+    }
+
+    @Override
+    public void deleteExercises(Long program_id, List<Exercise> exerciseList) {
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        String query;
+        try {
+            query = "DELETE FROM exercise WHERE exercise_name = ? AND division = ? AND program = ?;";
+            psmt = conn.prepareStatement(query);
+            for(Exercise exercise : exerciseList) {
+                psmt.setString(1, exercise.getName());
+                psmt.setLong(2, exercise.getDivision());
+                psmt.setLong(3, program_id);
+                psmt.addBatch();
+                psmt.clearParameters();
+            }
+            psmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
+    }
+
+    @Override
+    public void editProgram(Program newProgram) {
+        Connection conn = getConnection();
+        PreparedStatement psmt = null;
+        String query;
+        try {
+            query = "UPDATE program SET name = ?, purpose = ?, length = ?, divisionQty = ? WHERE program_id = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setString(1, newProgram.getName());
+            psmt.setString(2, newProgram.getPurpose());
+            psmt.setLong(3, newProgram.getLength());
+            psmt.setLong(4,newProgram.getDivisionQty());
+            psmt.setLong(5, newProgram.getId());
+            psmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            closePreparedStatement(psmt);
+            closeConnection(conn);
+        }
     }
 
     private Program mapProgram(ResultSet rs) throws SQLException {
@@ -97,104 +215,6 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
                 rs.getString("rest"),
                 rs.getLong("division"));
         return exercise;
-    }
-
-    @Override
-    public void editProgram(Program oldProgram, Program newProgram, List<Long> removedDivisions, List<Exercise> addedExercises, List<Exercise> deletedExercises) {
-        Connection conn = getConnection();
-        PreparedStatement psmt = null;
-        String query;
-        try {
-            Long program_id = oldProgram.getId();
-            if(!oldProgram.getName().equals(newProgram.getName()) || !oldProgram.getPurpose().equals(newProgram.getPurpose()) || !oldProgram.getLength().equals(newProgram.getLength())) {
-                query = "UPDATE program SET name = ?, purpose = ?, length = ?, divisionQty = ? WHERE program_id = ?;";
-                psmt = conn.prepareStatement(query);
-                updateProgramData(psmt,oldProgram,newProgram);
-            }
-            if(!oldProgram.getDivisionQty().equals(newProgram.getDivisionQty())) {
-                query = "UPDATE program SET divisionQty = ? WHERE program_id = ?;";
-                psmt = conn.prepareStatement(query);
-                updateDivision(psmt,program_id,newProgram.getDivisionQty());
-            }
-            if (!removedDivisions.isEmpty()) {
-                removeEntireDivision(conn,psmt,program_id,removedDivisions);
-            }
-            if (!deletedExercises.isEmpty()) {
-                query = "DELETE FROM exercise WHERE exercise_name = ? AND division = ? AND program = ?;";
-                psmt = conn.prepareStatement(query);
-                deleteExercises(psmt,program_id,deletedExercises);
-            }
-            if (!addedExercises.isEmpty()) {
-                query = "INSERT INTO exercise values (?,?,?,?,?,?,?);";
-                psmt = conn.prepareStatement(query);
-                addExercises(psmt,program_id,addedExercises);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            closePreparedStatement(psmt);
-            closeConnection(conn);
-        }
-    }
-
-    private void updateProgramData(PreparedStatement psmt, Program oldProgram, Program newProgram) throws SQLException{
-        psmt.setString(1, newProgram.getName());
-        psmt.setString(2, newProgram.getPurpose());
-        psmt.setLong(3, newProgram.getLength());
-        psmt.setLong(4,newProgram.getDivisionQty());
-        psmt.setLong(5, oldProgram.getId());
-        psmt.executeUpdate();
-    }
-
-    private void updateDivision(PreparedStatement psmt, Long programId, Long divisionCount) throws SQLException {
-        psmt.setLong(1,divisionCount);
-        psmt.setLong(2,programId);
-        psmt.executeUpdate();
-    }
-
-    private void removeEntireDivision(Connection conn, PreparedStatement psmt, Long programId, List<Long> removedDivisions) throws SQLException {
-        for(Long removedDivision : removedDivisions) {
-            String query = "DELETE FROM exercise WHERE division = ? AND program = ?;";
-            psmt = conn.prepareStatement(query);
-            psmt.setLong(1, removedDivision);
-            psmt.setLong(2, programId);
-            psmt.executeUpdate();
-            psmt.clearParameters();
-
-            query = "UPDATE exercise SET division = division - 1 WHERE division > ? AND program = ?;";
-            psmt = conn.prepareStatement(query);
-            psmt.setLong(1, removedDivision);
-            psmt.setLong(2, programId);
-            psmt.executeUpdate();
-            psmt.clearParameters();
-        }
-    }
-
-    private void deleteExercises(PreparedStatement psmt, Long programId, List<Exercise> deletedExercises) throws SQLException{
-        for(Exercise exercise : deletedExercises) {
-            psmt.setString(1,exercise.getName());
-            psmt.setLong(2, exercise.getDivision());
-            psmt.setLong(3,programId);
-            psmt.addBatch();
-            psmt.clearParameters();
-        }
-        psmt.executeBatch();
-    }
-
-    private void addExercises(PreparedStatement psmt, Long programId, List<Exercise> addedExercises) throws SQLException{
-        for(Exercise exercise : addedExercises) {
-            psmt.setString(1,exercise.getName());
-            psmt.setLong(2,exercise.getSet());
-            psmt.setLong(3,exercise.getRep());
-            psmt.setLong(4,exercise.getWeight());
-            psmt.setString(5,exercise.getRestTime());
-            psmt.setLong(6,exercise.getDivision());
-            psmt.setLong(7,programId);
-            psmt.addBatch();
-            psmt.clearParameters();
-        }
-        psmt.executeBatch();
     }
 
     @Override

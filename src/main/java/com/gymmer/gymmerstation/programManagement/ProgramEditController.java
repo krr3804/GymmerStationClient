@@ -6,6 +6,7 @@ import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
+import com.gymmer.gymmerstation.programManagement.validations.NoChangeFoundValidation;
 import com.gymmer.gymmerstation.util.Alerts;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,18 +28,18 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 
-import static com.gymmer.gymmerstation.programManagement.validations.ChangeNotFoundValidation.changeNotFoundValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.DataUnsavedValidation.dataUnsavedValidationEdition;
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
-import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static com.gymmer.gymmerstation.util.Util.*;
+import static com.gymmer.gymmerstation.programManagement.validations.NoChangeFoundValidation.noChangeFoundValidation;
+import static com.gymmer.gymmerstation.util.Alerts.*;
+import static com.gymmer.gymmerstation.util.CommonValidation.noItemSelectedValidation;
+import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramEditController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private Program program = null;
     private List<Integer> divisionList = new ArrayList<>();
-    private List<Long> removedDivisions = new ArrayList<>();
     private List<Exercise> additionList = new ArrayList<>();
     private List<Exercise> deletionList = new ArrayList<>();
 
@@ -80,7 +81,7 @@ public class ProgramEditController implements Initializable {
             InputValidation.inputMismatchValidationNumber(inpLength.getText(), "Length");
         } catch (IllegalArgumentException e) {
             inpLength.clear();
-            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
+            generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -88,7 +89,7 @@ public class ProgramEditController implements Initializable {
         try {
             if (event.getSource().equals(btnSave)) {
                 handleBtnSaveAction(event);
-                Alerts.generateInformationAlert("Program Edited!").showAndWait();
+                generateInformationAlert("Program Edited!").showAndWait();
             }
             if (event.getSource().equals(btnAddDivision)) {
                 handleBtnAddDivisionEvent(event);
@@ -101,17 +102,17 @@ public class ProgramEditController implements Initializable {
             }
         } catch (IllegalArgumentException e) {
             if(e.getMessage().equals("Data Unsaved!")) {
-                Alert alert = Alerts.generateSaveAlert();
+                Alert alert = generateSaveAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if(result.get() == ButtonType.YES) {
                     btnSave.fire();
                 } else if(result.get() == ButtonType.NO) {
-                    loadStage("main-view.fxml", btnExit.getScene());
+                    loadStage("fxml files/main-view.fxml", btnExit.getScene());
                 } else {
                     alert.close();
                 }
             } else {
-                Alerts.generateErrorAlert(e.getMessage()).showAndWait();
+                generateErrorAlert(e.getMessage()).showAndWait();
             }
         }
     }
@@ -124,14 +125,14 @@ public class ProgramEditController implements Initializable {
         inputBlankValidation(map);
         noDivisionValidation(divisionList);
         noExerciseValidation(program,divisionList);
-        changeNotFoundValidation(program,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),removedDivisions,additionList,deletionList);
-        Program programEdited = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.countDivision(),program.getExerciseList());
-        programService.editProgram(program,programEdited,removedDivisions,additionList,deletionList);
-        program = programEdited;
+        noChangeFoundValidation(program, inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),additionList,deletionList);
+        Program programEdited = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.countDivision());
+        programService.editProgram(program,programEdited,additionList,deletionList);
+        loadStage("fxml files/load-program-view.fxml",btnSave.getScene());
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        dataUnsavedValidationEdition(program,inpName.getText(),inpPurpose.getText(),inpLength.getText(),removedDivisions,additionList,deletionList);
+        dataUnsavedValidationEdition(program,inpName.getText(),inpPurpose.getText(),inpLength.getText(),additionList,deletionList);
         loadStage("fxml files/load-program-view.fxml",btnExit.getScene());
     }
 
@@ -148,12 +149,16 @@ public class ProgramEditController implements Initializable {
             removeDivision(selectedDivision);
             return;
         }
-        Alert alert = Alerts.generateDeleteDivisionAlert(selectedDivision);
+        Alert alert = generateDeleteDivisionAlert(selectedDivision);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.get() == ButtonType.OK) {
-            removeDivision(selectedDivision);
-        } else {
-            alert.close();
+            Optional<ButtonType> warningResult = generateWarningAlert().showAndWait();
+            if(warningResult.get() == ButtonType.OK) {
+                programService.removeEntireDivision(program.getId(),selectedDivision);
+                removeDivision(selectedDivision);
+            } else {
+                alert.close();
+            }
         }
     }
 
@@ -179,7 +184,7 @@ public class ProgramEditController implements Initializable {
                 loadExerciseWindow(program, selectedDivision, event);
             }
         } catch (IllegalArgumentException e) {
-            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
+            generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -208,7 +213,7 @@ public class ProgramEditController implements Initializable {
             exerciseController.initData(program,division);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(((Node)event.getSource()).getScene().getWindow());
-            Alerts.handleCloseWindowAction(stage);
+            handleCloseWindowAction(stage);
             stage.showAndWait();
 
             additionList.addAll(exerciseController.getAdditionList());

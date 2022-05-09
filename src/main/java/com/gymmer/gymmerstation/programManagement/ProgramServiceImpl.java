@@ -25,8 +25,23 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void editProgram(Program oldProgram, Program newProgram, List<Long> removedDivisions, List<Exercise> addedExercises, List<Exercise> deletedExercises) {
-        programRepository.editProgram(oldProgram,newProgram,removedDivisions,addedExercises,deletedExercises);
+    public void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList) {
+        Long programId = newProgram.getId();
+        if (!oldProgram.getName().equals(newProgram.getName()) || !oldProgram.getPurpose().equals(newProgram.getPurpose())
+                || !oldProgram.getLength().equals(newProgram.getLength()) || !oldProgram.getDivisionQty().equals(newProgram.getDivisionQty())) {
+            programRepository.editProgram(newProgram);
+        }
+        if(!additionList.isEmpty()) {
+            programRepository.addExercises(programId,additionList);
+        }
+        if(!deletionList.isEmpty()) {
+            programRepository.deleteExercises(programId,deletionList);
+        }
+    }
+
+    @Override
+    public void removeEntireDivision(Long programId, Long removedDivision) {
+        programRepository.removeEntireDivision(programId, removedDivision);
     }
 
     @Override

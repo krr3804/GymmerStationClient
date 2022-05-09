@@ -64,6 +64,15 @@ public class Alerts {
         return alert;
     }
 
+    public static Alert generateWarningAlert() {
+        Alert alert = customizeAlert(Alert.AlertType.WARNING);
+        alert.getButtonTypes().add(ButtonType.CANCEL);
+        alert.setTitle("WARNING MESSAGE");
+        alert.setHeaderText("Warning!");
+        alert.setContentText("Changes Are Final, Press 'OK' To Proceed!");
+        return alert;
+    }
+
     public static Alert generateInformationAlert(String message) {
         Alert alert = customizeAlert(Alert.AlertType.INFORMATION);
         alert.setTitle("INFORMATION");

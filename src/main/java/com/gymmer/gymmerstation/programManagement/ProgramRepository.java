@@ -10,7 +10,13 @@ public interface ProgramRepository {
 
     List<Program> showProgramList();
 
-    void editProgram(Program oldProgram, Program newProgram, List<Long> removedDivisions, List<Exercise> addedExercises, List<Exercise> deletedExercises);
+    void removeEntireDivision(Long programId, Long removedDivision);
+
+    void addExercises(Long programId, List<Exercise> exerciseList);
+
+    void deleteExercises(Long programId, List<Exercise> exerciseList);
+
+    void editProgram(Program newProgram);
 
     Program getProgramById(Long id);
 

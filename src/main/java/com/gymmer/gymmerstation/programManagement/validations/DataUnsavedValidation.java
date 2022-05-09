@@ -13,13 +13,14 @@ public class DataUnsavedValidation {
         }
     }
 
-    public static void dataUnsavedValidationEdition(Program currentProgram, String name, String purpose, String length, List<Long> removedDivisions, List<Exercise> addedExercises, List<Exercise> deletedExercises) {
+    public static void dataUnsavedValidationEdition(Program currentProgram, String name, String purpose, String length,
+                                                    List<Exercise> additionList, List<Exercise> deletionList) {
         Long tmpLength = 0L;
         if(!length.isBlank()) {
             tmpLength = Long.parseLong(length);
         }
         if(!currentProgram.getName().equals(name) || !currentProgram.getPurpose().equals(purpose) || !currentProgram.getLength().equals(tmpLength)
-                || !removedDivisions.isEmpty() || !deletedExercises.isEmpty() || !addedExercises.isEmpty()) {
+        || !additionList.isEmpty() || !deletionList.isEmpty()) {
             throw new IllegalArgumentException(DATA_UNSAVED);
         }
     }

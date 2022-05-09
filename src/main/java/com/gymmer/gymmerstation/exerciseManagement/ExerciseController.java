@@ -1,7 +1,9 @@
 package com.gymmer.gymmerstation.exerciseManagement;
 
+import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.Alerts;
 import com.gymmer.gymmerstation.util.Util;
@@ -24,6 +26,7 @@ import static com.gymmer.gymmerstation.util.CommonValidation.*;
 import static javafx.collections.FXCollections.observableList;
 
 public class ExerciseController implements Initializable {
+    private final ProgramService programService = AppConfig.programService();
     private Program currentProgram = null;
     private Long currentDivision = null;
     private List<Exercise> additionList = new ArrayList<>();
@@ -89,10 +92,7 @@ public class ExerciseController implements Initializable {
                 handleBtnExitAction(event);
             }
         } catch (IllegalArgumentException e) {
-            if(e.getMessage().equals("No Item Selected!") || e.getMessage().contains("Is Blank!") ||
-                    e.getMessage().equals("Rest Time Is 00:00!") || e.getMessage().equals("Exercise Already In The List!")) {
-                Alerts.generateErrorAlert(e.getMessage()).showAndWait();
-            }
+            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -125,8 +125,8 @@ public class ExerciseController implements Initializable {
                 Long.parseLong(Reps.getText()), Long.parseLong(Weight.getText()),
                 restTime, currentDivision);
         currentProgram.getExerciseList().add(exercise);
-        exerciseListView.setItems(showExerciseList());
         additionList.add(exercise);
+        exerciseListView.setItems(showExerciseList());
         clearData();
     }
 
@@ -151,8 +151,8 @@ public class ExerciseController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             Exercise exercise = currentProgram.removeExercise(currentDivision,name);
-            exerciseListView.setItems(showExerciseList());
             deletionList.add(exercise);
+            exerciseListView.setItems(showExerciseList());
         } else {
             alert.close();
         }
@@ -166,7 +166,7 @@ public class ExerciseController implements Initializable {
         return additionList;
     }
 
-    public List<Exercise> getDeletionList() {
+    public List<Exercise> getDeletionList(){
         return deletionList;
     }
 

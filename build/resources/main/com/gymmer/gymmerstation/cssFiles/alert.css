@@ -1,6 +1,5 @@
 .root {
     -fx-font-family : sans-serif;
-    -fx-border-color : black;
 }
 
 .dialog-pane:header *.header-panel {

@@ -90,6 +90,10 @@ public class Program {
         this.length = length;
     }
 
+    public void setDivisionQty(Long divisionQty) {
+        this.divisionQty = divisionQty;
+    }
+
     @Override
     public boolean equals(Object o) {
         if(this == o) {
