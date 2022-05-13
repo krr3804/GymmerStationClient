@@ -26,3 +26,9 @@
 .button:hover {
     -fx-text-fill : radial-gradient(center 50% 50%, radius 50%, grey, lightgrey);
 }
+
+#btnLogout {
+    -fx-font-size : 12;
+    -fx-text-fill : black;
+    -fx-effect : none;
+}

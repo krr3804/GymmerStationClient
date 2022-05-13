@@ -16,4 +16,6 @@ module com.gymmer.gymmerstation {
     exports com.gymmer.gymmerstation.performanceArchive;
     opens com.gymmer.gymmerstation.domain to javafx.fxml;
     exports com.gymmer.gymmerstation.domain;
+    exports com.gymmer.gymmerstation.home;
+    opens com.gymmer.gymmerstation.home to javafx.fxml;
 }

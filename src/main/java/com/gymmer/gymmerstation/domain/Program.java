@@ -1,12 +1,13 @@
 package com.gymmer.gymmerstation.domain;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Program {
+public class Program implements Serializable {
+    private static final long serialVersionUID = 1234567890L;
+
     private Long id;
     private String name;
     private String purpose;
@@ -52,7 +53,7 @@ public class Program {
     }
 
     public Exercise removeExercise(Long division, String name) {
-        Exercise exercise = exerciseList.stream().filter(e -> e.division.equals(division) && e.getName().equals(name)).findAny().get();
+        Exercise exercise = exerciseList.stream().filter(e -> e.getDivision().equals(division) && e.getName().equals(name)).findAny().get();
         exerciseList.remove(exercise);
         return exercise;
     }
@@ -70,12 +71,12 @@ public class Program {
     }
 
     public List<Exercise> getExerciseByDivision(Long divisionNumber) {
-        return exerciseList.stream().filter(exercise -> exercise.division.equals(divisionNumber)).collect(Collectors.toList());
+        return exerciseList.stream().filter(exercise -> exercise.getDivision().equals(divisionNumber)).collect(Collectors.toList());
     }
 
     public void removeExerciseInDivision(Long division) {
         exerciseList.removeIf(exercise -> exercise.getDivision().equals(division));
-        exerciseList.stream().filter(exercise -> exercise.division > division).forEach(exercise -> exercise.decreaseDivisionSequence(exercise.division));
+        exerciseList.stream().filter(exercise -> exercise.getDivision()> division).forEach(exercise -> exercise.decreaseDivisionSequence(exercise.getDivision()));
     }
 
     public void setName(String name) {

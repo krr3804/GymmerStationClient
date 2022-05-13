@@ -1,6 +1,12 @@
 # Functions
 
 ---
+## Login window
+- If user is registered -> login with ID and PW
+- If not, [Register] button -> [Register] window
+- If login is successful -> [Main] window
+- [Exit] button -> program stop
+
 ## Main window
 - [Create Program] button -> [Create Program] window
 - [Load Program] button -> [Load Program] window

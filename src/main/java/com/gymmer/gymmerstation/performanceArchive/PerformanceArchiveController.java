@@ -4,18 +4,14 @@ import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
-import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;

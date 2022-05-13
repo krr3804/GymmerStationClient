@@ -27,6 +27,11 @@
     -fx-background-color : linear-gradient(#328BDB 100%, #207BCF 75%, #1973C9 25%, #0A65BF 0%);
 }
 
+#registerTxt {
+    -fx-font-weight : bold;
+    -fx-font-size : 24;
+}
+
 .label {
     -fx-font-size : 14;
     -fx-text-fill : midnightblue;
@@ -43,9 +48,12 @@
 .list-cell:filled:selected:focused {
     -fx-background-color : linear-gradient(#328BDB 0%, #207BCF 25%, #1973C9 75%, #0A65BF 100%);
     -fx-text-fill : white;
+    -fx-underline : false;
 }
 
 .list-cell:filled:hover {
     -fx-background-color : #0093ff;
     -fx-text-fill : white;
+    -fx-underline : true;
 }
+

@@ -2,7 +2,6 @@ package com.gymmer.gymmerstation.programManagement;
 
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.Main;
-import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;

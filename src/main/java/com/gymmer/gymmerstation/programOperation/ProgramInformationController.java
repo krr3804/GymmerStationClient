@@ -123,7 +123,7 @@ public class ProgramInformationController implements Initializable {
             operationStage.setOnCloseRequest(event -> {
                 event.consume();
                 programOperationController.handleWatchOnCloseRequest();
-                Alert alert = Alerts.generateExitProgramAlert();
+                Alert alert = Alerts.generateExitProgramInProgressAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
                     System.exit(0);
@@ -150,7 +150,7 @@ public class ProgramInformationController implements Initializable {
             operationStage.setOnCloseRequest(event -> {
                 event.consume();
                 restTimeController.handleWatchOnCloseRequest();
-                Alert alert = Alerts.generateExitProgramAlert();
+                Alert alert = Alerts.generateExitProgramInProgressAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
                     System.exit(0);

@@ -37,7 +37,7 @@ public class PauseController implements Initializable {
     }
 
     private void handleBtnSaveAndExitAction(ActionEvent event) {
-        Optional<ButtonType> result = Alerts.generateExitProgramAlert().showAndWait();
+        Optional<ButtonType> result = Alerts.generateExitProgramInProgressAlert().showAndWait();
         if(result.get() == ButtonType.OK) {
             pauseOption = "saveAndExit";
             closeStage(btnSaveAndExit);
@@ -45,7 +45,7 @@ public class PauseController implements Initializable {
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        Optional<ButtonType> resultExit = Alerts.generateExitProgramAlert().showAndWait();
+        Optional<ButtonType> resultExit = Alerts.generateExitProgramInProgressAlert().showAndWait();
         if(resultExit.get() == ButtonType.OK) {
             Alert alert = generateSaveAlert();
             alert.getButtonTypes().remove(ButtonType.CANCEL);

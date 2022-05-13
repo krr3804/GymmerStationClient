@@ -6,8 +6,6 @@ import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
-import com.gymmer.gymmerstation.programManagement.validations.NoChangeFoundValidation;
-import com.gymmer.gymmerstation.util.Alerts;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

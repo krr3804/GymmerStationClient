@@ -2,7 +2,6 @@ package com.gymmer.gymmerstation.util;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -91,7 +90,7 @@ public class Alerts {
         return alert;
     }
 
-    public static Alert generateExitProgramAlert() {
+    public static Alert generateExitProgramInProgressAlert() {
         Alert alert = customizeAlert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("CONFIRMATION");
         alert.setHeaderText("Program Still In Progress!");
@@ -99,12 +98,17 @@ public class Alerts {
         return alert;
     }
 
+    public static Alert generateExitProgramAlert() {
+        Alert alert = customizeAlert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("CONFIRMATION");
+        alert.setHeaderText("Are You Sure To Exit?");
+        return alert;
+    }
+
     public static void handleCloseWindowAction(Stage window) {
         window.setOnCloseRequest(e -> {
             e.consume();
-            Alert alert = customizeAlert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("CONFIRMATION");
-            alert.setHeaderText("Are You Sure To Exit?");
+            Alert alert = generateExitProgramAlert();
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 System.exit(0);
@@ -117,7 +121,7 @@ public class Alerts {
     static void handleCloseOperationWindowAction(Stage window) {
         window.setOnCloseRequest(e -> {
             e.consume();
-            Alert alert = generateExitProgramAlert();
+            Alert alert = generateExitProgramInProgressAlert();
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 System.exit(0);

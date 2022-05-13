@@ -1,7 +1,6 @@
 package com.gymmer.gymmerstation.programManagement.validations;
 
 import com.gymmer.gymmerstation.domain.Exercise;
-import com.gymmer.gymmerstation.domain.Program;
 
 import java.util.List;
 

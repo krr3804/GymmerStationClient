@@ -1,24 +1,14 @@
 package com.gymmer.gymmerstation.programOperation;
 
-import com.gymmer.gymmerstation.Main;
-import com.gymmer.gymmerstation.util.Util;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.gymmer.gymmerstation.util.Util.*;
