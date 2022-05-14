@@ -218,33 +218,6 @@ public class ProgramRepositoryJDBC implements ProgramRepository{
     }
 
     @Override
-    public Program getProgramById(Long id) {
-        Connection conn = getConnection();
-        PreparedStatement psmt = null;
-        Program program = null;
-        try {
-            String query = "select * from program left join exercise on exercise.program = program.program_id where program.program_id = ?;";
-            psmt = conn.prepareStatement(query);
-            psmt.setLong(1,id);
-            ResultSet rs = psmt.executeQuery();
-
-            while(rs.next()) {
-                if (program == null) {
-                    program = mapProgram(rs);
-                }
-                program.getExerciseList().add(mapExercise(rs));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            System.err.println("sql : " + e.getMessage());
-        } finally {
-            closePreparedStatement(psmt);
-            closeConnection(conn);
-        }
-        return program;
-    }
-
-    @Override
     public void deleteProgram(Long id) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;

@@ -89,7 +89,6 @@ public class RegisterController implements Initializable {
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
 
-
             map = new HashMap<>();
             map.put("checkExistID", userId.getText());
 

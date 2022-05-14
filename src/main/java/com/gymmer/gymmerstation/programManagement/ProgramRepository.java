@@ -18,7 +18,5 @@ public interface ProgramRepository {
 
     void editProgram(Program newProgram);
 
-    Program getProgramById(Long id);
-
     void deleteProgram(Long id);
 }

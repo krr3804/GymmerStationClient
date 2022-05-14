@@ -1,9 +1,12 @@
 package com.gymmer.gymmerstation.util;
 
+import com.gymmer.gymmerstation.home.User;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Optional;
 
 public class Alerts {
@@ -111,6 +114,14 @@ public class Alerts {
             Alert alert = generateExitProgramAlert();
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                try {
+                    if(User.socketConnect) {
+                        Socket socket = User.socket;
+                        socket.close();
+                    }
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 System.exit(0);
             } else {
                 alert.close();
@@ -124,6 +135,14 @@ public class Alerts {
             Alert alert = generateExitProgramInProgressAlert();
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                try {
+                    if(User.socketConnect) {
+                        Socket socket = User.socket;
+                        socket.close();
+                    }
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
                 System.exit(0);
             } else {
                 alert.close();

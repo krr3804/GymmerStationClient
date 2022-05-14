@@ -174,8 +174,8 @@ public class ProgramInformationController implements Initializable {
         loadStage("fxml files/load-program-view.fxml",btnExit.getScene());
     }
 
-    public void initProgramData(int index) {
-        currentProgram = programService.getProgramById(index);
+    public void initProgramData(Program program) {
+        currentProgram = program;
         programNameInfo.setText(currentProgram.getName());
         purposeInfo.setText(currentProgram.getPurpose());
         week = programOperationService.getCurrentWeek(currentProgram);

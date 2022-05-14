@@ -8,13 +8,11 @@ import java.util.List;
 public interface ProgramService {
     void addProgram(Program program);
 
-    List<String> showProgramList();
+    List<Program> getProgramList();
 
     void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList);
 
     void removeEntireDivision(Long programId, Long removedDivision);
 
-    Program getProgramById(int index);
-
-    void deleteProgram(Long id);
+    void deleteProgram(Long programId);
 }

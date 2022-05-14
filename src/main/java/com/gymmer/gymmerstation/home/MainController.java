@@ -24,8 +24,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.gymmer.gymmerstation.home.User.setUser_id;
-import static com.gymmer.gymmerstation.home.User.user_id;
+import static com.gymmer.gymmerstation.home.User.*;
 import static com.gymmer.gymmerstation.util.Alerts.generateExitProgramAlert;
 import static com.gymmer.gymmerstation.util.Alerts.handleCloseWindowAction;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
@@ -70,6 +69,14 @@ public class MainController implements Initializable {
     private void handleBtnExitEvent() {
         Optional<ButtonType> result = generateExitProgramAlert().showAndWait();
         if (result.get() == ButtonType.OK) {
+            try {
+                if(socketConnect) {
+                    Socket socket = User.socket;
+                    socket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             System.exit(0);
         }
     }

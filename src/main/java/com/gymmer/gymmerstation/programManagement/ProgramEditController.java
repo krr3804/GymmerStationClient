@@ -6,6 +6,7 @@ import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -186,8 +187,8 @@ public class ProgramEditController implements Initializable {
         }
     }
 
-    public void initEditData(int index) {
-        program = programService.getProgramById(index);
+    public void initEditData(Program program) {
+        this.program = program;
         inpName.setText(program.getName());
         inpPurpose.setText(program.getPurpose());
         inpLength.setText(program.getLength().toString());

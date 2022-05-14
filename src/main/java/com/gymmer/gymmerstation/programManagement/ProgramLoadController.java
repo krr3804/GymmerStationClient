@@ -6,6 +6,8 @@ import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.programOperation.ProgramInformationController;
 import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import com.gymmer.gymmerstation.util.Alerts;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +20,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import static com.gymmer.gymmerstation.util.Alerts.generateErrorAlert;
+import static com.gymmer.gymmerstation.util.Alerts.generateInformationAlert;
 import static com.gymmer.gymmerstation.util.CommonValidation.noIndexSelectedValidation;
 import static com.gymmer.gymmerstation.util.Util.*;
 import static javafx.collections.FXCollections.observableList;
@@ -29,6 +36,8 @@ public class ProgramLoadController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private static int index = -1;
+    private List<Program> programs = new ArrayList<>();
+    private Program selectedProgram;
 
     @FXML
     private ListView<String> programList;
@@ -44,7 +53,7 @@ public class ProgramLoadController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        programList.setItems(observableList(programService.showProgramList()));
+        programList.setItems(FXCollections.observableList(loadProgramList()));
         programList.setOnMouseClicked(event -> handleProgressBar(event));
         btnReturn.setOnAction(event -> loadStage("fxml files/main-view.fxml",btnReturn.getScene()));
         btnStart.setOnAction(event -> handleButtonEvents(event));
@@ -52,11 +61,16 @@ public class ProgramLoadController implements Initializable {
         btnDelete.setOnAction(event -> handleButtonEvents(event));
     }
 
+    private List<String> loadProgramList() {
+        programs = programService.getProgramList();
+        return programs.stream().map(Program::getName).collect(Collectors.toList());
+    }
+
     private void handleProgressBar (MouseEvent event) {
         if (!programList.getSelectionModel().isEmpty()) {
             index = programList.getSelectionModel().getSelectedIndex();
             noIndexSelectedValidation(index);
-            Program selectedProgram = programService.getProgramById(index);
+            selectedProgram = programs.get(index);
             int workDone = programOperationService.getProgress(selectedProgram);
             long totalWork = selectedProgram.getLength() * selectedProgram.getDivisionQty();
             progressTxt.setText(workDone + "/" + totalWork);
@@ -80,13 +94,14 @@ public class ProgramLoadController implements Initializable {
                 handleBtnDelete(event);
             }
         } catch (IllegalArgumentException e) {
-            Alerts.generateErrorAlert(e.getMessage()).showAndWait();
+            generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
     private void handleBtnStart(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
         noIndexSelectedValidation(index);
+        selectedProgram = programs.get(index);
         try {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(Main.class.getResource("fxml files/program-information-view.fxml"));
@@ -94,7 +109,7 @@ public class ProgramLoadController implements Initializable {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));
                 ProgramInformationController programInformationController = loader.getController();
-                programInformationController.initProgramData(index);
+                programInformationController.initProgramData(selectedProgram);
                 stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,18 +120,18 @@ public class ProgramLoadController implements Initializable {
     private void handleBtnDelete(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
         noIndexSelectedValidation(index);
-        Program program = programService.getProgramById(index);
-        Alert alert = Alerts.generateDeleteDataAlert(program.getName());
+        selectedProgram = programs.get(index);
+        Alert alert = Alerts.generateDeleteDataAlert(selectedProgram.getName());
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            if(programOperationService.getProgress(program) > 0) {
-                programOperationService.terminateProgram(program);
+            if(programOperationService.getProgress(selectedProgram) > 0) {
+                programOperationService.terminateProgram(selectedProgram);
             }
-            programService.deleteProgram(program.getId());
-            programList.setItems(observableList(programService.showProgramList()));
+            programService.deleteProgram(selectedProgram.getId());
+            programList.setItems(observableList(loadProgramList()));
             programList.getSelectionModel().clearSelection();
             index = -1;
-            Alerts.generateInformationAlert("Program Deleted!").showAndWait();
+            generateInformationAlert("Program Deleted!").showAndWait();
         } else {
             alert.close();
         }
@@ -125,6 +140,7 @@ public class ProgramLoadController implements Initializable {
     private void handleBtnEdit(ActionEvent event) {
         index = programList.getSelectionModel().getSelectedIndex();
         noIndexSelectedValidation(index);
+        selectedProgram = programs.get(index);
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("fxml files/edit-program-view.fxml"));
@@ -132,7 +148,7 @@ public class ProgramLoadController implements Initializable {
             Stage stage = (Stage) btnEdit.getScene().getWindow();
             stage.setScene(new Scene(root));
             ProgramEditController programEditController = loader.getController();
-            programEditController.initEditData(index);
+            programEditController.initEditData(selectedProgram);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
