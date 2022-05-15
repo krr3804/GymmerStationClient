@@ -37,7 +37,7 @@ public class PerformanceArchiveController implements Initializable {
     }
 
     private void setTabPane() {
-        for(OperationDataProgram dataProgram : programOperationService.getProgramDataList(currentProgram)) {
+        for(OperationDataProgram dataProgram : programOperationService.getPerformanceDataList(currentProgram)) {
             StringBuilder title = new StringBuilder();
             title.append(dataProgram.getWeek()).append("-").append(dataProgram.getDivision());
             tabPane.getTabs().add(addTab(title.toString(),dataProgram));

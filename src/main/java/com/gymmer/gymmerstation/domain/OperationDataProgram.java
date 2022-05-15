@@ -1,8 +1,11 @@
 package com.gymmer.gymmerstation.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OperationDataProgram {
+public class OperationDataProgram implements Serializable {
+    private static final long serialVersionUID = 1234567892L;
+
     private Program program;
     private Long week;
     private Long division;

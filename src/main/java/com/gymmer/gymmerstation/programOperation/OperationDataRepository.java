@@ -10,11 +10,11 @@ public interface OperationDataRepository {
 
     void terminate(Long programId);
 
-    void delete(Long programId, boolean status);
+    void delete(Long programId);
 
     List<OperationDataProgram> getProgramData(Program program);
 
     int getProgress(Long programId);
 
-    List<Program> getPrograms(boolean status);
+    List<Program> getPrograms(String userId, boolean status);
 }

@@ -27,7 +27,7 @@ private HashMap<String,Object> map;
     @BeforeEach
     void setUp() {
         if(!User.socketConnect) {
-            final String SERVER_IP = "192.168.137.1";
+            final String SERVER_IP = "192.168.200.134";
             final int SERVER_HOST = 8080;
             socket = new Socket();
 
@@ -52,6 +52,12 @@ private HashMap<String,Object> map;
             User.setUser_id(null);
             User.setSocket(null);
             User.setSocketConnect(false);
+            if (ois != null) {
+                ois.close();
+            }
+            if (oos != null) {
+                oos.close();
+            }
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,10 +80,8 @@ private HashMap<String,Object> map;
         Long programId = null;
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
-            HashMap<String,Program> map1 = new HashMap<>();
-            map1.put(User.user_id,program);
             map = new HashMap<>();
-            map.put("addProgram",map1);
+            map.put("addProgram",program);
             oos.writeObject(map);
             oos.flush();
 

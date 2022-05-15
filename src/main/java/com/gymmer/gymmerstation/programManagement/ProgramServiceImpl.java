@@ -31,10 +31,8 @@ public class ProgramServiceImpl implements ProgramService {
     public void addProgram(Program program) {
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
-            HashMap<String,Program> map1 = new HashMap<>();
-            map1.put(User.user_id,program);
             map = new HashMap<>();
-            map.put("addProgram",map1);
+            map.put("addProgram",program);
             oos.writeObject(map);
             oos.flush();
 

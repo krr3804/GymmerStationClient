@@ -63,7 +63,7 @@ public class ProgramInformationController implements Initializable {
             exitToMain();
             return;
         }
-        programOperationService.saveProgramData(new OperationDataProgram(currentProgram,week,division,odeList));
+        programOperationService.savePerformanceData(new OperationDataProgram(currentProgram,week,division,odeList));
         checkProgramCompletion();
         currentStage.show();
         Platform.runLater(() -> {

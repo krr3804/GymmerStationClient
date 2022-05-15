@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2022-05-15T16:33:24" hostname="DESKTOP-D3DODB7" time="1.472">
+  <properties/>
+  <testcase name="savePerformanceData()" classname="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" time="0.667"/>
+  <testcase name="deletePerformanceData()" classname="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" time="0.171"/>
+  <testcase name="terminateProgram()" classname="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" time="0.181"/>
+  <testcase name="getProgramsInArchiveList()" classname="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" time="0.2"/>
+  <testcase name="getPerformanceDataList()" classname="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" time="0.115"/>
+  <testcase name="getProgress()" classname="com.gymmer.gymmerstation.programOperation.ProgramOperationServiceImplTest" time="0.131"/>
+  <system-out><![CDATA[Connection Success!
+Connection Success!
+Connection Success!
+Connection Success!
+Connection Success!
+Connection Success!
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

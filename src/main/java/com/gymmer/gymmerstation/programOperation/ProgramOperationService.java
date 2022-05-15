@@ -6,13 +6,13 @@ import com.gymmer.gymmerstation.domain.Program;
 import java.util.List;
 
 public interface ProgramOperationService {
-    void saveProgramData(OperationDataProgram operationDataProgram);
+    void savePerformanceData(OperationDataProgram operationDataProgram);
 
     void terminateProgram(Long programId);
 
-    void deleteProgramData(Long programId, boolean status);
+    void deletePerformanceData(Long programId);
 
-    List<OperationDataProgram> getProgramDataList(Program program);
+    List<OperationDataProgram> getPerformanceDataList(Program program);
 
     int getProgress(Long programId);
 
@@ -20,5 +20,5 @@ public interface ProgramOperationService {
 
     Long getCurrentDivision(Program program);
 
-    List<Program> getPerformanceArchiveList(boolean status);
+    List<Program> getProgramsInArchive(boolean status);
 }

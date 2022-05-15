@@ -73,7 +73,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public void delete(Long programId, boolean status) {
+    public void delete(Long programId) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         String query;
@@ -83,12 +83,11 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,programId);
             psmt.executeUpdate();
-            if(status) {
-                query = "DELETE FROM program where program_id = ?";
-                psmt = conn.prepareStatement(query);
-                psmt.setLong(1,programId);
-                psmt.executeUpdate();
-            }
+
+            query = "DELETE FROM program WHERE termination_status = true AND programId = ?;";
+            psmt = conn.prepareStatement(query);
+            psmt.setLong(1,programId);
+            psmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -174,17 +173,18 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public List<Program> getPrograms(boolean status) {
+    public List<Program> getPrograms(String userId, boolean status) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         ResultSet rs = null;
         List<Program> programList = new ArrayList<>();
         try {
             String query = "SELECT program.program_id, program.name, program.purpose, program.length, program.divisionQty FROM performance_data_exercise " +
-                    "INNER JOIN program ON performance_data_exercise.program = program.program_id WHERE program.termination_status = ? " +
+                    "INNER JOIN program ON performance_data_exercise.program = program.program_id WHERE program.user = ? program.termination_status = ? " +
                     "GROUP BY performance_data_exercise.program ;";
             psmt = conn.prepareStatement(query);
-            psmt.setBoolean(1,status);
+            psmt.setString(1,userId);
+            psmt.setBoolean(2,status);
             rs = psmt.executeQuery();
             while (rs.next()) {
                 programList.add(mapProgram(rs));

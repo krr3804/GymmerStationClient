@@ -3,19 +3,29 @@ package com.gymmer.gymmerstation.programOperation;
 import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.home.User;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProgramOperationServiceImpl implements ProgramOperationService{
     private final OperationDataRepository operationDataRepository;
+    private final Socket socket = User.socket;
+    private HashMap<String,Object> map;
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
 
     public ProgramOperationServiceImpl(OperationDataRepository operationDataRepository) {
         this.operationDataRepository = AppConfig.operationDataRepository();
     }
 
     @Override
-    public void saveProgramData(OperationDataProgram operationDataProgram) {
+    public void savePerformanceData(OperationDataProgram operationDataProgram) {
+
         operationDataRepository.save(operationDataProgram);
     }
 
@@ -25,12 +35,12 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public void deleteProgramData(Long programId, boolean status) {
-        operationDataRepository.delete(programId, status);
+    public void deletePerformanceData(Long programId) {
+        operationDataRepository.delete(programId);
     }
 
     @Override
-    public List<OperationDataProgram> getProgramDataList(Program program) {
+    public List<OperationDataProgram> getPerformanceDataList(Program program) {
         return operationDataRepository.getProgramData(program);
     }
 
@@ -62,8 +72,8 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public List<Program> getPerformanceArchiveList(boolean status) {
-        return operationDataRepository.getPrograms(status);
+    public List<Program> getProgramsInArchive(boolean status) {
+        return operationDataRepository.getPrograms(User.user_id,status);
     }
 
 

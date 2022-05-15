@@ -162,11 +162,11 @@ public class PerformanceArchiveListController implements Initializable {
 
     private List<String> loadProgramList(boolean terminationStatus) {
         if(!terminationStatus) {
-            programsInProgress = programOperationService.getPerformanceArchiveList(false);
+            programsInProgress = programOperationService.getProgramsInArchive(false);
             return programsInProgress.stream().map(program -> program.getName() + "(" + programOperationService.getProgress(program.getId()) + "/"
                     + (program.getLength() * program.getDivisionQty()) + ")").collect(Collectors.toList());
         } else {
-            programsTerminated = programOperationService.getPerformanceArchiveList(true);
+            programsTerminated = programOperationService.getProgramsInArchive(true);
             return programsTerminated.stream().map(program -> program.getName() + "(complete)").collect(Collectors.toList());
         }
     }
@@ -227,7 +227,7 @@ public class PerformanceArchiveListController implements Initializable {
         Alert alert = Alerts.generateDeleteDataAlert("");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            programOperationService.deleteProgramData(selectedProgramId,status);
+            programOperationService.deletePerformanceData(selectedProgramId);
             programListInProgress.setItems(FXCollections.observableList(loadProgramList(false)));
             programListTerminated.setItems(FXCollections.observableList(loadProgramList(true)));
             Alerts.generateInformationAlert("Data Deleted!").showAndWait();

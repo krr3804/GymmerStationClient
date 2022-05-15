@@ -1,6 +1,10 @@
 package com.gymmer.gymmerstation.domain;
 
-public class OperationDataExercise {
+import java.io.Serializable;
+
+public class OperationDataExercise implements Serializable {
+    private static final long serialVersionUID = 1234567893L;
+
     private String name;
     private Long currentSet;
     private Long rep;
