@@ -21,6 +21,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -40,7 +41,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if(!User.socketConnect) {
-            final String SERVER_IP = "192.168.137.1";
+            final String SERVER_IP = "192.168.200.134";
             final int SERVER_HOST = 8080;
             socket = new Socket();
 
@@ -57,6 +58,8 @@ public class MainController implements Initializable {
             Platform.runLater(() -> {
                 viewLogInPage();
             });
+        } else {
+            socket = User.socket;
         }
         showLoginStatus();
         btnLogout.setOnAction(event -> handleBtnLogoutEvent());
@@ -70,13 +73,19 @@ public class MainController implements Initializable {
         Optional<ButtonType> result = generateExitProgramAlert().showAndWait();
         if (result.get() == ButtonType.OK) {
             try {
-                if(socketConnect) {
-                    Socket socket = User.socket;
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(null);
+                oos.flush();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } finally {
+                try {
                     socket.close();
+                } catch (IOException e2) {
+                    e2.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+            System.exit(0);
             System.exit(0);
         }
     }
@@ -94,9 +103,18 @@ public class MainController implements Initializable {
     }
 
     private void handleBtnLogoutEvent() {
-        setUser_id(null);
-        showLoginStatus();
-        viewLogInPage();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            HashMap<String, String> map = new HashMap<>();
+            map.put("logOut",user_id);
+            oos.writeObject(map);
+            oos.flush();
+            setUser_id(null);
+            showLoginStatus();
+            viewLogInPage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void viewLogInPage() {

@@ -34,7 +34,6 @@ public class LoginController implements Initializable {
     private ObjectOutputStream oos = null;
     private ObjectInputStream ois = null;
     private Socket socket;
-    private String passwordDB = "";
     private HashMap<String,String> map;
 
     @Override
@@ -47,16 +46,16 @@ public class LoginController implements Initializable {
 
     private void handleBtnLogin() {
         try {
+            checkLoginInput(userId.getText(),password.getText());
             checkUserID();
             doLogin();
-            checkPassword();
+            checkAlreadyLoggedIn();
         } catch (IllegalArgumentException e) {
             generateErrorAlert(e.getMessage()).showAndWait();
         }
     }
 
     private void doLogin() {
-        checkLoginInput(userId.getText(),password.getText());
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
             map = new HashMap<>();
@@ -65,7 +64,8 @@ public class LoginController implements Initializable {
             oos.flush();
 
             ois = new ObjectInputStream(socket.getInputStream());
-            passwordDB = (String) ois.readObject();
+            String passwordDB = (String) ois.readObject();
+            checkPassword(passwordDB);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -84,6 +84,7 @@ public class LoginController implements Initializable {
 
             if(checkNum != 1) {
                 userId.clear();
+                password.clear();
                 throw new IllegalArgumentException("ID Does Not Exist!");
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -91,20 +92,44 @@ public class LoginController implements Initializable {
         }
     }
 
-    private void checkPassword() {
+    private void checkPassword(String passwordDB) {
         if(!passwordDB.equals(password.getText())) {
             password.clear();
             throw new IllegalArgumentException("Wrong Password! Please Type Again.");
         }
-        System.out.println("login success!");
-        User.setUser_id(userId.getText());
-        closeStage(btnLogIn);
+    }
+
+    private void checkAlreadyLoggedIn() {
+        try {
+            oos = new ObjectOutputStream(socket.getOutputStream());
+            map = new HashMap<>();
+            map.put("checkAlreadyLoggedIn",userId.getText());
+            oos.writeObject(map);
+            oos.flush();
+
+            ois = new ObjectInputStream(socket.getInputStream());
+            int result = (int) ois.readObject();
+            if (result == 0) {
+                throw new IllegalArgumentException("User Already Logged In!");
+            } else if (result == 1) {
+                System.out.println("login success!");
+                User.setUser_id(userId.getText());
+                closeStage(btnLogIn);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleBtnExit() {
         Optional<ButtonType> result = generateExitProgramAlert().showAndWait();
         if(result.get() == ButtonType.OK) {
-            System.exit(0);
+            try {
+                socket.close();
+                System.exit(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
