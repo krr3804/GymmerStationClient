@@ -20,13 +20,13 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public void terminateProgram(Program program) {
-        operationDataRepository.terminate(program);
+    public void terminateProgram(Long programId) {
+        operationDataRepository.terminate(programId);
     }
 
     @Override
-    public void deleteProgramData(Program program, boolean status) {
-        operationDataRepository.delete(program, status);
+    public void deleteProgramData(Long programId, boolean status) {
+        operationDataRepository.delete(programId, status);
     }
 
     @Override
@@ -35,15 +35,15 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public int getProgress(Program program) {
-        return operationDataRepository.getProgress(program);
+    public int getProgress(Long programId) {
+        return operationDataRepository.getProgress(programId);
     }
 
     @Override
     public Long getCurrentWeek(Program program) {
         long res = 0L;
         try {
-            res = operationDataRepository.getProgress(program) / program.getDivisionQty() + 1;
+            res = operationDataRepository.getProgress(program.getId()) / program.getDivisionQty() + 1;
         } catch (Exception e) {
             System.err.println("error : " + e.getMessage());
         }
@@ -54,7 +54,7 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     public Long getCurrentDivision(Program program) {
         long res = 0L;
         try {
-            res = operationDataRepository.getProgress(program) % program.getDivisionQty() + 1;
+            res = operationDataRepository.getProgress(program.getId()) % program.getDivisionQty() + 1;
         } catch (Exception e) {
             System.err.println("error : " + e.getMessage());
         }
@@ -62,25 +62,9 @@ public class ProgramOperationServiceImpl implements ProgramOperationService{
     }
 
     @Override
-    public List<String> getPerformanceArchiveList(boolean status) {
-        List<String> list = new ArrayList<>();
-        for(Program program: operationDataRepository.getPrograms(status)) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(program.getName()).append("(");
-            if(status) {
-                sb.append("complete");
-            } else {
-                sb.append(operationDataRepository.getProgress(program)).append("/").append((program.getLength() * program.getDivisionQty()));
-            }
-            sb.append(")");
-            list.add(sb.toString());
-        }
-
-        return list;
+    public List<Program> getPerformanceArchiveList(boolean status) {
+        return operationDataRepository.getPrograms(status);
     }
 
-    @Override
-    public Program getProgramByIndex(int index, boolean status) {
-        return operationDataRepository.getPrograms(status).get(index);
-    }
+
 }

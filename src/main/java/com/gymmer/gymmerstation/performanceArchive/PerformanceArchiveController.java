@@ -87,8 +87,8 @@ public class PerformanceArchiveController implements Initializable {
         loadStage("fxml files/performance-archive-list-view.fxml", btnReturn.getScene());
     }
 
-    public void initData(int index, boolean status) {
-        currentProgram = programOperationService.getProgramByIndex(index, status);
+    public void initData(Program program) {
+        currentProgram = program;
         programName.setText(currentProgram.getName());
         setTabPane();
     }

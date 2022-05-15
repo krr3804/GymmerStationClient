@@ -71,7 +71,7 @@ public class ProgramLoadController implements Initializable {
             index = programList.getSelectionModel().getSelectedIndex();
             noIndexSelectedValidation(index);
             selectedProgram = programs.get(index);
-            int workDone = programOperationService.getProgress(selectedProgram);
+            int workDone = programOperationService.getProgress(selectedProgram.getId());
             long totalWork = selectedProgram.getLength() * selectedProgram.getDivisionQty();
             progressTxt.setText(workDone + "/" + totalWork);
             double progress = (double)workDone / totalWork;
@@ -124,8 +124,8 @@ public class ProgramLoadController implements Initializable {
         Alert alert = Alerts.generateDeleteDataAlert(selectedProgram.getName());
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            if(programOperationService.getProgress(selectedProgram) > 0) {
-                programOperationService.terminateProgram(selectedProgram);
+            if(programOperationService.getProgress(selectedProgram.getId()) > 0) {
+                programOperationService.terminateProgram(selectedProgram.getId());
             }
             programService.deleteProgram(selectedProgram.getId());
             programList.setItems(observableList(loadProgramList()));

@@ -8,13 +8,13 @@ import java.util.List;
 public interface OperationDataRepository {
     void save(OperationDataProgram dataProgram);
 
-    void terminate(Program program);
+    void terminate(Long programId);
 
-    void delete(Program program, boolean status);
+    void delete(Long programId, boolean status);
 
     List<OperationDataProgram> getProgramData(Program program);
 
-    int getProgress(Program program);
+    int getProgress(Long programId);
 
     List<Program> getPrograms(boolean status);
 }

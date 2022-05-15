@@ -18,8 +18,10 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.gymmer.gymmerstation.util.CommonValidation.noIndexSelectedValidation;
 import static com.gymmer.gymmerstation.util.Util.*;
@@ -28,6 +30,8 @@ public class PerformanceArchiveListController implements Initializable {
     private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private int selectedItemIndex = -1;
     private boolean status = false;
+    private List<Program> programsInProgress;
+    private List<Program> programsTerminated;
 
     @FXML
     private ListView<String> programListInProgress;
@@ -41,7 +45,8 @@ public class PerformanceArchiveListController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setListView();
+        programListInProgress.setItems(FXCollections.observableList(loadProgramList(false)));
+        programListTerminated.setItems(FXCollections.observableList(loadProgramList(true)));
         formListDragDetectedAction(programListInProgress);
         formListDragDroppedAction(programListTerminated);
         handleListViewFocus();
@@ -106,7 +111,7 @@ public class PerformanceArchiveListController implements Initializable {
 
                 listCell.setOnDragDone((DragEvent event) -> {
                     if(programListTerminated.getItems().get(0).equals("")) {
-                        setListView();
+                        programListTerminated.setItems(FXCollections.observableList(loadProgramList(true)));
                     }
                     selectedItemIndex = -1;
                 });
@@ -155,24 +160,42 @@ public class PerformanceArchiveListController implements Initializable {
         });
     }
 
+    private List<String> loadProgramList(boolean terminationStatus) {
+        if(!terminationStatus) {
+            programsInProgress = programOperationService.getPerformanceArchiveList(false);
+            return programsInProgress.stream().map(program -> program.getName() + "(" + programOperationService.getProgress(program.getId()) + "/"
+                    + (program.getLength() * program.getDivisionQty()) + ")").collect(Collectors.toList());
+        } else {
+            programsTerminated = programOperationService.getPerformanceArchiveList(true);
+            return programsTerminated.stream().map(program -> program.getName() + "(complete)").collect(Collectors.toList());
+        }
+    }
+
     private void terminateProgram(DragEvent event) {
-        Program program = programOperationService.getProgramByIndex(selectedItemIndex,false);
-        Optional<ButtonType> result = Alerts.generateTerminateProgramAlert(program.getName()).showAndWait();
+        Program selectedProgram = programsInProgress.get(selectedItemIndex);
+        Optional<ButtonType> result = Alerts.generateTerminateProgramAlert(selectedProgram.getName()).showAndWait();
         if(result.get() == ButtonType.YES) {
-            programOperationService.terminateProgram(program);
-            setListView();
+            programOperationService.terminateProgram(selectedProgram.getId());
+            programListInProgress.setItems(FXCollections.observableList(loadProgramList(false)));
+            programListTerminated.setItems(FXCollections.observableList(loadProgramList(true)));
         }
     }
 
     private void handleBtnViewAction(ActionEvent event) {
         checkSelectedList();
         noIndexSelectedValidation(selectedItemIndex);
+        Program selectedProgram = null;
+        if(status) {
+            selectedProgram = programsTerminated.get(selectedItemIndex);
+        } else {
+            selectedProgram = programsInProgress.get(selectedItemIndex);
+        }
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("fxml files/performance-archive-view.fxml"));
             Parent root = loader.load();
             PerformanceArchiveController performanceArchiveController = loader.getController();
-            performanceArchiveController.initData(selectedItemIndex,status);
+            performanceArchiveController.initData(selectedProgram);
             Stage stage = (Stage) btnView.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -192,26 +215,28 @@ public class PerformanceArchiveListController implements Initializable {
         }
     }
 
-    private void setListView() {
-        programListTerminated.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList(true)));
-        programListInProgress.setItems(FXCollections.observableList(programOperationService.getPerformanceArchiveList(false)));
-    }
-
     private void handleBtnDeleteAction(ActionEvent event) {
         checkSelectedList();
         noIndexSelectedValidation(selectedItemIndex);
-        Program program = programOperationService.getProgramByIndex(selectedItemIndex,status);
+        Long selectedProgramId = null;
+        if(status) {
+            selectedProgramId = programsTerminated.get(selectedItemIndex).getId();
+        } else {
+            selectedProgramId = programsInProgress.get(selectedItemIndex).getId();
+        }
         Alert alert = Alerts.generateDeleteDataAlert("");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            programOperationService.deleteProgramData(program,status);
-            setListView();
+            programOperationService.deleteProgramData(selectedProgramId,status);
+            programListInProgress.setItems(FXCollections.observableList(loadProgramList(false)));
+            programListTerminated.setItems(FXCollections.observableList(loadProgramList(true)));
             Alerts.generateInformationAlert("Data Deleted!").showAndWait();
         } else {
             alert.close();
             programListInProgress.getSelectionModel().clearSelection();
             programListTerminated.getSelectionModel().clearSelection();
         }
+        selectedItemIndex = -1;
     }
 
     private void handleBtnReturnAction(ActionEvent event) {

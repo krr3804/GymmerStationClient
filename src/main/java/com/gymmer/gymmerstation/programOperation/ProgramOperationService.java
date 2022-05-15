@@ -8,19 +8,17 @@ import java.util.List;
 public interface ProgramOperationService {
     void saveProgramData(OperationDataProgram operationDataProgram);
 
-    void terminateProgram(Program program);
+    void terminateProgram(Long programId);
 
-    void deleteProgramData(Program program, boolean status);
+    void deleteProgramData(Long programId, boolean status);
 
     List<OperationDataProgram> getProgramDataList(Program program);
 
-    int getProgress(Program program);
+    int getProgress(Long programId);
 
     Long getCurrentWeek(Program program);
 
     Long getCurrentDivision(Program program);
 
-    List<String> getPerformanceArchiveList(boolean status);
-
-    Program getProgramByIndex(int index, boolean status);
+    List<Program> getPerformanceArchiveList(boolean status);
 }

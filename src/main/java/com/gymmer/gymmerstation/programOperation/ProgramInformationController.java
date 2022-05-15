@@ -73,8 +73,8 @@ public class ProgramInformationController implements Initializable {
     }
 
     private void checkProgramCompletion() {
-        if(programOperationService.getProgress(currentProgram) == currentProgram.getLength() * currentProgram.getDivisionQty()) {
-            programOperationService.terminateProgram(currentProgram);
+        if(programOperationService.getProgress(currentProgram.getId()) == currentProgram.getLength() * currentProgram.getDivisionQty()) {
+            programOperationService.terminateProgram(currentProgram.getId());
             Alerts.generateCompletionMessage(currentProgram.getName()).showAndWait();
         }
     }

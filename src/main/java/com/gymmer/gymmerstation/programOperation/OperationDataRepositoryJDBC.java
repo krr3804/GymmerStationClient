@@ -43,14 +43,14 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public void terminate(Program program) {
+    public void terminate(Long programId) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         long key = 0L;
         try {
             String query = "INSERT INTO program SELECT null, name, purpose, length, divisionQty, true FROM program where program_id = ?";
             psmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-            psmt.setLong(1,program.getId());
+            psmt.setLong(1,programId);
             psmt.executeUpdate();
 
             ResultSet rs = psmt.getGeneratedKeys();
@@ -62,7 +62,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
             query =  "UPDATE performance_data_exercise SET program = ? WHERE program = ?";
             psmt = conn.prepareStatement(query);
             psmt.setLong(1,key);
-            psmt.setLong(2,program.getId());
+            psmt.setLong(2,programId);
             psmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -73,7 +73,7 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public void delete(Program program, boolean status) {
+    public void delete(Long programId, boolean status) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         String query;
@@ -81,12 +81,12 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
             query = "DELETE FROM performance_data_exercise USING program LEFT JOIN " +
                     "performance_data_exercise ON program_id = performance_data_exercise.program where program.program_id = ?";
             psmt = conn.prepareStatement(query);
-            psmt.setLong(1,program.getId());
+            psmt.setLong(1,programId);
             psmt.executeUpdate();
             if(status) {
                 query = "DELETE FROM program where program_id = ?";
                 psmt = conn.prepareStatement(query);
-                psmt.setLong(1,program.getId());
+                psmt.setLong(1,programId);
                 psmt.executeUpdate();
             }
         } catch (SQLException e) {
@@ -152,14 +152,14 @@ public class OperationDataRepositoryJDBC implements OperationDataRepository {
     }
 
     @Override
-    public int getProgress(Program program) {
+    public int getProgress(Long programId) {
         Connection conn = getConnection();
         PreparedStatement psmt = null;
         int progress = 0;
         try {
             String query = "SELECT COUNT(DISTINCT(CONCAT(week,'-',division))) AS PROGRESS FROM performance_data_exercise WHERE program = ?;";
             psmt = conn.prepareStatement(query);
-            psmt.setLong(1,program.getId());
+            psmt.setLong(1,programId);
             ResultSet rs = psmt.executeQuery();
             while (rs.next()) {
                 progress = rs.getInt("progress");
