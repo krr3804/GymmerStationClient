@@ -6,6 +6,8 @@ import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
+import com.gymmer.gymmerstation.programManagement.validations.ProgramEditionValidation;
+import com.gymmer.gymmerstation.programOperation.ProgramOperationService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,12 +30,14 @@ import java.util.*;
 
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
+import static com.gymmer.gymmerstation.programManagement.validations.ProgramEditionValidation.*;
 import static com.gymmer.gymmerstation.util.Alerts.*;
 import static com.gymmer.gymmerstation.util.CommonValidation.noItemSelectedValidation;
 import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramEditController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
+    private final ProgramOperationService programOperationService = AppConfig.programOperationService();
     private Program program = null;
     private List<Integer> divisionList = new ArrayList<>();
     private List<Exercise> oldExerciseList = new ArrayList<>();
@@ -120,30 +124,22 @@ public class ProgramEditController implements Initializable {
         inputBlankValidation(map);
         noDivisionValidation(divisionList);
         noExerciseValidation(program,divisionList);
-        Program editedProgram = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.countDivision(),program.getExerciseList());
-        if(!checkChangeInProgramContents() && !checkChangeInExerciseList()) {
+        if(!checkChangeInProgramContents(program,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText())) && !checkChangeInExerciseList(oldExerciseList,program.getExerciseList())) {
             throw new IllegalArgumentException("No Change Found!");
         }
-        if (checkChangeInProgramContents()) {
+        checkCurrentProgress(programOperationService.getProgress(program.getId()),Long.parseLong(inpLength.getText()),program.countDivision());
+        Program editedProgram = new Program(program.getId(),inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()),program.countDivision(),program.getExerciseList());
+        if (checkChangeInProgramContents(program,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText()))) {
             programService.editProgram(editedProgram);
         }
-        if (checkChangeInExerciseList()) {
+        if (checkChangeInExerciseList(oldExerciseList,program.getExerciseList())) {
             programService.replaceExercises(editedProgram);
         }
         loadStage("fxml files/load-program-view.fxml",btnSave.getScene());
     }
 
-    private boolean checkChangeInProgramContents() {
-        return !program.getName().equals(inpName.getText()) || !program.getPurpose().equals(inpPurpose.getText()) ||
-                !program.getLength().equals(Long.parseLong(inpLength.getText())) || !program.getDivisionQty().equals(program.countDivision());
-    }
-
-    private boolean checkChangeInExerciseList() {
-        return !program.getExerciseList().containsAll(oldExerciseList) || !oldExerciseList.containsAll(program.getExerciseList());
-    }
-
     private void handleBtnExitAction(ActionEvent event) {
-        if(checkChangeInProgramContents() || checkChangeInExerciseList()) {
+        if(checkChangeInProgramContents(program,inpName.getText(),inpPurpose.getText(),Long.parseLong(inpLength.getText())) || checkChangeInExerciseList(oldExerciseList,program.getExerciseList())) {
             throw new IllegalArgumentException("Data Unsaved!");
         }
         loadStage("fxml files/load-program-view.fxml",btnExit.getScene());
