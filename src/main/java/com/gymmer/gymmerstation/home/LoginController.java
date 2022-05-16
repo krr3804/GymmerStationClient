@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
@@ -26,7 +27,10 @@ import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class LoginController implements Initializable {
     @FXML
-    private TextField userId, password;
+    private TextField userId;
+
+    @FXML
+    private PasswordField password;
 
     @FXML
     private Button btnExit, btnLogIn, btnMoveToRegister;
