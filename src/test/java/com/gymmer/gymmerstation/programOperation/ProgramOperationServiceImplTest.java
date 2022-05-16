@@ -32,7 +32,7 @@ class ProgramOperationServiceImplTest {
     @BeforeEach
     void setUp() {
         if(!User.socketConnect) {
-            final String SERVER_IP = "192.168.200.134";
+            final String SERVER_IP = "192.168.137.1";
             final int SERVER_HOST = 8080;
             socket = new Socket();
 
@@ -252,7 +252,7 @@ class ProgramOperationServiceImplTest {
             oos.flush();
 
             ois = new ObjectInputStream(socket.getInputStream());
-            List<OperationDataExercise> odpList = (List<OperationDataExercise>) ois.readObject();
+            List<OperationDataProgram> odpList = (List<OperationDataProgram>) ois.readObject();
             assertEquals(2,odpList.size());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
