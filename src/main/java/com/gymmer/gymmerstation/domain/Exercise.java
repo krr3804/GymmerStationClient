@@ -1,6 +1,7 @@
 package com.gymmer.gymmerstation.domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Exercise implements Serializable {
     private static final long serialVersionUID = 1234567891L;
@@ -43,6 +44,26 @@ public class Exercise implements Serializable {
 
     public Long getDivision() {
         return division;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Exercise other = (Exercise) o;
+
+        return Objects.equals(other.name,name) && Objects.equals(other.set,set) &&
+                Objects.equals(other.rep,rep) && Objects.equals(other.weight,weight) &&
+                Objects.equals(other.restTime,restTime) && Objects.equals(other.division,division);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name,set,rep,weight,restTime,division);
     }
 
     public void decreaseDivisionSequence(Long division) {

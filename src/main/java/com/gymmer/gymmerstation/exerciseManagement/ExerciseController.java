@@ -29,8 +29,6 @@ public class ExerciseController implements Initializable {
     private final ProgramService programService = AppConfig.programService();
     private Program currentProgram = null;
     private Long currentDivision = null;
-    private List<Exercise> additionList = new ArrayList<>();
-    private List<Exercise> deletionList = new ArrayList<>();
 
     @FXML
     private ListView<String> exerciseListView;
@@ -125,7 +123,6 @@ public class ExerciseController implements Initializable {
                 Long.parseLong(Reps.getText()), Long.parseLong(Weight.getText()),
                 restTime, currentDivision);
         currentProgram.getExerciseList().add(exercise);
-        additionList.add(exercise);
         exerciseListView.setItems(showExerciseList());
         clearData();
     }
@@ -151,7 +148,6 @@ public class ExerciseController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             Exercise exercise = currentProgram.removeExercise(currentDivision,name);
-            deletionList.add(exercise);
             exerciseListView.setItems(showExerciseList());
         } else {
             alert.close();
@@ -160,14 +156,6 @@ public class ExerciseController implements Initializable {
 
     private void handleBtnExitAction(ActionEvent event) {
         Util.closeStage(btnExit);
-    }
-
-    public List<Exercise> getAdditionList() {
-        return additionList;
-    }
-
-    public List<Exercise> getDeletionList(){
-        return deletionList;
     }
 
 }

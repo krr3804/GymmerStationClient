@@ -41,7 +41,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if(!User.socketConnect) {
-            final String SERVER_IP = "192.168.200.134";
+            final String SERVER_IP = "192.168.137.1";
             final int SERVER_HOST = 8080;
             socket = new Socket();
 
@@ -85,7 +85,6 @@ public class MainController implements Initializable {
                     e2.printStackTrace();
                 }
             }
-            System.exit(0);
             System.exit(0);
         }
     }

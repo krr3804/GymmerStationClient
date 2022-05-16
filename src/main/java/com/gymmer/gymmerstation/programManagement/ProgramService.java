@@ -10,9 +10,9 @@ public interface ProgramService {
 
     List<Program> getProgramList();
 
-    void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList);
+    void editProgram(Program newProgram);
 
-    void removeEntireDivision(Long programId, Long removedDivision);
+    void replaceExercises(Program newProgram);
 
     void deleteProgram(Long programId);
 }

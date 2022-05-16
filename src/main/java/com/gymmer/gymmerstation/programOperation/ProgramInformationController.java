@@ -6,6 +6,7 @@ import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.OperationDataExercise;
 import com.gymmer.gymmerstation.domain.OperationDataProgram;
 import com.gymmer.gymmerstation.domain.Program;
+import com.gymmer.gymmerstation.home.User;
 import com.gymmer.gymmerstation.programManagement.ProgramService;
 import com.gymmer.gymmerstation.util.Alerts;
 import javafx.application.Platform;
@@ -22,6 +23,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +67,9 @@ public class ProgramInformationController implements Initializable {
             exitToMain();
             return;
         }
-        programOperationService.savePerformanceData(new OperationDataProgram(currentProgram,week,division,odeList));
+        if (!odeList.isEmpty()) {
+            programOperationService.savePerformanceData(new OperationDataProgram(currentProgram,week,division,odeList));
+        }
         checkProgramCompletion();
         currentStage.show();
         Platform.runLater(() -> {
@@ -126,6 +132,20 @@ public class ProgramInformationController implements Initializable {
                 Alert alert = Alerts.generateExitProgramInProgressAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
+                    Socket socket = User.socket;
+                    try {
+                        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                        oos.writeObject(null);
+                        oos.flush();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
+                        }
+                    }
                     System.exit(0);
                 } else {
                     alert.close();
@@ -153,6 +173,20 @@ public class ProgramInformationController implements Initializable {
                 Alert alert = Alerts.generateExitProgramInProgressAlert();
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
+                    Socket socket = User.socket;
+                    try {
+                        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                        oos.writeObject(null);
+                        oos.flush();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } finally {
+                        try {
+                            socket.close();
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
+                        }
+                    }
                     System.exit(0);
                 } else {
                     alert.close();

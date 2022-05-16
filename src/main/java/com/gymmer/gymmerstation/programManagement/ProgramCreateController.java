@@ -26,10 +26,9 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 
-import static com.gymmer.gymmerstation.programManagement.validations.DataUnsavedValidation.dataUnsavedValidationCreation;
 import static com.gymmer.gymmerstation.programManagement.validations.DivisionValidation.*;
-import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static com.gymmer.gymmerstation.util.Util.*;
+import static com.gymmer.gymmerstation.util.CommonValidation.noItemSelectedValidation;
+import static com.gymmer.gymmerstation.util.Util.loadStage;
 
 public class ProgramCreateController implements Initializable {
 
@@ -112,8 +111,15 @@ public class ProgramCreateController implements Initializable {
     }
 
     private void handleBtnExitAction(ActionEvent event) {
-        dataUnsavedValidationCreation(program,inpName.getText(),inpPurpose.getText(),inpLength.getText());
+        if(checkDataUnsaved()) {
+            throw new IllegalArgumentException("Data Unsaved!");
+        }
         loadStage("fxml files/main-view.fxml", btnExit.getScene());
+    }
+
+    private boolean checkDataUnsaved() {
+        return !inpName.getText().equals("") || !inpPurpose.getText().equals("") ||
+                !inpLength.getText().equals("") || !divisionList.isEmpty();
     }
 
     private void handleBtnSaveAction(ActionEvent event) {
@@ -148,6 +154,7 @@ public class ProgramCreateController implements Initializable {
         Alert alert = Alerts.generateDeleteDivisionAlert(selectedDivision);
         Optional<ButtonType> result = alert.showAndWait();
         if(result.get() == ButtonType.OK) {
+            program.removeExerciseInDivision(selectedDivision);
             removeDivision(selectedDivision);
         } else {
             alert.close();
@@ -158,9 +165,8 @@ public class ProgramCreateController implements Initializable {
         int index = divisionListView.getSelectionModel().getSelectedIndex();
         divisionList.remove(index);
         for (int i = index; i < divisionList.size(); i++) {
-            divisionList.set(index, divisionList.get(index) - 1);
+            divisionList.set(i, divisionList.get(i) - 1);
         }
-        program.removeExerciseInDivision(selectedDivision);
         divisionListView.setItems(getDivision());
     }
 

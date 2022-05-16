@@ -145,13 +145,19 @@ public class Alerts {
             Alert alert = generateExitProgramInProgressAlert();
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                Socket socket = User.socket;
                 try {
-                    if(User.socketConnect) {
-                        Socket socket = User.socket;
+                    ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                    oos.writeObject(null);
+                    oos.flush();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } finally {
+                    try {
                         socket.close();
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
                     }
-                } catch (IOException exception) {
-                    exception.printStackTrace();
                 }
                 System.exit(0);
             } else {

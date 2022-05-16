@@ -17,15 +17,10 @@ import java.util.stream.Collectors;
 import static com.gymmer.gymmerstation.home.User.user_id;
 
 public class ProgramServiceImpl implements ProgramService {
-    private final ProgramRepository programRepository;
     private final Socket socket = User.socket;
     private HashMap<String,Object> map;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
-
-    public ProgramServiceImpl(ProgramRepository programRepository) {
-        this.programRepository = AppConfig.programRepository();
-    }
 
     @Override
     public void addProgram(Program program) {
@@ -65,65 +60,27 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void editProgram(Program oldProgram, Program newProgram, List<Exercise> additionList, List<Exercise> deletionList) {
-        Long programId = newProgram.getId();
-        if (!oldProgram.getName().equals(newProgram.getName()) || !oldProgram.getPurpose().equals(newProgram.getPurpose())
-                || !oldProgram.getLength().equals(newProgram.getLength()) || !oldProgram.getDivisionQty().equals(newProgram.getDivisionQty())) {
-            try {
-                oos = new ObjectOutputStream(socket.getOutputStream());
-                map = new HashMap<>();
-                map.put("editProgram",newProgram);
-                oos.writeObject(map);
-                oos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if(!additionList.isEmpty()) {
-            try {
-                oos = new ObjectOutputStream(socket.getOutputStream());
-                HashMap<Long, List<Exercise>> hashMap = new HashMap<>();
-                hashMap.put(programId,additionList);
-                map = new HashMap<>();
-                map.put("addExercises",hashMap);
-                oos.writeObject(map);
-                oos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        if(!deletionList.isEmpty()) {
-            try {
-                oos = new ObjectOutputStream(socket.getOutputStream());
-                HashMap<Long, List<Exercise>> hashMap = new HashMap<>();
-                hashMap.put(programId,deletionList);
-                map = new HashMap<>();
-                map.put("deleteExercises",hashMap);
-                oos.writeObject(map);
-                oos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void editProgram(Program newProgram) {
+        try {
+            oos = new ObjectOutputStream(socket.getOutputStream());
+            map = new HashMap<>();
+            map.put("editProgram",newProgram);
+            oos.writeObject(map);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void removeEntireDivision(Long programId, Long removedDivision) {
-        String data = programId + "," + removedDivision;
+    public void replaceExercises(Program newProgram) {
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
             map = new HashMap<>();
-            map.put("removeEntireDivision",data);
+            map.put("replaceExercises",newProgram);
             oos.writeObject(map);
             oos.flush();
-
-            ois = new ObjectInputStream(socket.getInputStream());
-            int result = (int)ois.readObject();
-            if(result == 0) {
-                throw new IllegalArgumentException("Division Deletion Failed!");
-            }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
