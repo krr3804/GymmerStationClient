@@ -28,9 +28,8 @@
 - Add Exercise
   - Exercise name
   - Sets
-  - Reps
   - Rest time
-  - Weight
+  - Weight Type
 - [Save] button
 - [Return] -> return to [Create Program] window
 

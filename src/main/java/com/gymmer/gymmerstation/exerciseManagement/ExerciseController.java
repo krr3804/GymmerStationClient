@@ -1,11 +1,9 @@
 package com.gymmer.gymmerstation.exerciseManagement;
 
-import com.gymmer.gymmerstation.AppConfig;
 import com.gymmer.gymmerstation.domain.Exercise;
 import com.gymmer.gymmerstation.domain.Program;
-import com.gymmer.gymmerstation.programManagement.ProgramService;
-import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.Alerts;
+import com.gymmer.gymmerstation.util.CommonValidation;
 import com.gymmer.gymmerstation.util.Util;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,14 +17,12 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.gymmer.gymmerstation.programManagement.validations.DuplicateExerciseValidation.*;
+import static com.gymmer.gymmerstation.programManagement.validations.DuplicateExerciseValidation.duplicateExerciseValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputBlankValidation;
 import static com.gymmer.gymmerstation.programManagement.validations.InputValidation.inputMismatchValidationRestTime;
-import static com.gymmer.gymmerstation.util.CommonValidation.*;
-import static javafx.collections.FXCollections.observableList;
+import static com.gymmer.gymmerstation.util.CommonValidation.noItemSelectedValidation;
 
 public class ExerciseController implements Initializable {
-    private final ProgramService programService = AppConfig.programService();
     private Program currentProgram = null;
     private Long currentDivision = null;
 
@@ -34,7 +30,10 @@ public class ExerciseController implements Initializable {
     private ListView<String> exerciseListView;
 
     @FXML
-    private TextField Name, Sets, Reps, Weight;
+    private TextField Name, Sets;
+
+    @FXML
+    private ChoiceBox<String> weightType;
 
     @FXML
     private Spinner<String> Minute, Second;
@@ -52,8 +51,6 @@ public class ExerciseController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTimer();
         Sets.setOnKeyTyped(event -> checkInputEventValidation(event));
-        Reps.setOnKeyTyped(event -> checkInputEventValidation(event));
-        Weight.setOnKeyTyped(event -> checkInputEventValidation(event));
         btnSave.setOnAction(event -> checkButtonEventValidation(event));
         btnDelete.setOnAction(event -> checkButtonEventValidation(event));
         btnExit.setOnAction(event -> checkButtonEventValidation(event));
@@ -69,7 +66,7 @@ public class ExerciseController implements Initializable {
         TextField field = (TextField) event.getSource();
         try {
             String fieldName = field.getId();
-            InputValidation.inputMismatchValidationNumber(field.getText(),fieldName);
+            CommonValidation.inputMismatchValidationNumber(field.getText(),fieldName);
         } catch (IllegalArgumentException e) {
             field.clear();
             Alerts.generateErrorAlert(e.getMessage()).showAndWait();
@@ -113,15 +110,13 @@ public class ExerciseController implements Initializable {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("Name",Name.getText());
         map.put("Sets", Sets.getText());
-        map.put("Reps", Reps.getText());
-        map.put("Weight", Weight.getText());
         inputBlankValidation(map);
+        String selectedWeightType = weightType.getSelectionModel().getSelectedItem();
+        noItemSelectedValidation(selectedWeightType);
         String restTime = Minute.getValue() + ":" + Second.getValue();
         inputMismatchValidationRestTime(restTime);
         duplicateExerciseValidation(currentProgram.getExerciseByDivision(currentDivision),Name.getText());
-        Exercise exercise = new Exercise(Name.getText(),Long.parseLong(Sets.getText()),
-                Long.parseLong(Reps.getText()), Long.parseLong(Weight.getText()),
-                restTime, currentDivision);
+        Exercise exercise = new Exercise(Name.getText(),Long.parseLong(Sets.getText()), selectedWeightType, restTime, currentDivision);
         currentProgram.getExerciseList().add(exercise);
         exerciseListView.setItems(showExerciseList());
         clearData();
@@ -130,8 +125,6 @@ public class ExerciseController implements Initializable {
     private void clearData() {
         Name.setText("");
         Sets.setText("");
-        Reps.setText("");
-        Weight.setText("");
         Minute.getValueFactory().setValue("00");
         Second.getValueFactory().setValue("00");
     }
@@ -147,7 +140,7 @@ public class ExerciseController implements Initializable {
         Alert alert = Alerts.generateDeleteDataAlert(name);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            Exercise exercise = currentProgram.removeExercise(currentDivision,name);
+            currentProgram.removeExercise(currentDivision,name);
             exerciseListView.setItems(showExerciseList());
         } else {
             alert.close();

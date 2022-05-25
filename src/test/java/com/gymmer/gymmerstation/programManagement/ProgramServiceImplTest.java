@@ -67,8 +67,8 @@ private HashMap<String,Object> map;
     @Test
     void addProgram() {
         List<Exercise> exerciseList = new ArrayList<>();
-        exerciseList.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
-        exerciseList.add(new Exercise("Split Squat",1L,10L,100L,"00:03",2L));
+        exerciseList.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
+        exerciseList.add(new Exercise("Split Squat",1L,"Fixed","00:03",2L));
         Program program = new Program(null,"Leg Buster","To increase leg weight",2L,2L,exerciseList);
 
         Long programId = sendProgramAdditionRequest(program);
@@ -113,11 +113,11 @@ private HashMap<String,Object> map;
     @Test
     void getProgramList() {
         List<Exercise> exercises1 = new ArrayList<>();
-        exercises1.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
-        exercises1.add(new Exercise("Split Squat",1L,10L,100L,"00:03",2L));
+        exercises1.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
+        exercises1.add(new Exercise("Split Squat",1L,"Fixed","00:03",2L));
         List<Exercise> exercises2 = new ArrayList<>();
-        exercises2.add(new Exercise("Bench Press",1L,10L,60L,"00:02",1L));
-        exercises2.add(new Exercise("Dumbbell Press",1L,10L,30L,"00:04",2L));
+        exercises2.add(new Exercise("Bench Press",1L,"Fixed","00:02",1L));
+        exercises2.add(new Exercise("Dumbbell Press",1L,"Fixed","00:04",2L));
         Program program1 = new Program(null,"Leg Buster","To increase leg weight",2L,2L,exercises1);
         Program program2 = new Program(null,"Chest Focused","To increase chest mobility",2L,2L,exercises2);
         Long program1Id = sendProgramAdditionRequest(program1);
@@ -146,9 +146,9 @@ private HashMap<String,Object> map;
     @Test
     void editProgram() {
         List<Exercise> exerciseList = new ArrayList<>();
-        exerciseList.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
-        exerciseList.add(new Exercise("Split Squat",1L,10L,100L,"00:03",1L));
-        exerciseList.add(new Exercise("Leg Press",1L,10L,200L,"00:02",2L));
+        exerciseList.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
+        exerciseList.add(new Exercise("Split Squat",1L,"Fixed","00:03",1L));
+        exerciseList.add(new Exercise("Leg Press",1L,"Fixed","00:02",2L));
         Program program = new Program(null,"Leg Buster","To increase leg weight",2L,2L,exerciseList);
         Long programId = sendProgramAdditionRequest(program);
         try {
@@ -171,7 +171,7 @@ private HashMap<String,Object> map;
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
             List<Exercise> additionList = new ArrayList<>();
-            additionList.add(new Exercise("Front Squat",1L,10L,100L,"00:06",3L));
+            additionList.add(new Exercise("Front Squat",1L,"Fixed","00:06",3L));
             HashMap<Long, List<Exercise>> hashMap = new HashMap<>();
             hashMap.put(programId,additionList);
             map = new HashMap<>();
@@ -189,7 +189,7 @@ private HashMap<String,Object> map;
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
             List<Exercise> deletionList = new ArrayList<>();
-            deletionList.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
+            deletionList.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
             HashMap<Long, List<Exercise>> hashMap = new HashMap<>();
             hashMap.put(programId,deletionList);
             map = new HashMap<>();
@@ -210,9 +210,9 @@ private HashMap<String,Object> map;
     @Test
     void removeEntireDivision() {
         List<Exercise> exerciseList = new ArrayList<>();
-        exerciseList.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
-        exerciseList.add(new Exercise("Split Squat",1L,10L,100L,"00:03",1L));
-        exerciseList.add(new Exercise("Leg Press",1L,10L,200L,"00:02",2L));
+        exerciseList.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
+        exerciseList.add(new Exercise("Split Squat",1L,"Fixed","00:03",1L));
+        exerciseList.add(new Exercise("Leg Press",1L,"Fixed","00:02",2L));
         Program program = new Program(null,"Leg Buster","To increase leg weight",2L,2L,exerciseList);
         Long programId = sendProgramAdditionRequest(program);
         try {
@@ -236,8 +236,8 @@ private HashMap<String,Object> map;
     @Test
     void deleteProgram() {
         List<Exercise> exerciseList = new ArrayList<>();
-        exerciseList.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
-        exerciseList.add(new Exercise("Split Squat",1L,10L,100L,"00:03",2L));
+        exerciseList.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
+        exerciseList.add(new Exercise("Split Squat",1L,"Fixed","00:03",2L));
         Program program = new Program(null,"Leg Buster","To increase leg weight",2L,2L,exerciseList);
         Long programId = sendProgramAdditionRequest(program);
         int success = sendClearDataRequest(programId);

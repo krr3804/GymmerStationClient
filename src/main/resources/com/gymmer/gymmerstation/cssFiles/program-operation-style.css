@@ -10,6 +10,7 @@
     -fx-font-size : 14;
     -fx-text-fill : midnightblue;
     -fx-font-weight : bold;
+    -fx-text-alignment : left;
 }
 
 .button {

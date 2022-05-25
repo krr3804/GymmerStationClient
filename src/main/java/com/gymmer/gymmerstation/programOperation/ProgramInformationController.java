@@ -16,10 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -40,7 +37,6 @@ public class ProgramInformationController implements Initializable {
     private Program currentProgram = null;
     private Long week;
     private Long division;
-    private String timeConsumed;
     private String pauseOption;
     private Stage operationStage;
 
@@ -52,6 +48,7 @@ public class ProgramInformationController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        purposeInfo.setWrapText(true);
         setOperationStage();
         btnStart.setOnAction(event -> handleBtnStartAction(event));
         btnExit.setOnAction(event -> handleBtnExitAction(event));
@@ -96,15 +93,21 @@ public class ProgramInformationController implements Initializable {
         List<OperationDataExercise> odeList = new ArrayList<>();
         outerLoop:
         for(Exercise exercise : currentProgram.getExerciseByDivision(division)) {
+            String weight = null;
+            Long reps = null;
+            String timeConsumed = null;
             for(long set = 1; set <= exercise.getSet(); set++) {
-                loadOperationStage(exercise,set);
+                String[] operationResult = loadOperationStage(exercise, set, weight);
+                weight = operationResult[0];
+                reps = Long.parseLong(operationResult[1]);
+                timeConsumed = operationResult[2];
                 if (pauseOption.equals("saveAndExit")) {
                     break outerLoop;
                 }
                 if (pauseOption.equals("exit")) {
                     throw new IllegalArgumentException();
                 }
-                odeList.add(new OperationDataExercise(exercise.getName(), set, exercise.getRep(), exercise.getWeight(), exercise.getRestTime(), timeConsumed));
+                odeList.add(new OperationDataExercise(exercise.getName(), set, reps, weight, exercise.getRestTime(), timeConsumed));
                 loadRestTimeStage(exercise);
                 if (pauseOption.equals("saveAndExit")) {
                     break outerLoop;
@@ -113,18 +116,18 @@ public class ProgramInformationController implements Initializable {
                     throw new IllegalArgumentException();
                 }
                 pauseOption = "";
-                timeConsumed = "";
             }
         }
         return odeList;
     }
 
-    private void loadOperationStage(Exercise exercise, Long currentSet) {
+    private String[] loadOperationStage(Exercise exercise, Long currentSet, String weight) {
+        String[] operationResult = null;
         try {
             FXMLLoader operationLoader = new FXMLLoader(Main.class.getResource("fxml files/program-operation-view.fxml"));
             Parent root = operationLoader.load();
             ProgramOperationController programOperationController = operationLoader.getController();
-            programOperationController.initData(exercise,currentSet);
+            programOperationController.initData(exercise,currentSet,weight);
             operationStage.setScene(new Scene(root));
             operationStage.setOnCloseRequest(event -> {
                 event.consume();
@@ -153,11 +156,14 @@ public class ProgramInformationController implements Initializable {
                 }
             });
             operationStage.showAndWait();
+
             pauseOption = programOperationController.returnOption();
-            timeConsumed = programOperationController.getTimeConsumed();
+            operationResult = programOperationController.getOperationResult();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return operationResult;
     }
 
     private void loadRestTimeStage(Exercise exercise) {

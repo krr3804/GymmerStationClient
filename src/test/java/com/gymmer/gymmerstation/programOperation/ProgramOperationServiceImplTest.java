@@ -68,11 +68,11 @@ class ProgramOperationServiceImplTest {
 
 
         List<Exercise> exercises1 = new ArrayList<>();
-        exercises1.add(new Exercise("Back Squat",1L,10L,100L,"00:05",1L));
-        exercises1.add(new Exercise("Split Squat",1L,10L,100L,"00:03",2L));
+        exercises1.add(new Exercise("Back Squat",1L,"Fixed","00:05",1L));
+        exercises1.add(new Exercise("Split Squat",1L,"Fixed","00:03",2L));
         List<Exercise> exercises2 = new ArrayList<>();
-        exercises2.add(new Exercise("Bench Press",1L,10L,60L,"00:02",1L));
-        exercises2.add(new Exercise("Dumbbell Press",1L,10L,30L,"00:04",2L));
+        exercises2.add(new Exercise("Bench Press",1L,"Fixed","00:02",1L));
+        exercises2.add(new Exercise("Dumbbell Press",1L,"Fixed","00:04",2L));
         Program program1 = new Program(null,"Leg Buster","To increase leg weight",2L,2L,exercises1);
         Program program2 = new Program(null,"Chest Focused","To increase chest mobility",2L,2L,exercises2);
         Long program1Id = sendProgramAdditionRequest(program1);
@@ -196,7 +196,7 @@ class ProgramOperationServiceImplTest {
     @Test
     void savePerformanceData() {
         List<OperationDataExercise> odeList = new ArrayList<>();
-        odeList.add(new OperationDataExercise("Back Squat", 1L, 10L, 100L,"00:05","01:05"));
+        odeList.add(new OperationDataExercise("Back Squat", 1L, 10L, "100","00:05","01:05"));
         OperationDataProgram odp = new OperationDataProgram(registeredProgram1,1L,1L,odeList);
         int res = sendAddODPRequest(odp);
         sendDeleteODPRequest(registeredProgram1.getId());
@@ -206,7 +206,7 @@ class ProgramOperationServiceImplTest {
     @Test
     void terminateProgram() {
         List<OperationDataExercise> odeList = new ArrayList<>();
-        odeList.add(new OperationDataExercise("Back Squat", 1L, 10L, 100L,"00:05","01:05"));
+        odeList.add(new OperationDataExercise("Back Squat", 1L, 10L, "100","00:05","01:05"));
         OperationDataProgram odp = new OperationDataProgram(registeredProgram1,1L,1L,odeList);
         sendAddODPRequest(odp);
         Long terminatedProgramId = sendTerminateProgramRequest(registeredProgram1.getId());
@@ -218,7 +218,7 @@ class ProgramOperationServiceImplTest {
     @Test
     void deletePerformanceData() {
         List<OperationDataExercise> odeList = new ArrayList<>();
-        odeList.add(new OperationDataExercise("Back Squat", 1L, 10L, 100L,"00:05","01:05"));
+        odeList.add(new OperationDataExercise("Back Squat", 1L, 10L, "100","00:05","01:05"));
         OperationDataProgram odp = new OperationDataProgram(registeredProgram1,1L,1L,odeList);
         int res = 0;
         //delete program in progress
@@ -237,10 +237,10 @@ class ProgramOperationServiceImplTest {
     @Test
     void getPerformanceDataList() {
         List<OperationDataExercise> odeList1 = new ArrayList<>();
-        odeList1.add(new OperationDataExercise("Back Squat", 1L, 10L, 100L,"00:05","01:05"));
+        odeList1.add(new OperationDataExercise("Back Squat", 1L, 10L, "100","00:05","01:05"));
         OperationDataProgram odp1 = new OperationDataProgram(registeredProgram1,1L,1L,odeList1);
         List<OperationDataExercise> odeList2 = new ArrayList<>();
-        odeList2.add(new OperationDataExercise("Split Squat",1L,10L,100L,"00:03","02:05"));
+        odeList2.add(new OperationDataExercise("Split Squat",1L,10L,"100","00:03","02:05"));
         OperationDataProgram odp2 = new OperationDataProgram(registeredProgram1,1L,2L,odeList2);
         sendAddODPRequest(odp1);
         sendAddODPRequest(odp2);
@@ -264,10 +264,10 @@ class ProgramOperationServiceImplTest {
     @Test
     void getProgress() {
         List<OperationDataExercise> odeList1 = new ArrayList<>();
-        odeList1.add(new OperationDataExercise("Back Squat", 1L, 10L, 100L,"00:05","01:05"));
+        odeList1.add(new OperationDataExercise("Back Squat", 1L, 10L, "100","00:05","01:05"));
         OperationDataProgram odp1 = new OperationDataProgram(registeredProgram1,1L,1L,odeList1);
         List<OperationDataExercise> odeList2 = new ArrayList<>();
-        odeList2.add(new OperationDataExercise("Split Squat",1L,10L,100L,"00:03","02:05"));
+        odeList2.add(new OperationDataExercise("Split Squat",1L,10L,"100","00:03","02:05"));
         OperationDataProgram odp2 = new OperationDataProgram(registeredProgram1,1L,2L,odeList2);
         sendAddODPRequest(odp1);
         sendAddODPRequest(odp2);
@@ -292,10 +292,10 @@ class ProgramOperationServiceImplTest {
     @Test
     void getProgramsInArchiveList() {
         List<OperationDataExercise> odeList1 = new ArrayList<>();
-        odeList1.add(new OperationDataExercise("Back Squat", 1L, 10L, 100L,"00:05","01:05"));
+        odeList1.add(new OperationDataExercise("Back Squat", 1L, 10L, "100","00:05","01:05"));
         OperationDataProgram odp1 = new OperationDataProgram(registeredProgram1,1L,1L,odeList1);
         List<OperationDataExercise> odeList2 = new ArrayList<>();
-        odeList2.add(new OperationDataExercise("Bench Press",1L,10L,60L,"00:02","00:10"));
+        odeList2.add(new OperationDataExercise("Bench Press",1L,10L,"60","00:02","00:10"));
         OperationDataProgram odp2 = new OperationDataProgram(registeredProgram2,1L,2L,odeList2);
         sendAddODPRequest(odp1);
         sendAddODPRequest(odp2);

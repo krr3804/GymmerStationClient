@@ -6,6 +6,7 @@ import com.gymmer.gymmerstation.domain.Program;
 import com.gymmer.gymmerstation.exerciseManagement.ExerciseController;
 import com.gymmer.gymmerstation.programManagement.validations.InputValidation;
 import com.gymmer.gymmerstation.util.Alerts;
+import com.gymmer.gymmerstation.util.CommonValidation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,6 +54,7 @@ public class ProgramCreateController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        inpPurpose.setWrapText(true);
         divisionListView.setOnMouseClicked(event -> handleListDoubleClickEvent(event));
         divisionListView.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if(btnRemoveDivision.isFocused()) {
@@ -71,7 +73,7 @@ public class ProgramCreateController implements Initializable {
 
     private void checkInputEventValidation(KeyEvent event) {
         try {
-            InputValidation.inputMismatchValidationNumber(inpLength.getText(), "Length");
+            CommonValidation.inputMismatchValidationNumber(inpLength.getText(), "Length");
         } catch (IllegalArgumentException e) {
             inpLength.clear();
             Alerts.generateErrorAlert(e.getMessage()).showAndWait();

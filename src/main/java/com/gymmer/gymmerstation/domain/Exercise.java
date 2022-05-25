@@ -8,16 +8,14 @@ public class Exercise implements Serializable {
 
     private String name;
     private Long set;
-    private Long rep;
-    private Long weight;
+    private String weightType;
     private String restTime;
     private Long division;
 
-    public Exercise(String name, Long set, Long rep, Long weight, String restTime, Long division) {
+    public Exercise(String name, Long set, String weightType, String restTime, Long division) {
         this.name = name;
         this.set = set;
-        this.rep = rep;
-        this.weight = weight;
+        this.weightType = weightType;
         this.restTime = restTime;
         this.division = division;
     }
@@ -30,12 +28,8 @@ public class Exercise implements Serializable {
         return set;
     }
 
-    public Long getRep() {
-        return rep;
-    }
-
-    public Long getWeight() {
-        return weight;
+    public String getWeightType() {
+        return weightType;
     }
 
     public String getRestTime() {
@@ -57,13 +51,12 @@ public class Exercise implements Serializable {
         Exercise other = (Exercise) o;
 
         return Objects.equals(other.name,name) && Objects.equals(other.set,set) &&
-                Objects.equals(other.rep,rep) && Objects.equals(other.weight,weight) &&
-                Objects.equals(other.restTime,restTime) && Objects.equals(other.division,division);
+                Objects.equals(other.weightType,weightType) && Objects.equals(other.restTime,restTime) && Objects.equals(other.division,division);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name,set,rep,weight,restTime,division);
+        return Objects.hash(name,set,weightType,restTime,division);
     }
 
     public void decreaseDivisionSequence(Long division) {

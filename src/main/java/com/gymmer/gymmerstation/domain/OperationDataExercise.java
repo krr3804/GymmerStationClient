@@ -8,12 +8,12 @@ public class OperationDataExercise implements Serializable {
     private String name;
     private Long currentSet;
     private Long rep;
-    private Long weight;
+    private String weight;
     private String restTime;
     private String timeConsumed;
 
 
-    public OperationDataExercise(String name, Long currentSet, Long rep, Long weight, String restTime, String timeConsumed) {
+    public OperationDataExercise(String name, Long currentSet, Long rep, String weight, String restTime, String timeConsumed) {
         this.name = name;
         this.currentSet = currentSet;
         this.rep = rep;
@@ -30,7 +30,7 @@ public class OperationDataExercise implements Serializable {
         return rep;
     }
 
-    public Long getWeight() {
+    public String getWeight() {
         return weight;
     }
 
